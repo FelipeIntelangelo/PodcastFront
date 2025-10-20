@@ -1,0 +1,8 @@
+input::placeholder {
+  font-size: 14px;
+  transition: font-size .2s ease; /* animación suave */
+}
+
+input:focus::placeholder {
+  font-size: 10px; /* tamaño más chico cuando hacés click */
+}
