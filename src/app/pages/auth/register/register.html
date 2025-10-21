@@ -11,5 +11,17 @@
         <label for="emailIn">Email:</label>
         <input type="email" id="emailIn" placeholder="email" formControlName="email">
     </fieldset>
+    <fieldset>
+        <label for="nameIn">Name:</label>
+        <input type="text" id="nameIn" placeholder="name" formControlName="name">
+    </fieldset>
+    <fieldset>
+        <label for="lastNameIn">Last Name:</label>
+        <input type="text" id="lastNameIn" placeholder="last name" formControlName="lastName">
+    </fieldset>
+    <fieldset>
+        <label for="nickname">Nickname:</label>
+        <input type="text" id="nicknameIn" placeholder="nickname" formControlName="nickname">
+    </fieldset>
     <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
 </form>
