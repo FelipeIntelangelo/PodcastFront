@@ -1,4 +1,4 @@
-<form>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <fieldset>
         <label for="usernameIn">Username:</label>
         <input type="text" id="usernameIn" placeholder="username" formControlName="username">
@@ -7,9 +7,9 @@
         <label for="passwordIn">Password:</label>
         <input type="password" id="passwordIn" placeholder="password" formControlName="password">
     </fieldset>
-        <label for="emailIn">Email:</label>
-        <input type="text">
     <fieldset>
+        <label for="emailIn">Email:</label>
+        <input type="email" id="emailIn" placeholder="email" formControlName="email">
     </fieldset>
-    <button>Registrarse</button>
+    <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
 </form>
