@@ -1,39 +1,57 @@
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
     <div id="form-container">
         <h2>Sign Up</h2>
-        <div id="fieldsetContainer">
-            <div class="fieldsetUp">
-                <fieldset>
-                <label for="usernameIn">Username:</label>
-                <input type="text" id="usernameIn" placeholder="username" formControlName="username">
-                </fieldset>
-                <fieldset>
-                    <label for="passwordIn">Password:</label>
-                    <input type="password" id="passwordIn" placeholder="password" formControlName="password">
-                </fieldset>
-                <fieldset>
-                    <label for="emailIn">Email:</label>
-                    <input type="email" id="emailIn" placeholder="email" formControlName="email">
-                </fieldset>
-            </div>
-            <div class="fieldsetUp">
+        @if (currentStep === 1) {
+            <h3>Account Data</h3>
+            <div id="fieldsetContainer">
+                <div class="fieldsetUp">
                     <fieldset>
-                    <label for="nameIn">Name:</label>
-                    <input type="text" id="nameIn" placeholder="name" formControlName="name">
-                </fieldset>
-                <fieldset>
-                    <label for="lastNameIn">Last Name:</label>
-                    <input type="text" id="lastNameIn" placeholder="last name" formControlName="lastName">
-                </fieldset>
-                <fieldset>
-                    <label for="nickname">Nickname:</label>
-                    <input type="text" id="nicknameIn" placeholder="nickname" formControlName="nickname">
-                </fieldset>
+                    <label for="usernameIn">Username:</label>
+                    <input type="text" id="usernameIn" placeholder="username" formControlName="username">
+                    </fieldset>
+                    <fieldset>
+                        <label for="passwordIn">Password:</label>
+                        <input type="password" id="passwordIn" placeholder="password" formControlName="password">
+                    </fieldset>
+                    <fieldset>
+                        <label for="emailIn">Email:</label>
+                        <input type="email" id="emailIn" placeholder="email" formControlName="email">
+                    </fieldset>
+                </div>
             </div>
-        </div>
-        <div id="buttonContainer">
-            <button type="submit" [disabled]="!registerForm.valid">Register</button>
-            <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
-        </div>
+            <div id="buttonContainer">
+                <button type="button" [disabled]="
+                    !registerForm.get('username')?.valid
+                    || !registerForm.get('email')?.valid
+                    || !registerForm.get('password')?.valid"
+                     (click)="nextStep()">Next Step</button>
+                <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
+            </div>
+        } @else if (currentStep === 2) {
+            <h3>Personal Information</h3>
+            <div id="buttonContainer">
+                <button type="button" (click)="prevStep()">Back</button>
+            </div>
+            <div id="fieldsetContainer">
+                <div class="fieldsetUp">
+                        <fieldset>
+                        <label for="nameIn">Name:</label>
+                        <input type="text" id="nameIn" placeholder="name" formControlName="name">
+                    </fieldset>
+                    <fieldset>
+                        <label for="lastNameIn">Last Name:</label>
+                        <input type="text" id="lastNameIn" placeholder="last name" formControlName="lastName">
+                    </fieldset>
+                    <fieldset>
+                        <label for="nickname">Nickname:</label>
+                        <input type="text" id="nicknameIn" placeholder="nickname" formControlName="nickname">
+                    </fieldset>
+                </div>
+            </div>
+            <div id="buttonContainer">
+                <button type="submit" [disabled]="!registerForm.valid">Register</button>
+                <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
+            </div>
+        }
     </div>
 </form>

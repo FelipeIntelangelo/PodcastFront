@@ -11,6 +11,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 })
 export class Register implements OnInit{
   registerForm!: FormGroup;
+  currentStep = 1;
 
   constructor(public router:Router){}
 
@@ -23,6 +24,21 @@ export class Register implements OnInit{
       lastName: new FormControl('', Validators.required),
       nickname: new FormControl('', Validators.required),
     });
+  }
+
+  nextStep() {
+    if (this.currentStep === 1 && this.registerForm.get('username')!.valid
+        && this.registerForm.get('email')!.valid
+        && this.registerForm.get('password')!.valid)
+    {
+      this.currentStep = 2;
+    } else {
+      this.registerForm.markAllAsTouched(); // con esto reutilizamos los validadores.
+    }
+  }
+
+  prevStep() {
+  this.currentStep = 1;
   }
 
   get username() { return this.registerForm.get('username'); }
