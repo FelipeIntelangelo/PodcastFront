@@ -21,7 +21,8 @@ export class Register implements OnInit{
       username: new FormControl('', [
         Validators.required,
         Validators.minLength(3),
-        Validators.maxLength(20)
+        Validators.maxLength(20),
+        Validators.pattern("^[a-zA-Z0-9_]+$")
       ]),
       password: new FormControl('', [
         Validators.required,
@@ -31,7 +32,8 @@ export class Register implements OnInit{
       email: new FormControl('', [
         Validators.required,
         Validators.email,
-        Validators.maxLength(50)
+        Validators.maxLength(50),
+        Validators.pattern("^(?![.])[a-zA-Z0-9._%+-]+(?<![.])@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,}$")
       ]),
       name: new FormControl('', [
         Validators.required,
