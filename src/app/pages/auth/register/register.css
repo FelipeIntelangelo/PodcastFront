@@ -6,3 +6,74 @@ input::placeholder {
 input:focus::placeholder {
   font-size: 10px; /* tamaño más chico cuando hacés click */
 }
+
+form {
+  /* background: linear-gradient(180deg, #000000 0%, #1a1a1a 100%);  DEGRADE LINEAL 90°- 180°- 270° - 360° */  
+  background: radial-gradient(circle, #1a1a1a 0%, #000000 100%);
+  height: 90vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#form-container {
+  padding: 0rem 3rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 2rem;
+  text-align: center;
+  box-shadow: 0 0 30px rgba(76, 76, 76, 0.5);
+  color: white;
+}
+
+h2 {
+  margin: 2rem 0rem;
+  font-size: 40px;
+  letter-spacing: 6px;
+}
+
+input {
+  width: 100%;
+  padding: 1rem;
+  margin: 0.4rem 0rem;
+  border: none;
+  border-radius: 0.7rem;
+  outline: none;
+}
+
+fieldset{
+  border: none;
+  text-align: start;
+  margin: 1rem 0rem;
+}
+
+button{
+  width: 100%;
+  padding: 0.4rem;
+  border: none;
+  border-radius: 1rem;
+  background-color: rgb(146, 48, 195);
+  color: white;
+  font-size: 15px;
+  margin-bottom: 0.5rem;
+}
+
+#buttonContainer{
+  margin-bottom: 2rem;
+}
+
+#loginRoute{
+  text-decoration: none;
+  font-weight: 600;
+  color: rgb(168, 92, 205);
+}
+
+#fieldsetContainer{
+  display: flex;
+  margin-bottom: 2rem;
+}
+
+.fieldsetUp{
+  margin: 0rem 1rem;
+}

@@ -1,27 +1,39 @@
 <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <fieldset>
-        <label for="usernameIn">Username:</label>
-        <input type="text" id="usernameIn" placeholder="username" formControlName="username">
-    </fieldset>
-    <fieldset>
-        <label for="passwordIn">Password:</label>
-        <input type="password" id="passwordIn" placeholder="password" formControlName="password">
-    </fieldset>
-    <fieldset>
-        <label for="emailIn">Email:</label>
-        <input type="email" id="emailIn" placeholder="email" formControlName="email">
-    </fieldset>
-    <fieldset>
-        <label for="nameIn">Name:</label>
-        <input type="text" id="nameIn" placeholder="name" formControlName="name">
-    </fieldset>
-    <fieldset>
-        <label for="lastNameIn">Last Name:</label>
-        <input type="text" id="lastNameIn" placeholder="last name" formControlName="lastName">
-    </fieldset>
-    <fieldset>
-        <label for="nickname">Nickname:</label>
-        <input type="text" id="nicknameIn" placeholder="nickname" formControlName="nickname">
-    </fieldset>
-    <button type="submit" [disabled]="!registerForm.valid">Registrarse</button>
+    <div id="form-container">
+        <h2>Sign Up</h2>
+        <div id="fieldsetContainer">
+            <div class="fieldsetUp">
+                <fieldset>
+                <label for="usernameIn">Username:</label>
+                <input type="text" id="usernameIn" placeholder="username" formControlName="username">
+                </fieldset>
+                <fieldset>
+                    <label for="passwordIn">Password:</label>
+                    <input type="password" id="passwordIn" placeholder="password" formControlName="password">
+                </fieldset>
+                <fieldset>
+                    <label for="emailIn">Email:</label>
+                    <input type="email" id="emailIn" placeholder="email" formControlName="email">
+                </fieldset>
+            </div>
+            <div class="fieldsetUp">
+                    <fieldset>
+                    <label for="nameIn">Name:</label>
+                    <input type="text" id="nameIn" placeholder="name" formControlName="name">
+                </fieldset>
+                <fieldset>
+                    <label for="lastNameIn">Last Name:</label>
+                    <input type="text" id="lastNameIn" placeholder="last name" formControlName="lastName">
+                </fieldset>
+                <fieldset>
+                    <label for="nickname">Nickname:</label>
+                    <input type="text" id="nicknameIn" placeholder="nickname" formControlName="nickname">
+                </fieldset>
+            </div>
+        </div>
+        <div id="buttonContainer">
+            <button type="submit" [disabled]="!registerForm.valid">Register</button>
+            <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
+        </div>
+    </div>
 </form>
