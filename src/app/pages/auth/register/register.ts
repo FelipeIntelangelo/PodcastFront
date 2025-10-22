@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormError } from '../../../components/shared/form-error/form-error';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, FormError],
   templateUrl: './register.html',
   styleUrl: './register.css'
 })
@@ -17,25 +18,37 @@ export class Register implements OnInit{
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
-      username: new FormControl('',
-         [Validators.required]),
-      password: new FormControl('',
-         [Validators.required]),
-      email: new FormControl('',
-         [Validators.required,
-          Validators.email]),
-      name: new FormControl('',
-         [Validators.required,
-          Validators.maxLength(19), 
-          Validators.minLength(2)]),
-      lastName: new FormControl('',
-         [Validators.required,
-          Validators.maxLength(19)]),
-      nickname: new FormControl('',
-         [Validators.required,
-          Validators.maxLength(20),
-          Validators.minLength(3),
-          Validators.pattern("^[a-zA-Z0-9_]+$")]),
+      username: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20)
+      ]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(30)
+      ]),
+      email: new FormControl('', [
+        Validators.required,
+        Validators.email,
+        Validators.maxLength(50)
+      ]),
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(19)
+      ]),
+      lastName: new FormControl('', [
+        Validators.required,
+        Validators.minLength(2),
+        Validators.maxLength(19)
+      ]),
+      nickname: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(20),
+        Validators.pattern("^[a-zA-Z0-9_]+$")
+      ]),
     });
   }
 

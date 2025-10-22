@@ -6,16 +6,19 @@
             <div id="fieldsetContainer">
                 <div class="fieldsetUp">
                     <fieldset>
-                    <label for="usernameIn">Username:</label>
-                    <input type="text" id="usernameIn" placeholder="username" formControlName="username">
+                        <label for="usernameIn">Username:</label>
+                        <input type="text" id="usernameIn" placeholder="username" formControlName="username">
+                        <app-form-error controlName="username" />
                     </fieldset>
                     <fieldset>
                         <label for="passwordIn">Password:</label>
                         <input type="password" id="passwordIn" placeholder="password" formControlName="password">
+                        <app-form-error controlName="password" />
                     </fieldset>
                     <fieldset>
                         <label for="emailIn">Email:</label>
                         <input type="email" id="emailIn" placeholder="email" formControlName="email">
+                        <app-form-error controlName="email" />
                     </fieldset>
                 </div>
             </div>
@@ -34,17 +37,20 @@
             </div>
             <div id="fieldsetContainer">
                 <div class="fieldsetUp">
-                        <fieldset>
+                    <fieldset>
                         <label for="nameIn">Name:</label>
                         <input type="text" id="nameIn" placeholder="name" formControlName="name">
+                        <app-form-error controlName="name" />
                     </fieldset>
                     <fieldset>
                         <label for="lastNameIn">Last Name:</label>
                         <input type="text" id="lastNameIn" placeholder="last name" formControlName="lastName">
+                        <app-form-error controlName="lastName" />
                     </fieldset>
                     <fieldset>
                         <label for="nickname">Nickname:</label>
                         <input type="text" id="nicknameIn" placeholder="nickname" formControlName="nickname">
+                        <app-form-error controlName="nickname" />
                     </fieldset>
                 </div>
             </div>
