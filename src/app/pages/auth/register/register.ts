@@ -13,6 +13,42 @@ import { FormError } from '../../../components/shared/form-error/form-error';
 export class Register implements OnInit{
   registerForm!: FormGroup;
   currentStep = 1;
+  // Estos customErrors se llevan al form-error component, desde el HTML
+  customErrors: { [controlName: string]: { [key: string]: string } } = {
+    username: {
+      required: 'El nombre de usuario es obligatorio',
+      minlength: 'El usuario debe tener al menos {requiredLength} caracteres',
+      maxlength: 'El usuario no puede superar {requiredLength} caracteres',
+      pattern: 'Solo letras, números y guiones bajos están permitidos'
+    },
+    password: {
+      required: 'La contraseña es obligatoria',
+      minlength: 'La contraseña debe tener al menos {requiredLength} caracteres',
+      maxlength: 'La contraseña no puede superar {requiredLength} caracteres'
+    },
+    name: {
+      required: 'El nombre es obligatorio',
+      minlength: 'El nombre debe tener al menos {requiredLength} caracteres',
+      maxlength: 'El nombre no puede superar {requiredLength} caracteres'
+    },
+    lastName: {
+      required: 'El apellido es obligatorio',
+      minlength: 'El apellido debe tener al menos {requiredLength} caracteres',
+      maxlength: 'El apellido no puede superar {requiredLength} caracteres'
+    },
+    nickname: {
+      required: 'El nickname es obligatorio',
+      minlength: 'El nickname debe tener al menos {requiredLength} caracteres',
+      maxlength: 'El nickname no puede superar {requiredLength} caracteres',
+      pattern: 'El nickname solo puede contener letras, números y guion bajo'
+    },
+    email: {
+      required: 'El email es obligatorio.',
+      email: 'Debe ser un email valido.',
+      maxlength: 'El email no debe superar los {requiredLength} caracteres.',
+      pattern: 'El email contiene caracteres invalidos.'
+    }
+  };
 
   constructor(public router:Router){}
 
