@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div id="buttonContainer">
-                <button type="button" [disabled]="
+                <button type="button" [disabled]="isSubmitting || 
                     !registerForm.get('username')?.valid
                     || !registerForm.get('email')?.valid
                     || !registerForm.get('password')?.valid"
@@ -55,7 +55,13 @@
                 </div>
             </div>
             <div id="buttonContainer">
-                <button type="submit" [disabled]="!registerForm.valid">Register</button>
+                <button type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Registrando...' : 'Register' }}</button>
+                @if (isSubmitting) {
+                    <span class="spinner" aria-hidden="true"></span>
+                }
+                @if (serverError) {
+                    <p class="server-error">{{ serverError }}</p>
+                }
                 <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
             </div>
         }
