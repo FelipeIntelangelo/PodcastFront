@@ -6,9 +6,37 @@
             <a href=""><li>Podcasts</li></a>
             <a href=""><li>About Us</li></a>
             <a href=""><li>Contact</li></a> 
+            <a routerLink="/profile"><li>Profile</li></a>
         </ul>
     </div>
     <div id="headersButton">
-        <button id="headerSignIn" routerLink="auth/login">Sign Up</button>
+        <div class="search-wrapper">
+            <div class="search-container">
+                <input type="search" class="search-input" placeholder="Search Podcasts or Users" aria-label="Search podcasts"
+                    (focus)="onSearchFocus()"
+                    (input)="onSearchInput($event)"
+                    (blur)="onSearchBlur()">
+                <button class="search-button" routerLink="/search" aria-label="Search">
+                    <span class="search-icon"></span>
+                </button>
+            </div>
+            <div class="search-dropdown" [class.show]="showDropdown && searchResults.length > 0">
+                <div class="search-results">
+                    @for (result of searchResults; track result.id) {
+                        <div
+                            class="search-result-item"
+                            (click)="selectResult(result)">
+                            <div class="result-title">{{ result.nickname }}</div>
+                            @if (result.bio && result.bio.length > 0) {
+                                <div class="result-subtitle">
+                                    {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <button id="headerSignIn" routerLink="auth/login">Sign In</button>
     </div>
 </header>
