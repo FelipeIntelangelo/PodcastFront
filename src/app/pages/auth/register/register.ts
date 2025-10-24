@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, RouterLink } from "@angular/router";
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { FormError } from '../../../components/shared/form-error/form-error';
-import { ClientService } from '../../../services/client/client-service';
+import { UserService } from '../../../services/client/user-service';
 import { UserRegisterDTO } from '../../../models/user/userRegister/user-register-dto';
 
 @Component({
@@ -55,7 +55,7 @@ export class Register implements OnInit {
     }
   };
 
-  constructor(public router: Router, public clientService: ClientService) {}
+  constructor(public router: Router, public userService: UserService) {}
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -138,7 +138,7 @@ export class Register implements OnInit {
     this.isSubmitting = true;
     this.serverError = null;
 
-    this.clientService.postUser(payload).subscribe({
+    this.userService.postUser(payload).subscribe({
       next: (response) => {
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, 1000 - elapsed);

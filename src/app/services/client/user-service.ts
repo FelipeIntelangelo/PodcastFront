@@ -6,7 +6,7 @@ import { Observable, catchError, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ClientService {
+export class UserService {
 
   private readonly API_URL = "/api/users";
 
