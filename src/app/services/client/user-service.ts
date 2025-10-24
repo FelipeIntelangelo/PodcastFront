@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { UserRegisterDTO } from '../../models/user/userRegister/user-register-dto';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
+import { User } from '../../models/user/user';
+import { UserLoginDTO } from '../../models/user/userLogin/user-login-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,22 @@ import { Observable, catchError, throwError } from 'rxjs';
 export class UserService {
 
   private readonly API_URL = "/api/users";
+  private readonly AUTH_API_URL = "/api/auth";
 
   constructor(private http: HttpClient) {}
   
+  getCurrentUserProfile(): Observable<User> {
+    return this.http.get<User>(`${this.API_URL}/myProfile`).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  login(credentials: UserLoginDTO): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(`${this.AUTH_API_URL}/login`, credentials).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // If your backend returns plain text (e.g. "Usuario registrado correctamente")
   // use responseType: 'text' so HttpClient doesn't try to parse JSON.
   // Preferably the backend should return JSON with Content-Type: application/json.
@@ -36,8 +51,7 @@ export class UserService {
       );
   }
 
-
-  //Este manejador de errores se utilizara en todos los metodos http de user
+  // Gpt hizo este handle error para todos los errores que ocurran en los metodos http del service de user, quizas podramos implementar un handler singleton o generico como hicimos en la api
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Un error ha ocurrido';
     if (error.error instanceof ErrorEvent) {
