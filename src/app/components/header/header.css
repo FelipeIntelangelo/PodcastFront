@@ -27,10 +27,100 @@ a{
     color: white;
 }
 
+#headersButton{
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.search-wrapper{
+    position: relative;
+}
+
 #headersButton button{
     padding: 0.6rem 1.2rem;
     font-size: 16px;
     font-weight: bold;
+}
+
+.search-container{
+    display: flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    padding: 0.3rem 0.6rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.search-container:hover{
+    background-color: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.search-container:focus-within{
+    background-color: rgba(255, 255, 255, 0.2);
+    border-color: white;
+}
+
+.search-input{
+    background: transparent;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 0.3rem 0.5rem;
+    font-size: 14px;
+    width: 200px;
+}
+
+.search-input::placeholder{
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-button{
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    min-width: 30px;
+}
+
+.search-button:hover{
+    transform: scale(1.15);
+}
+
+.search-icon{
+    position: relative;
+    width: 14px;
+    height: 14px;
+    border: 2px solid white;
+    border-radius: 50%;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.search-icon::after{
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 8px;
+    background-color: white;
+    bottom: -7px;
+    right: -5px;
+    transform: rotate(-45deg);
+    border-radius: 2px;
+}
+
+.search-button:hover .search-icon{
+    border-color: #ffffff;
+}
+
+.search-button:hover .search-icon::after{
+    background-color: #ffffff;
 }
 
 #headerSignIn{
@@ -42,4 +132,78 @@ a{
 #headerSignIn:hover{
     transform: scale(1.1);
     transition: 0.5s;
+}
+/* Dropdown styles */
+.search-dropdown{
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background-color: rgba(20, 20, 20, 0.98);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.5rem;
+    max-height: 220px; /* capped height so it becomes scrollable */
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    display: none;
+    overscroll-behavior: contain; /* avoid scroll chaining */
+}
+
+.search-dropdown.show{
+    display: block;
+}
+
+.search-results{
+    padding: 0.5rem 0;
+}
+
+.search-result-item{
+    padding: 0.75rem 1rem;
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item:last-child{
+    border-bottom: none;
+}
+
+.search-result-item:hover{
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.search-result-item .result-title{
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.search-result-item .result-subtitle{
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.search-no-results{
+    padding: 1rem;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.search-dropdown::-webkit-scrollbar{
+    width: 8px;
+}
+
+.search-dropdown::-webkit-scrollbar-track{
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb{
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 4px;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb:hover{
+    background: rgba(255, 255, 255, 0.5);
 }

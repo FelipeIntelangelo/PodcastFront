@@ -132,13 +132,11 @@ export class Register implements OnInit {
         password: this.password?.value
       }
     };
-
-    // Ensure spinner visible at least 1 second
     const start = Date.now();
     this.isSubmitting = true;
     this.errorMessage = null;
 
-    this.userService.postUser(payload).subscribe({
+    this.userService.registerUser(payload).subscribe({
       next: (response) => {
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, 1000 - elapsed);
@@ -161,12 +159,10 @@ export class Register implements OnInit {
   private formatError(err: any): string {
     if (!err) return 'Error al registrar el usuario.';
     if (typeof err === 'string') return err;
-    // If backend returned an object in 'error' property (HttpErrorResponse), use that
     const payload = err.error ?? err;
     if (typeof payload === 'string') return payload;
     if (payload && typeof payload === 'object') {
       if (payload.message) return payload.message;
-      // some APIs return { errors: [...] }
       if (payload.errors && Array.isArray(payload.errors) && payload.errors.length) return String(payload.errors[0]);
     }
     if (err.message) return err.message;

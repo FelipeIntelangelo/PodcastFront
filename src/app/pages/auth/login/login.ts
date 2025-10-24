@@ -42,7 +42,6 @@ export class Login implements OnInit {
           console.error('Login error', err);
         }
       });
-
     } else {
       this.errorMessage = 'Please enter both username and password.';
     }
