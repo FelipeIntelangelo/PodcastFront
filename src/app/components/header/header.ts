@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { UserService } from '../../services/client/user-service';
 import { UserSearchDTO } from '../../models/user/userSearchDTO';
 
@@ -15,11 +15,9 @@ export class Header implements OnInit{
   searchResults: UserSearchDTO[] = []; // Resultados filtrados a mostrar
   error: string | null = null;
 
-  constructor(private userService:UserService){}
+  constructor(private userService:UserService, private router: Router){}
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   onSearchFocus() {
     this.showDropdown = true;
@@ -32,7 +30,7 @@ export class Header implements OnInit{
     if (this.searchQuery.length > 0) {
       this.showDropdown = true;
 
-      // Trae los usuarios y filtra en el cliente por nickname
+      // Trae los usuarios y filtra el cliente por nickname
       this.userService.getUsersDTO().subscribe({
         next: (users) => {
           const queryClean = this.searchQuery.trim().toLowerCase();
@@ -59,9 +57,19 @@ export class Header implements OnInit{
   }
 
   selectResult(result: any) {
-    // Aca tengo que mandarlo a la pagina con un getUserByID,
-    // Pasandole el ID por rutas parametricas
-    console.log('Selected:', result);
+    // navegar al perfil publico(DTO) del usuario usando rutas paramétricas
+    if (result && result.id) {
+      this.router.navigate(['/profile', result.id]);
+    }
     this.showDropdown = false;
   }
+
+  onSearchButton(){
+    const term = this.searchQuery.trim();
+    if (term) {
+      this.showDropdown = false;
+      this.router.navigate(['/search', term]);
+    }
+  }
 }
+

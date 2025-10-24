@@ -16,7 +16,7 @@
                     (focus)="onSearchFocus()"
                     (input)="onSearchInput($event)"
                     (blur)="onSearchBlur()">
-                <button class="search-button" routerLink="/search" aria-label="Search">
+                <button class="search-button" (click)="onSearchButton()" aria-label="Search">
                     <span class="search-icon"></span>
                 </button>
             </div>

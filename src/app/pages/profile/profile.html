@@ -11,25 +11,37 @@
     <div class="user-profile">
       <div class="profile-header">
         <img [src]="user.profilePicture || 'assets/default-profile.png'" alt="Profile Picture" class="profile-picture">
-        <h2>{{ user.name }} {{ user.lastName }} ({{ user.nickname }})</h2>
+        @if (isFullUser(user)) {
+          <h2>{{ user.name }} {{ user.lastName }} ({{ user.nickname }})</h2>
+        } @else {
+          <h2>{{ user.nickname }}</h2>
+        }
       </div>
 
       <div class="profile-details">
-        <p><strong>Username:</strong> {{ user.credential.username }}</p>
-        <p><strong>Email:</strong> {{ user.credential.email }}</p>
-        <p><strong>Bio:</strong> {{ user.bio }}</p>
-        <p><strong>Member Since:</strong> {{ user.credential.createdAt | date:'mediumDate' }}</p>
-        <p><strong>Roles:</strong> {{ user.credential.roles.join(', ') }}</p>
+        @if (isFullUser(user)) {
+          <p><strong>Username:</strong> {{ user.credential.username }}</p>
+          <p><strong>Email:</strong> {{ user.credential.email }}</p>
+          <p><strong>Bio:</strong> {{ user.bio }}</p>
+          <p><strong>Member Since:</strong> {{ user.credential.createdAt | date:'mediumDate' }}</p>
+          <p><strong>Roles:</strong> {{ user.credential.roles.join(', ') }}</p>
+        } @else {
+          @if (user.bio) {
+            <p><strong>Bio:</strong> {{ user.bio }}</p>
+          }
+        }
 
-        <!-- Optional: Display counts for lists if they exist -->
-        @if (user.podcasts?.length) {
-          <p><strong>Podcasts:</strong> {{ user.podcasts?.length }}</p>
-        }
-        @if (user.favorites?.length) {
-          <p><strong>Favorites:</strong> {{ user.favorites?.length }}</p>
-        }
-        @if (user.ratings?.length) {
-          <p><strong>Ratings:</strong> {{ user.ratings?.length }}</p>
+        <!-- Optional: Display counts for lists if they exist (only for full User) -->
+        @if (isFullUser(user)) {
+          @if (user.podcasts?.length) {
+            <p><strong>Podcasts:</strong> {{ user.podcasts?.length }}</p>
+          }
+          @if (user.favorites?.length) {
+            <p><strong>Favorites:</strong> {{ user.favorites?.length }}</p>
+          }
+          @if (user.ratings?.length) {
+            <p><strong>Ratings:</strong> {{ user.ratings?.length }}</p>
+          }
         }
       </div>
     </div>

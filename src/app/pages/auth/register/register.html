@@ -27,7 +27,7 @@
                     !registerForm.get('username')?.valid
                     || !registerForm.get('email')?.valid
                     || !registerForm.get('password')?.valid"
-                     (click)="nextStep()">Next Step</button>
+                    (click)="nextStep()">Next Step</button>
                 <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
             </div>
         } @else if (currentStep === 2) {
