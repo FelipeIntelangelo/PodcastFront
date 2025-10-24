@@ -16,7 +16,7 @@ export class Register implements OnInit {
   registerForm!: FormGroup;
   currentStep = 1;
   isSubmitting = false;
-  serverError: string | null = null;
+  errorMessage: string | null = null;
 
   // custom error messages for form-error component
   customErrors: { [controlName: string]: { [key: string]: string } } = {
@@ -136,7 +136,7 @@ export class Register implements OnInit {
     // Ensure spinner visible at least 1 second
     const start = Date.now();
     this.isSubmitting = true;
-    this.serverError = null;
+    this.errorMessage = null;
 
     this.userService.postUser(payload).subscribe({
       next: (response) => {
@@ -151,7 +151,7 @@ export class Register implements OnInit {
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, 1000 - elapsed);
         setTimeout(() => {
-          this.serverError = this.formatError(err);
+          this.errorMessage = this.formatError(err);
           this.isSubmitting = false;
         }, remaining);
       }

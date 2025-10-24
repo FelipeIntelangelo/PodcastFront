@@ -59,8 +59,8 @@
                 @if (isSubmitting) {
                     <span class="spinner" aria-hidden="true"></span>
                 }
-                @if (serverError) {
-                    <p class="server-error">{{ serverError }}</p>
+                @if (errorMessage) {
+                    <p class="server-error">{{ errorMessage }}</p>
                 }
                 <p>Have an account?<a routerLink="/auth/login" id="loginRoute"> Sign in</a></p>
             </div>
