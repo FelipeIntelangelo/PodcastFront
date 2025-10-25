@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import Swal from 'sweetalert2';
+import { AlertService } from '../../services/ui/alert.service';
 
 @Component({
   selector: 'app-home',
@@ -7,15 +8,12 @@ import Swal from 'sweetalert2';
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
+
 export class Home {
-  SuccessAlert(){
-    Swal.fire({
-      title: "Registration Successful!",
-      icon: "success",
-      draggable: true,
-      showConfirmButton: false,
-      theme: 'dark',
-      timer: 1500
-    });
+  constructor(private alertService : AlertService){}
+
+  alertaTrue(){
+    this.alertService.warningAlert();
   }
+
 }

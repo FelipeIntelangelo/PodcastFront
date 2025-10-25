@@ -23,10 +23,6 @@ a{
     color: black;
 }
 
-#divLogo a p{
-    color: white;
-}
-
 #headersButton{
     display: flex;
     align-items: center;
@@ -41,6 +37,11 @@ a{
     padding: 0.6rem 1.2rem;
     font-size: 16px;
     font-weight: bold;
+}
+
+#logoNav{
+    font-size: 30px;
+    color: #b565ff;
 }
 
 .search-container{

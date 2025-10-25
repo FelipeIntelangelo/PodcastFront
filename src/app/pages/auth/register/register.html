@@ -26,7 +26,7 @@
                 </div>
             </div>
             <div id="buttonContainer">
-                <button type="button" [disabled]="isSubmitting || 
+                <button type="button" id="buttonNext" [disabled]="isSubmitting || 
                     !registerForm.get('username')?.valid
                     || !registerForm.get('email')?.valid
                     || !registerForm.get('password')?.valid"
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <div id="buttonContainer">
-                <button type="submit" [disabled]="isSubmitting">{{ isSubmitting ? 'Registrando...' : 'Register' }}</button>
+                <button type="submit"  id="buttonSubmit" [disabled]="isSubmitting">{{ isSubmitting ? 'Registrando...' : 'Register' }}</button>
                 @if (isSubmitting) {
                     <span class="spinner" aria-hidden="true"></span>
                 }

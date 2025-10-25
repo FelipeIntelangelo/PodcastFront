@@ -63,6 +63,32 @@ button{
   margin-bottom: 2rem;
 }
 
+#buttonNext{
+  background-color: #892be246;
+  border: 3px solid #8a2be2;
+  background: linear-gradient(to right, #8a2be2) left/0% 100% no-repeat;
+  transition: background-size 1s ease, color 1s ease;
+}
+
+/* Hover: el gradiente se expande a todo el botón */
+#buttonNext:hover {
+  background-size: 50% 100%;
+  color: white; /* opcional: cambia el color del texto si querés */
+}
+
+#buttonSubmit{
+  background-color: #892be246;
+  border: 3px solid #8a2be2;
+  background: linear-gradient(to right, #8a2be2) left/50% 100% no-repeat;
+  transition: background-size 1s ease, color 1s ease;
+}
+
+/* Hover: el gradiente se expande a todo el botón */
+#buttonSubmit:hover {
+  background-size: 100% 200%;
+  color: white; /* opcional: cambia el color del texto si querés */
+}
+
 #loginRoute{
   text-decoration: none;
   font-weight: 600;

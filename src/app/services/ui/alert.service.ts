@@ -1,57 +1,63 @@
 import { Injectable } from '@angular/core';
-import Swal, { SweetAlertOptions, SweetAlertResult } from 'sweetalert2';
+import Swal from 'sweetalert2';
 
 @Injectable({
     providedIn: 'root' 
 })
+
 export class AlertService {
-// Opciones base reutilizables
-private baseOptions: SweetAlertOptions = {
-    showConfirmButton: false,
-    timer: 1500
-};
 
-// Alerts básicos
-success(title = 'Operación exitosa', options?: SweetAlertOptions) {
-    const merged = { ...this.baseOptions, icon: 'success', title, ...(options || {}) } as unknown as SweetAlertOptions;
-    return Swal.fire(merged);
-}
+    successAlert(){
+        Swal.fire({
+            title: "Registration Successful!",
+            icon: "success",
+            draggable: true,
+            showConfirmButton: false,
+            theme: 'dark',
+            timer: 1500
+        });
+    }
 
-error(title = 'Ocurrió un error', options?: SweetAlertOptions) {
-    const merged = { ...this.baseOptions, icon: 'error', title, ...(options || {}) } as unknown as SweetAlertOptions;
-    return Swal.fire(merged);
-}
+    errorAlert(){
+        Swal.fire({
+            title: "Registration Failed!",
+            icon: "error",
+            draggable: true,
+            showConfirmButton: false,
+            theme: 'dark',
+            timer: 1500
+        });
+    }
 
-info(title = 'Información', options?: SweetAlertOptions) {
-    const merged = { ...this.baseOptions, icon: 'info', title, ...(options || {}) } as unknown as SweetAlertOptions;
-    return Swal.fire(merged);
-}
+    questionAlert(){
+        Swal.fire({
+            title: "The Internet?",
+            text: "That thing is still around?",
+            icon: "question",
+            showConfirmButton: false,
+            theme: 'dark',
+            timer: 1500
+        });
+    }
 
-// Confirmación con botones
-confirm(options?: SweetAlertOptions): Promise<SweetAlertResult<any>> {
-    const defaults: SweetAlertOptions = {
-        icon: 'question',
-        title: '¿Estás seguro?',
-        showConfirmButton: true,
-        showCancelButton: true,
-        confirmButtonText: 'Aceptar',
-        cancelButtonText: 'Cancelar'
-    };
-    const merged = { ...defaults, ...(options || {}) } as unknown as SweetAlertOptions;
-    return Swal.fire(merged);
-}
-
-// Variante toast (arriba a la derecha)
-toastSuccess(title = 'Listo', options?: SweetAlertOptions) {
-    const defaults: SweetAlertOptions = {
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 2000,
-        icon: 'success',
-        title
-    };
-    const merged = { ...defaults, ...(options || {}) } as unknown as SweetAlertOptions;
-    return Swal.fire(merged);
-}
+    warningAlert(){
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            theme: 'dark',
+            showCancelButton: true,
+            confirmButtonColor: "#3d6e37ff",
+            cancelButtonColor: "rgba(187, 49, 49, 1)",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                    Swal.fire({
+                    title: "Deleted!",
+                    text: "Your file has been deleted.",
+                    icon: "success"
+                });
+            }
+        });
+    }
 }
