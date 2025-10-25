@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { UserService } from '../../services/client/user-service';
 import { UserSearchDTO } from '../../models/user/userSearchDTO';
@@ -18,7 +18,11 @@ export class Search implements OnInit, OnDestroy {
   filteredUsers: UserSearchDTO[] = [];
   private sub = new Subscription();
 
-  constructor(private route: ActivatedRoute, private userService: UserService) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private userService: UserService,
+    private router: Router
+  ) {}
 
   ngOnInit(): void {
     this.sub.add(
@@ -54,5 +58,9 @@ export class Search implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
+  }
+
+  navigateToProfile(userId: number): void {
+    this.router.navigate(['/profile', userId]);
   }
 }

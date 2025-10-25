@@ -22,11 +22,11 @@ export class UserService {
       catchError(this.handleError))
   }
 
-    getUserById(id: number): Observable<User | UserSearchDTO> {
-      return this.http.get<User | UserSearchDTO>(`${this.API_URL}/${id}`).pipe(
-      catchError(this.handleError)
-    );
-  }
+  getUserById(id: number): Observable<User | UserSearchDTO> {
+    return this.http.get<User | UserSearchDTO>(`${this.API_URL}/${id}`).pipe(
+    catchError(this.handleError)
+  );
+}
 
   /* -------------------- Login, Register & Profile LOGIC -------------------- */
   

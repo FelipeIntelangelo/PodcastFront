@@ -2,16 +2,21 @@ import { HttpInterceptorFn } from '@angular/common/http';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const token = localStorage.getItem('jwt_token');
-  
-  // Exclude login and register endpoints from adding the Authorization header
-  const excludedUrls = ['/api/auth/login', '/api/users/register'];
-  if (excludedUrls.some(url => req.url.includes(url))) {
+
+  // Endpoints PÚBLICOS (no adjuntar Authorization)
+  const isLogin = req.method === 'POST' && req.url.endsWith('/api/auth/login');
+  const isRegister = req.method === 'POST' && req.url.endsWith('/api/users/register');
+  // Listado público de usuarios (UserSearchDTO): GET /api/users y GET /api/users?... solo lista
+  const isPublicUsersList =
+    req.method === 'GET' && (req.url === '/api/users' || req.url.startsWith('/api/users?'));
+
+  if (isLogin || isRegister || isPublicUsersList) {
     return next(req);
   }
 
   if (token) {
     const cloned = req.clone({
-      headers: req.headers.set('Authorization', `Bearer ${token}`)
+      headers: req.headers.set('Authorization', `Bearer ${token}`),
     });
     return next(cloned);
   }
