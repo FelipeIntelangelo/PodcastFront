@@ -60,4 +60,16 @@ export class AlertService {
             }
         });
     }
+
+    // Toast específico para sesión expirada
+    sessionExpiredAlert(){
+        Swal.fire({
+            title: "Tu sesión expiró",
+            icon: "warning",
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
 }

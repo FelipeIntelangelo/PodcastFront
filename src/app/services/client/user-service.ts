@@ -15,8 +15,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  /* getusers */
-
+  /* -------------------- Login, Register & Profile LOGIC -------------------- */
   getUsersDTO(){
     return this.http.get<UserSearchDTO[]>(this.API_URL).pipe(
       catchError(this.handleError))
@@ -27,8 +26,6 @@ export class UserService {
     catchError(this.handleError)
   );
 }
-
-  /* -------------------- Login, Register & Profile LOGIC -------------------- */
   
   login(credentials: UserLoginDTO): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.AUTH_API_URL}/login`, credentials).pipe(

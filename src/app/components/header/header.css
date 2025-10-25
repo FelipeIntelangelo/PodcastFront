@@ -134,6 +134,9 @@ a{
     transform: scale(1.1);
     transition: 0.5s;
 }
+
+/* Dev-only button to force session expiration */
+/* (removed dev-only styles) */
 /* Dropdown styles */
 .search-dropdown{
     position: absolute;
