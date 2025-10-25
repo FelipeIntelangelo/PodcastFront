@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormError } from '../../../components/shared/form-error/form-error';
 import { UserService } from '../../../services/client/user-service';
 import { UserRegisterDTO } from '../../../models/user/userRegister/user-register-dto';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-register',
@@ -168,6 +169,4 @@ export class Register implements OnInit {
     if (err.message) return err.message;
     return 'Error al registrar el usuario.';
   }
-
 }
-

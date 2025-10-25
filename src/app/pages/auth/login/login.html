@@ -1,28 +1,22 @@
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
     <div class="form-container">
         <h2>Sign In</h2>
-        <fieldset class="fieldsetGroup">
+        <fieldset class="fieldsetGroup fieldsetGroupError">
             <label for="usernameIn">Username:</label>
-            <input type="text" id="usernameIn" placeholder="Username" formControlName="username">
-            @if (loginForm.get('username')?.invalid && loginForm.get('username')?.touched) {
-                <div class="error-message">
-                    Username is required.
-                </div>
-            }
+            <input type="text" id="usernameIn" placeholder="Username" formControlName="username"
+            [class.error-input]="loginForm.get('username')?.invalid && loginForm.get('username')?.touched">
+            <app-form-error controlName="username" [customMessages]="customErrors['username']" />
         </fieldset>
-        <fieldset class="fieldsetGroup">
+        <fieldset class="fieldsetGroup fieldsetGroupError">
             <label for="passwordIn">Password:</label>
-            <input type="password" id="passwordIn" placeholder="Password" formControlName="password">
-            @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                <div class="error-message">
-                    Password is required.
-                </div>
-            }
+            <input type="password" id="passwordIn" placeholder="Password" formControlName="password"
+            [class.error-input]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched">
+            <app-form-error controlName="password" [customMessages]="customErrors['password']" />
         </fieldset>
         <div id="buttonContainer">
             <button type="submit" [disabled]="loginForm.invalid">Login</button>
             @if (errorMessage) {
-                <p class="error-message">{{ errorMessage }}</p>
+                <p class="error-message">{{ errorMessage }}<span id="error-span">{{errorCheck}}</span></p>
             }
             <p>Don't have an account?<a routerLink="/auth/register" id="registerRoute"> Sign up </a></p>
         </div>

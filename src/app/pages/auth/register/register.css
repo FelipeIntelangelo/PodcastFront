@@ -89,9 +89,18 @@ button{
   animation: spin 0.8s linear infinite;
 }
 
+.buttonContainer{
+  align-items: center;
+}
+
 .server-error{
   color: #ffb3b3;
   margin: 0.5rem 0;
+}
+
+.error-input{
+  border: 2px solid rgb(255, 82, 82);
+  transition: border-color 0.3s ease;
 }
 
 @keyframes spin{

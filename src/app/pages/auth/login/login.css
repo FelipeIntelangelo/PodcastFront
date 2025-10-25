@@ -69,3 +69,20 @@ button{
   font-weight: 600;
   color: rgb(168, 92, 205);
 }
+
+.error-input {
+  border: 2px solid rgb(255, 82, 82);
+  transition: border-color 0.3s ease;
+}
+
+.error-message{
+  color: rgba(255, 90, 90, 0.623);
+  margin-bottom: 1rem;
+  font-size: 16px;
+}
+
+#error-span{
+  color: rgba(255, 90, 90, 0.623);
+  font-size: 13px;
+  margin-left: 0.3rem;
+}
