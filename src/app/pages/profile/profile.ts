@@ -17,11 +17,13 @@ export class Profile implements OnInit, OnDestroy {
   user: User | UserSearchDTO | null = null;
   isLoading: boolean = true;
   error: string | null = null;
+  isAdmin: boolean = false;
   private sub = new Subscription();
 
   constructor(private userService: UserService, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
+    this.checkAdminRole();
     // Suscripción única con responsabilidades separadas dentro del mismo callback
     this.sub.add(
       this.route.paramMap.subscribe((params) => {
@@ -48,6 +50,19 @@ export class Profile implements OnInit, OnDestroy {
         });
       })
     );
+  }
+
+  checkAdminRole(): void {
+    this.userService.getCurrentUserProfile().subscribe({
+      next: (user) => {
+        if (this.isFullUser(user) && user.credential.roles.includes('ADMIN')) {
+          this.isAdmin = true;
+        }
+      },
+      error: () => {
+        this.isAdmin = false;
+      }
+    });
   }
 
   ngOnDestroy(): void {

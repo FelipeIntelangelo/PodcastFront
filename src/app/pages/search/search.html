@@ -1,48 +1,50 @@
 <div class="search-page">
-    <div class="search-header">
-    <h1>Resultados de búsqueda</h1>
-    @if (term) {
-        <p class="search-term">Buscando: <strong>{{ term }}</strong></p>
-    }
-    </div>
-
-    @if (isLoading) {
-    <div class="loading">
-        <div class="spinner"></div>
-        <p>Cargando resultados...</p>
-    </div>
-    }
-
-    @if (error) {
-    <div class="error-message">
-        <p>{{ error }}</p>
-    </div>
-    }
-
-    @if (!isLoading && !error && filteredUsers.length === 0 && term) {
-    <div class="no-results">
-        <p>No se encontraron usuarios que coincidan con "{{ term }}"</p>
-    </div>
-    }
-
-    @if (!isLoading && !error && filteredUsers.length > 0) {
-    <div class="results-container">
-        <p class="results-count">{{ filteredUsers.length }} usuario(s) encontrado(s)</p>
-        <div class="users-grid">
-        @for (user of filteredUsers; track user.id) {
-            <div class="user-card" (click)="navigateToProfile(user.id)">
-            <div class="user-image">
-                <img [src]="user.profilePicture || 'assets/default-profile.png'" [alt]="user.nickname">
-            </div>
-            <div class="user-info">
-                <h3 class="user-nickname">{{ user.nickname }}</h3>
-                    @if (user.bio) {
-                <p class="user-bio">{{ user.bio.length > 80 ? (user.bio.slice(0, 80) + '…') : user.bio }}</p>
-                }
-            </div>
-            </div>
+    <div class="search-content">
+        <div class="search-header">
+        <h1>Resultados de búsqueda</h1>
+        @if (term) {
+            <p class="search-term">Buscando: <strong>{{ term }}</strong></p>
         }
         </div>
+
+        @if (isLoading) {
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>Cargando resultados...</p>
+        </div>
+        }
+
+        @if (error) {
+        <div class="error-message">
+            <p>{{ error }}</p>
+        </div>
+        }
+
+        @if (!isLoading && !error && filteredUsers.length === 0 && term) {
+        <div class="no-results">
+            <p>No se encontraron usuarios que coincidan con "{{ term }}"</p>
+        </div>
+        }
+
+        @if (!isLoading && !error && filteredUsers.length > 0) {
+        <div class="results-container">
+            <p class="results-count">{{ filteredUsers.length }} usuario(s) encontrado(s)</p>
+            <div class="users-grid">
+            @for (user of filteredUsers; track user.id) {
+                <div class="user-card" (click)="navigateToProfile(user.id)">
+                <div class="user-image">
+                    <img [src]="user.profilePicture || 'assets/default-pfp.png'" [alt]="user.nickname">
+                </div>
+                <div class="user-info">
+                    <h3 class="user-nickname">{{ user.nickname }}</h3>
+                        @if (user.bio) {
+                    <p class="user-bio">{{ user.bio.length > 80 ? (user.bio.slice(0, 80) + '…') : user.bio }}</p>
+                    }
+                </div>
+                </div>
+            }
+            </div>
+        </div>
+        }
     </div>
-    }
-    </div>
+</div>

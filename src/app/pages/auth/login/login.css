@@ -37,9 +37,14 @@ input {
   width: 100%;
   padding: 1rem;
   margin: 0.4rem 0;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 0.7rem;
   outline: none;
+  transition: box-shadow 0.3s ease;
+}
+
+input:focus {
+  box-shadow: 0 0 0 5px #9D65D7;
 }
 
 fieldset{
@@ -53,7 +58,7 @@ button{
   padding: 0.4rem;
   border: none;
   border-radius: 1rem;
-  background-color: rgb(146, 48, 195);
+  background-color: #9D65D7;
   color: white;
   font-size: 15px;
   margin-bottom: 0.5rem;
@@ -67,12 +72,11 @@ button{
 #registerRoute{
   text-decoration: none;
   font-weight: 600;
-  color: rgb(168, 92, 205);
+  color: #9D65D7;
 }
 
 .error-input {
-  border: 2px solid rgb(255, 82, 82);
-  transition: border-color 0.3s ease;
+  box-shadow: 0 0 0 5px rgb(255, 82, 82);
 }
 
 .error-message{

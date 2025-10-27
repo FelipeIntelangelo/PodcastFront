@@ -1,8 +1,13 @@
 .search-page {
+  padding: 120px 2rem 2rem 2rem;
+  min-height: calc(100vh - 200px);
+  background-color: #131313;
+  color: white;
+}
+
+.search-content {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
-  min-height: calc(100vh - 200px);
 }
 
 .search-header {
@@ -11,18 +16,18 @@
 }
 
 .search-header h1 {
-  color: #111;
+  color: white;
   font-size: 2rem;
   margin-bottom: 0.5rem;
 }
 
 .search-term {
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 1.1rem;
 }
 
 .search-term strong {
-  color: #111;
+  color: white;
 }
 
 /* Loading state */
@@ -32,14 +37,14 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  color: #222;
+  color: #ccc;
 }
 
 .spinner {
   width: 50px;
   height: 50px;
-  border: 4px solid rgba(0, 0, 0, 0.1);
-  border-top: 4px solid #111;
+  border: 4px solid rgba(255, 255, 255, 0.1);
+  border-top: 4px solid #9D65D7;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -53,19 +58,19 @@
 /* Error and no results */
 .error-message,
 .no-results {
-  background-color: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.5rem;
   padding: 2rem;
   text-align: center;
-  color: #111;
+  color: white;
   margin: 2rem 0;
 }
 
 .error-message {
   border-color: rgba(255, 100, 100, 0.5);
   background-color: rgba(255, 100, 100, 0.08);
-  color: #8b0000;
+  color: #ff8c8c;
 }
 
 /* Results */
@@ -74,7 +79,7 @@
 }
 
 .results-count {
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.7);
   margin-bottom: 1.5rem;
   font-size: 0.95rem;
 }
@@ -86,8 +91,8 @@
 }
 
 .user-card {
-  background-color: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.12);
+  background-color: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 0.75rem;
   padding: 1.5rem;
   cursor: pointer;
@@ -98,8 +103,8 @@
 }
 
 .user-card:hover {
-  background-color: #f7f8fa;
-  border-color: rgba(0, 0, 0, 0.2);
+  background-color: #2a2a2a;
+  border-color: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
@@ -113,7 +118,7 @@
   height: 60px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(0, 0, 0, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-info {
@@ -122,7 +127,7 @@
 }
 
 .user-nickname {
-  color: #111;
+  color: white;
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
@@ -132,7 +137,7 @@
 }
 
 .user-bio {
-  color: rgba(0, 0, 0, 0.7);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   margin: 0;
   line-height: 1.4;

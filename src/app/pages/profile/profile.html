@@ -10,7 +10,7 @@
   @if (user) {
     <div class="user-profile">
       <div class="profile-header">
-        <img [src]="user.profilePicture || 'assets/default-profile.png'" alt="Profile Picture" class="profile-picture">
+        <img [src]="user.profilePicture || 'assets/default-pfp.png'" alt="Profile Picture" class="profile-picture">
         @if (isFullUser(user)) {
           <h2>{{ user.name }} {{ user.lastName }} ({{ user.nickname }})</h2>
         } @else {
@@ -23,8 +23,10 @@
           <p><strong>Username:</strong> {{ user.credential.username }}</p>
           <p><strong>Email:</strong> {{ user.credential.email }}</p>
           <p><strong>Bio:</strong> {{ user.bio }}</p>
-          <p><strong>Member Since:</strong> {{ user.credential.createdAt | date:'mediumDate' }}</p>
-          <p><strong>Roles:</strong> {{ user.credential.roles.join(', ') }}</p>
+          @if (isAdmin) {
+            <p><strong>Member Since:</strong> {{ user.credential.createdAt | date:'mediumDate' }}</p>
+            <p><strong>Roles:</strong> {{ user.credential.roles.join(', ') }}</p>
+          }
         } @else {
           @if (user.bio) {
             <p><strong>Bio:</strong> {{ user.bio }}</p>

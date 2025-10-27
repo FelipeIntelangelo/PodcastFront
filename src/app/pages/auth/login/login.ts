@@ -5,6 +5,7 @@ import { UserService } from '../../../services/client/user-service';
 import { UserLoginDTO } from '../../../models/user/userLogin/user-login-dto';
 import { CommonModule } from '@angular/common';
 import { FormError } from '../../../components/shared/form-error/form-error';
+import { AuthService } from '../../../services/auth/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -29,7 +30,8 @@ export class Login implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -46,6 +48,7 @@ export class Login implements OnInit {
         next: (response) => {
           console.log('Login successful', response);
           localStorage.setItem('jwt_token', response.token); // Store the token
+          this.authService.login(); // Notify AuthService
           this.router.navigate(['/']); // Navigate to home page
         },
         error: (err) => {

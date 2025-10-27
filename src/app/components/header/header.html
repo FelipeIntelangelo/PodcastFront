@@ -1,12 +1,10 @@
 <header>
-    <div id="divLogo"><a href=""><p id="logoNav">Wavelly</p></a></div>
+    <div id="divLogo"><a href=""><img src="assets/isotipo-light.png" alt="Wavelly Logo" id="logoNav"></a></div>
     <div>
         <ul>
-            <a href=""><li>Home</li></a>
             <a href=""><li>Podcasts</li></a>
             <a href=""><li>About Us</li></a>
             <a href=""><li>Contact</li></a> 
-            <a routerLink="/profile"><li>Profile</li></a>
         </ul>
     </div>
     <div id="headersButton">
@@ -37,6 +35,15 @@
                 </div>
             </div>
         </div>
-        <button id="headerSignIn" routerLink="auth/login">Sign In</button>
+        <div *ngIf="isLoggedIn && user" class="profile-section">
+            <div (click)="toggleProfileMenu()" class="profile-picture-container">
+                <img [src]="user?.profilePicture ? user.profilePicture : 'assets/default-pfp.png'" alt="User Profile" class="profile-picture" />
+            </div>
+            <div *ngIf="showProfileMenu" class="profile-menu">
+                <a routerLink="/profile" class="menu-item">My Profile</a>
+                <div (click)="logout()" class="menu-item logout-item">Logout</div>
+            </div>
+        </div>
+        <button *ngIf="!isLoggedIn" id="headerSignIn" routerLink="auth/login">Sign In</button>
     </div>
 </header>

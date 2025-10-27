@@ -26,11 +26,17 @@ aside ul li{
 }
 
 aside ul li a {
-    display: inline-block;            /* necesario para que transform funcione bien */
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     color: #ffffff;
     text-decoration: none;
     transition: transform 0.4s ease, color 0.4s ease;
     padding-left: 3rem;
+}
+
+aside ul li a i {
+    color: #9D65D7;
 }
 
 aside ul li a:hover{
@@ -79,21 +85,27 @@ h2{
 .ejampleImg{
     width: 250px;
     height: 150px;
-    background-color: antiquewhite;
+    background-color: #9D65D7;
     border-radius: 1rem;
 }
 
 .verMas{
-    background: linear-gradient(to right, #892be268, #8a2be2) left/0% 100% no-repeat;
-    transition: background-size 1s ease, color 1s ease;
-    border: 1px solid rgb(84, 0, 163);
+    background-color: #333;
+    color: white;
+    border: 1px solid #333;
     border-radius: 2rem;
     padding: 0rem 1rem;
-    color: white;
     font-size: 16px;
     height: 3.5rem;
+    transition: background-color 0.3s ease;
 }
 
 .verMas:hover{
-    background-size: 100% 200%;
+    background-color: #9D65D7;
+}
+
+.ver-mas-link {
+    font-size: 0.9rem;
+    color: #9D65D7;
+    text-decoration: none;
 }
