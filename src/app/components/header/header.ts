@@ -95,7 +95,9 @@ export class Header implements OnInit{
   }
 
   onSearchBlur() {
-    this.showDropdown = false;
+    setTimeout(() => {
+      this.showDropdown = false
+    }, 300);
   }
 
   selectResult(result: any) {
