@@ -1,0 +1,90 @@
+.edit-profile-container {
+    display: flex;
+    justify-content: center;
+    padding: 120px 20px 20px 20px;
+    background-color: #131313;
+    min-height: calc(100vh - 60px);
+    color: white;
+  }
+  
+  .edit-profile-form {
+    background-color: #1a1a1a;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    width: 100%;
+    max-width: 700px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .edit-profile-form h2 {
+    color: white;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+  
+  .form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #333;
+    color: white;
+  }
+  
+  .form-group input:focus, .form-group textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px #9D65D7;
+  }
+  
+  .form-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .form-actions button {
+    background-color: #9D65D7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .form-actions button:hover {
+    background-color: #7a4db2;
+  }
+  
+  .form-actions button[type="button"] {
+    background-color: #555;
+  }
+  
+  .form-actions button[type="button"]:hover {
+    background-color: #777;
+  }
+  
+  .loading-spinner, .error-message {
+    padding: 20px;
+    font-size: 1.2em;
+    color: #9D65D7;
+    text-align: center;
+  }
+  
+  .error-message {
+    color: #dc3545;
+  }

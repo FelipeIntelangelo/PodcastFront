@@ -46,6 +46,12 @@
           }
         }
       </div>
+      <div class="profile-actions">
+          @if (isFullUser(user)) {
+            <a routerLink="/profile/edit" class="edit-button">Edit Profile</a>
+            <a (click)="deleteAccount($event)" class="delete-account-link">Delete Account</a>
+          }
+      </div>
     </div>
   }
 </div>

@@ -16,6 +16,8 @@
   max-width: 700px;
   text-align: center;
   border: 1px solid rgba(255, 255, 255, 0.2);
+  display: flex;
+  flex-direction: column;
 }
 
 .profile-header {
@@ -62,4 +64,58 @@
 
 .error-message {
   color: #dc3545;
+}
+
+.edit-button {
+    background-color: #9D65D7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.edit-form {
+    margin-top: 20px;
+    text-align: left;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.form-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.profile-actions {
+    margin-top: auto;
+    padding-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.delete-account-link {
+    color: #ff4d4d;
+    text-decoration: none;
+}
+
+.delete-account-link:hover {
+    text-decoration: underline;
 }
