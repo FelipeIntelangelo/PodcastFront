@@ -1,0 +1,55 @@
+<div class="edit-profile-container">
+    @if (isLoading) {
+      <div class="loading-spinner">Loading profile...</div>
+    }
+  
+    @if (error) {
+      <div class="error-message">{{ error }}</div>
+    }
+  
+    @if (currentUser) {
+      <form [formGroup]="editProfileForm" (ngSubmit)="onSave()" class="edit-profile-form">
+        <h2>Edit Profile</h2>
+  
+        <div class="form-group">
+          <label for="name">Name:</label>
+          <input type="text" id="name" formControlName="name">
+        </div>
+  
+        <div class="form-group">
+          <label for="lastName">Last Name:</label>
+          <input type="text" id="lastName" formControlName="lastName">
+        </div>
+  
+        <div class="form-group">
+          <label for="nickname">Nickname:</label>
+          <input type="text" id="nickname" formControlName="nickname">
+        </div>
+  
+        <div class="form-group">
+          <label for="bio">Bio:</label>
+          <textarea id="bio" formControlName="bio"></textarea>
+        </div>
+  
+        <div class="form-group">
+          <label for="profilePicture">Profile Picture URL:</label>
+          <input type="text" id="profilePicture" formControlName="profilePicture">
+        </div>
+  
+        <div class="form-group">
+          <label for="email">Email:</label>
+          <input type="email" id="email" formControlName="email">
+        </div>
+  
+        <div class="form-group">
+          <label for="username">Username:</label>
+          <input type="text" id="username" formControlName="username">
+        </div>
+  
+        <div class="form-actions">
+          <button type="submit" [disabled]="editProfileForm.invalid">Save Changes</button>
+          <button type="button" (click)="onCancel()">Cancel</button>
+        </div>
+      </form>
+    }
+  </div>

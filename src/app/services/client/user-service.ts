@@ -39,6 +39,18 @@ export class UserService {
     );
   }
 
+  updateCurrentUserProfile(user: Partial<User>): Observable<User> {
+    return this.http.patch<User>(`${this.API_URL}/myProfile`, user).pipe(
+      catchError(this.handleError)
+    );
+  }
+
+  deleteCurrentUser(): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/myProfile`, { responseType: 'text' as 'json' }).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   // If your backend returns plain text (e.g. "Usuario registrado correctamente")
   // use responseType: 'text' so HttpClient doesn't try to parse JSON.
   // Preferably the backend should return JSON with Content-Type: application/json.
@@ -62,12 +74,21 @@ export class UserService {
   // Gpt hizo este handle error para todos los errores que ocurran en los metodos http del service de user, quizas podramos implementar un handler singleton o generico como hicimos en la api
   private handleError(error: HttpErrorResponse) {
     let errorMessage = '';
+    console.log('Handling error:', error);
+    console.log('Error status:', error.status);
+    console.log('Error error:', error.error);
+
     if (error.error instanceof ErrorEvent) {
       // Error del lado del cliente
       errorMessage = `Error: ${error.error.message}`;
     } else {
+      // Check if it's a successful response with an empty body (common for DELETE)
+      if (error.status === 200 && (error.error === null || (typeof error.error === 'string' && error.error.length === 0))) {
+        console.log('Successful response with empty body, not treating as error.');
+        return new Observable<never>(); // Return an empty observable to complete the stream
+      }
       // Error del lado del servidor
-      errorMessage = `Código de error: ${error.status}\nMensaje: ${error.error?.message || 'Error del servidor'}`;
+      errorMessage = `Código de error: ${error.status}\nMensaje: ${error.error?.message || error.error || 'Error del servidor'}`;
     }
     console.error(errorMessage);
     return throwError(() => new Error(errorMessage));
