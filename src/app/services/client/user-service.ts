@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { UserRegisterDTO } from '../../models/user/userRegister/user-register-dto';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, catchError } from 'rxjs';
 import { User } from '../../models/user/user';
 import { UserLoginDTO } from '../../models/user/userLogin/user-login-dto';
 import { UserSearchDTO } from '../../models/user/userSearchDTO';
+import { ErrorHandlerService } from '../error/error-handler.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,41 +14,44 @@ export class UserService {
   private readonly API_URL = "/api/users";
   private readonly AUTH_API_URL = "/api/auth";
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    private errorHandler: ErrorHandlerService
+  ) {}
 
   /* -------------------- Login, Register & Profile LOGIC -------------------- */
   getUsersDTO(){
     return this.http.get<UserSearchDTO[]>(this.API_URL).pipe(
-      catchError(this.handleError))
+      catchError(this.errorHandler.handleError.bind(this.errorHandler)))
   }
 
   getUserById(id: number): Observable<User | UserSearchDTO> {
     return this.http.get<User | UserSearchDTO>(`${this.API_URL}/${id}`).pipe(
-    catchError(this.handleError)
+    catchError(this.errorHandler.handleError.bind(this.errorHandler))
   );
 }
   
   login(credentials: UserLoginDTO): Observable<{ token: string }> {
     return this.http.post<{ token: string }>(`${this.AUTH_API_URL}/login`, credentials).pipe(
-      catchError(this.handleError)
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
   
   getCurrentUserProfile(): Observable<User> {
     return this.http.get<User>(`${this.API_URL}/myProfile`).pipe(
-      catchError(this.handleError)
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
 
   updateCurrentUserProfile(user: Partial<User>): Observable<User> {
     return this.http.patch<User>(`${this.API_URL}/myProfile`, user).pipe(
-      catchError(this.handleError)
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
 
   deleteCurrentUser(): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/myProfile`, { responseType: 'text' as 'json' }).pipe(
-      catchError(this.handleError)
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
 
@@ -66,31 +70,9 @@ export class UserService {
             error: error.error,
             url: error.url
           });
-          return this.handleError(error);
+          return this.errorHandler.handleErrorWithContext(error, 'al registrar usuario');
         })
       );
   }
   /* -------------------- END OF LOGIN AND REGISTER LOGIC -------------------- */
-  // Gpt hizo este handle error para todos los errores que ocurran en los metodos http del service de user, quizas podramos implementar un handler singleton o generico como hicimos en la api
-  private handleError(error: HttpErrorResponse) {
-    let errorMessage = '';
-    console.log('Handling error:', error);
-    console.log('Error status:', error.status);
-    console.log('Error error:', error.error);
-
-    if (error.error instanceof ErrorEvent) {
-      // Error del lado del cliente
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Check if it's a successful response with an empty body (common for DELETE)
-      if (error.status === 200 && (error.error === null || (typeof error.error === 'string' && error.error.length === 0))) {
-        console.log('Successful response with empty body, not treating as error.');
-        return new Observable<never>(); // Return an empty observable to complete the stream
-      }
-      // Error del lado del servidor
-      errorMessage = `Código de error: ${error.status}\nMensaje: ${error.error?.message || error.error || 'Error del servidor'}`;
-    }
-    console.error(errorMessage);
-    return throwError(() => new Error(errorMessage));
-  }
 }
