@@ -33,9 +33,9 @@ export class Search implements OnInit, OnDestroy {
     this.sub.add(
       this.route.paramMap.subscribe(params => {
         this.term = (params.get('term') ?? '').trim();
-        const q = this.term.toLowerCase();
+        const query = this.term.toLowerCase();
 
-        if (!q) {
+        if (!query) {
           this.filteredUsers = [];
           this.filteredPodcasts = [];
           this.isLoading = false;
@@ -46,24 +46,27 @@ export class Search implements OnInit, OnDestroy {
         this.isLoading = true;
         this.error = null;
 
-        // Buscar usuarios
-        this.userService.getUsersDTO().subscribe({
-          next: (allUsers) => {
-            this.users = allUsers;
-            this.filteredUsers = allUsers.filter(u => (u.nickname ?? '').toLowerCase().includes(q));
-            this.checkLoadingComplete();
-          },
-          error: (err) => {
-            this.error = err?.message || 'Error al cargar usuarios';
-            this.filteredUsers = [];
-            this.checkLoadingComplete();
-          }
-        });
-
-        // Buscar podcasts (usar filtrado de la API directamente)
+        // Buscar usuarios y podcasts
+        this.loadUsers();
         this.loadPodcasts();
       })
     );
+  }
+
+  private loadUsers(): void {
+    this.userService.getUsersDTO().subscribe({
+      next: (allUsers) => {
+        this.users = allUsers;
+        const q = this.term.toLowerCase();
+        this.filteredUsers = allUsers.filter(u => (u.nickname ?? '').toLowerCase().includes(q));
+        this.checkLoadingComplete();
+      },
+      error: (err) => {
+        this.error = err?.message || 'Error al cargar usuarios';
+        this.filteredUsers = [];
+        this.checkLoadingComplete();
+      }
+    });
   }
 
   private loadPodcasts(): void {
