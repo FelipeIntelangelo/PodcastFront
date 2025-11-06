@@ -36,7 +36,18 @@
             <div class="results-section">
                 <div class="section-header">
                     <h2>🎙️ Podcasts ({{ filteredPodcasts.length }})</h2>
-                    <span class="sort-indicator">Ordenados por popularidad</span>
+                    <div class="sort-controls">
+                        <button 
+                            class="sort-button" 
+                            [class.active]="isOrderedByViews"
+                            (click)="toggleSortByViews()">
+                            @if (isOrderedByViews) {
+                                📈 Ordenado por popularidad
+                            } @else {
+                                🔀 Ordenar por popularidad
+                            }
+                        </button>
+                    </div>
                 </div>
                 <div class="podcasts-grid">
                     @for (podcast of filteredPodcasts; track podcast.id) {

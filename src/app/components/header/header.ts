@@ -93,8 +93,8 @@ export class Header implements OnInit{
         }
       });
 
-      // Trae los podcasts ya ordenados por vistas y filtra por título
-      this.podcastService.getAll(true).subscribe({
+      // Trae los podcasts sin ordenar y filtra por título
+      this.podcastService.getAll(false).subscribe({
         next: (podcasts) => {
           this.podcastResults = podcasts.filter(p => 
             p.title.toLowerCase().includes(queryClean)

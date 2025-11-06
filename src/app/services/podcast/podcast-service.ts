@@ -16,14 +16,14 @@ export class PodcastService {
     private errorHandler: ErrorHandlerService
   ) {}
 
-  getAll(orderByViews: boolean = true): Observable<PodcastSearchDTO[]> {
+  getAll(orderByViews: boolean = false): Observable<PodcastSearchDTO[]> {
     const params = orderByViews ? '?orderByViews=true' : '';
     return this.http.get<PodcastSearchDTO[]>(`${this.API_URL}${params}`).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
 
-  getAllFiltered(title?: string, userId?: number, category?: string, orderByViews: boolean = true): Observable<PodcastSearchDTO[]> {
+  getAllFiltered(title?: string, userId?: number, category?: string, orderByViews: boolean = false): Observable<PodcastSearchDTO[]> {
     const params = new URLSearchParams();
     
     if (title) params.append('title', title);

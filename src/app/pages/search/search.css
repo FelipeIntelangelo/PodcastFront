@@ -111,6 +111,39 @@
   gap: 0.5rem;
 }
 
+.sort-controls {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.sort-button {
+  background-color: rgba(157, 101, 215, 0.1);
+  border: 1px solid rgba(157, 101, 215, 0.3);
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.sort-button:hover {
+  background-color: rgba(157, 101, 215, 0.2);
+  border-color: rgba(157, 101, 215, 0.5);
+  color: white;
+}
+
+.sort-button.active {
+  background-color: rgba(157, 101, 215, 0.3);
+  border-color: rgba(157, 101, 215, 0.6);
+  color: white;
+  font-weight: 500;
+}
+
 .sort-indicator {
   color: rgba(255, 255, 255, 0.6);
   font-size: 0.8rem;

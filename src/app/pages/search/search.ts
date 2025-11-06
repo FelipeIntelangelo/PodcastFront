@@ -19,6 +19,7 @@ export class Search implements OnInit, OnDestroy {
   users: UserSearchDTO[] = [];
   filteredUsers: UserSearchDTO[] = [];
   filteredPodcasts: PodcastSearchDTO[] = [];
+  isOrderedByViews: boolean = false; // Estado del ordenamiento
   private sub = new Subscription();
 
   constructor(
@@ -60,19 +61,23 @@ export class Search implements OnInit, OnDestroy {
         });
 
         // Buscar podcasts (usar filtrado de la API directamente)
-        this.podcastService.getAllFiltered(this.term, undefined, undefined, true).subscribe({
-          next: (apiPodcasts) => {
-            this.filteredPodcasts = apiPodcasts; // Ya vienen filtrados y ordenados de la API
-            this.checkLoadingComplete();
-          },
-          error: (err) => {
-            this.error = err?.message || 'Error al cargar podcasts';
-            this.filteredPodcasts = [];
-            this.checkLoadingComplete();
-          }
-        });
+        this.loadPodcasts();
       })
     );
+  }
+
+  private loadPodcasts(): void {
+    this.podcastService.getAllFiltered(this.term, undefined, undefined, this.isOrderedByViews).subscribe({
+      next: (apiPodcasts) => {
+        this.filteredPodcasts = apiPodcasts; // Ya vienen filtrados de la API
+        this.checkLoadingComplete();
+      },
+      error: (err) => {
+        this.error = err?.message || 'Error al cargar podcasts';
+        this.filteredPodcasts = [];
+        this.checkLoadingComplete();
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -108,5 +113,13 @@ export class Search implements OnInit, OnDestroy {
       return (views / 1000).toFixed(1) + 'K';
     }
     return views.toString();
+  }
+
+  toggleSortByViews(): void {
+    this.isOrderedByViews = !this.isOrderedByViews;
+    if (this.term.trim()) {
+      this.isLoading = true;
+      this.loadPodcasts();
+    }
   }
 }
