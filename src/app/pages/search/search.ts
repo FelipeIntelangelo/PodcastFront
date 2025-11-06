@@ -18,7 +18,6 @@ export class Search implements OnInit, OnDestroy {
   error: string | null = null;
   users: UserSearchDTO[] = [];
   filteredUsers: UserSearchDTO[] = [];
-  podcasts: PodcastSearchDTO[] = [];
   filteredPodcasts: PodcastSearchDTO[] = [];
   private sub = new Subscription();
 
@@ -60,14 +59,10 @@ export class Search implements OnInit, OnDestroy {
           }
         });
 
-        // Buscar podcasts
-        this.podcastService.getAll().subscribe({
-          next: (allPodcasts) => {
-            this.podcasts = allPodcasts;
-            // Filtrar por título y ordenar por averageViews (mayor a menor)
-            this.filteredPodcasts = allPodcasts
-              .filter(p => (p.title ?? '').toLowerCase().includes(q))
-              .sort((a, b) => b.averageViews - a.averageViews);
+        // Buscar podcasts (usar filtrado de la API directamente)
+        this.podcastService.getAllFiltered(this.term, undefined, undefined, true).subscribe({
+          next: (apiPodcasts) => {
+            this.filteredPodcasts = apiPodcasts; // Ya vienen filtrados y ordenados de la API
             this.checkLoadingComplete();
           },
           error: (err) => {

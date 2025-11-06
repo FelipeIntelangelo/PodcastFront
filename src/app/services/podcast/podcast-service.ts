@@ -16,8 +16,25 @@ export class PodcastService {
     private errorHandler: ErrorHandlerService
   ) {}
 
-  getAll(): Observable<PodcastSearchDTO[]> {
-    return this.http.get<PodcastSearchDTO[]>(this.API_URL).pipe(
+  getAll(orderByViews: boolean = true): Observable<PodcastSearchDTO[]> {
+    const params = orderByViews ? '?orderByViews=true' : '';
+    return this.http.get<PodcastSearchDTO[]>(`${this.API_URL}${params}`).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  getAllFiltered(title?: string, userId?: number, category?: string, orderByViews: boolean = true): Observable<PodcastSearchDTO[]> {
+    const params = new URLSearchParams();
+    
+    if (title) params.append('title', title);
+    if (userId) params.append('userId', userId.toString());
+    if (category) params.append('category', category);
+    if (orderByViews) params.append('orderByViews', 'true');
+    
+    const queryString = params.toString();
+    const url = queryString ? `${this.API_URL}?${queryString}` : this.API_URL;
+    
+    return this.http.get<PodcastSearchDTO[]>(url).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
