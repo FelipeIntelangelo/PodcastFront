@@ -59,12 +59,12 @@ export class Search implements OnInit, OnDestroy {
         this.users = allUsers;
         const q = this.term.toLowerCase();
         this.filteredUsers = allUsers.filter(u => (u.nickname ?? '').toLowerCase().includes(q));
-        this.checkLoadingComplete();
+        this.isLoading = false;
       },
       error: (err) => {
         this.error = err?.message || 'Error al cargar usuarios';
         this.filteredUsers = [];
-        this.checkLoadingComplete();
+        this.isLoading = false;
       }
     });
   }
@@ -73,24 +73,18 @@ export class Search implements OnInit, OnDestroy {
     this.podcastService.getAllFiltered(this.term, undefined, undefined, this.isOrderedByViews).subscribe({
       next: (apiPodcasts) => {
         this.filteredPodcasts = apiPodcasts; // Ya vienen filtrados de la API
-        this.checkLoadingComplete();
+        this.isLoading = false;
       },
       error: (err) => {
         this.error = err?.message || 'Error al cargar podcasts';
         this.filteredPodcasts = [];
-        this.checkLoadingComplete();
+        this.isLoading = false;
       }
     });
   }
 
   ngOnDestroy(): void {
     this.sub.unsubscribe();
-  }
-
-  private checkLoadingComplete(): void {
-    // Se considera que la carga completa cuando ambas peticiones han terminado
-    // (exitosa o con error)
-    this.isLoading = false;
   }
 
   navigateToProfile(userId: number): void {
