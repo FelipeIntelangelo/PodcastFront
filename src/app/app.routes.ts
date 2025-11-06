@@ -5,6 +5,7 @@ import { Login } from './pages/auth/login/login';
 import { Profile } from './pages/profile/profile';
 import { Search } from './pages/search/search';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
+import { Podcast } from './pages/podcast/podcast';
 
 export const routes: Routes = [
     {path: "", component: Home},
@@ -14,5 +15,7 @@ export const routes: Routes = [
     {path: "profile/:id", component: Profile},
     {path: "profile", component: Profile},
     {path: "search/:term", component: Search},
-    {path: "search", component:Search}
+    {path: "search", component:Search},
+    {path: "podcast", component:Podcast},
+    {path: "podcast/:id", component:Podcast}
 ];

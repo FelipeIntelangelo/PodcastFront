@@ -180,6 +180,9 @@ a{
 }
 
 .search-result-item{
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
     padding: 0.75rem 1rem;
     color: white;
     cursor: pointer;
@@ -195,6 +198,17 @@ a{
     background-color: rgba(255, 255, 255, 0.1);
 }
 
+.result-type {
+    font-size: 1.2rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+}
+
+.result-content {
+    flex: 1;
+    min-width: 0; /* Para permitir text truncation */
+}
+
 .search-result-item .result-title{
     font-weight: 600;
     margin-bottom: 0.25rem;
@@ -203,6 +217,23 @@ a{
 .search-result-item .result-subtitle{
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.7);
+}
+
+/* Diferenciación por tipo */
+.user-result {
+    border-left: 3px solid #4CAF50; /* Verde para usuarios */
+}
+
+.podcast-result {
+    border-left: 3px solid #9D65D7; /* Morado para podcasts */
+}
+
+.user-result:hover {
+    background-color: rgba(76, 175, 80, 0.1);
+}
+
+.podcast-result:hover {
+    background-color: rgba(157, 101, 215, 0.1);
 }
 
 .search-no-results{

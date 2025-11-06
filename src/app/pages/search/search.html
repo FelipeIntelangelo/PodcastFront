@@ -20,31 +20,68 @@
         </div>
         }
 
-        @if (!isLoading && !error && filteredUsers.length === 0 && term) {
+        @if (!isLoading && !error && !hasResults && term) {
         <div class="no-results">
-            <p>No se encontraron usuarios que coincidan con "{{ term }}"</p>
+            <p>No se encontraron resultados que coincidan con "{{ term }}"</p>
         </div>
         }
 
-        @if (!isLoading && !error && filteredUsers.length > 0) {
-        <div class="results-container">
-            <p class="results-count">{{ filteredUsers.length }} usuario(s) encontrado(s)</p>
-            <div class="users-grid">
-            @for (user of filteredUsers; track user.id) {
-                <div class="user-card" (click)="navigateToProfile(user.id)">
-                <div class="user-image">
-                    <img [src]="user.profilePicture || 'assets/default-pfp.png'" [alt]="user.nickname">
+        @if (!isLoading && !error && hasResults) {
+            <div class="results-summary">
+                <p class="results-count">{{ totalResults }} resultado(s) encontrado(s)</p>
+            </div>
+
+            <!-- Sección de Podcasts -->
+            @if (filteredPodcasts.length > 0) {
+            <div class="results-section">
+                <div class="section-header">
+                    <h2>🎙️ Podcasts ({{ filteredPodcasts.length }})</h2>
+                    <span class="sort-indicator">Ordenados por popularidad</span>
                 </div>
-                <div class="user-info">
-                    <h3 class="user-nickname">{{ user.nickname }}</h3>
-                        @if (user.bio) {
-                    <p class="user-bio">{{ user.bio.length > 80 ? (user.bio.slice(0, 80) + '…') : user.bio }}</p>
+                <div class="podcasts-grid">
+                    @for (podcast of filteredPodcasts; track podcast.id) {
+                        <div class="podcast-card" (click)="navigateToPodcast(podcast.id)">
+                            <div class="podcast-icon">
+                                🎙️
+                            </div>
+                            <div class="podcast-info">
+                                <h3 class="podcast-title">{{ podcast.title }}</h3>
+                                @if (podcast.description) {
+                                    <p class="podcast-description">{{ podcast.description.length > 80 ? (podcast.description.slice(0, 80) + '…') : podcast.description }}</p>
+                                }
+                                <div class="podcast-stats">
+                                    <span class="views-count">👁️ {{ formatViews(podcast.averageViews) }} vistas promedio</span>
+                                </div>
+                            </div>
+                        </div>
                     }
                 </div>
-                </div>
-            }
             </div>
-        </div>
+            }
+
+            <!-- Sección de Usuarios -->
+            @if (filteredUsers.length > 0) {
+            <div class="results-section">
+                <div class="section-header">
+                    <h2>👤 Usuarios ({{ filteredUsers.length }})</h2>
+                </div>
+                <div class="users-grid">
+                    @for (user of filteredUsers; track user.id) {
+                        <div class="user-card" (click)="navigateToProfile(user.id)">
+                            <div class="user-image">
+                                <img [src]="user.profilePicture || 'assets/default-pfp.png'" [alt]="user.nickname">
+                            </div>
+                            <div class="user-info">
+                                <h3 class="user-nickname">{{ user.nickname }}</h3>
+                                @if (user.bio) {
+                                    <p class="user-bio">{{ user.bio.length > 80 ? (user.bio.slice(0, 80) + '…') : user.bio }}</p>
+                                }
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            }
         }
     </div>
 </div>

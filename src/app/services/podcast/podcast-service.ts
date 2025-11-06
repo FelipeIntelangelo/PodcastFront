@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { catchError, Observable } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
+import { PodcastSearchDTO } from '../../models/podcast/podcast-search-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,9 @@ export class PodcastService {
     private errorHandler: ErrorHandlerService
   ) {}
 
- /* getAll(): Observable<PodcastSearchDTO[]> {
+  getAll(): Observable<PodcastSearchDTO[]> {
     return this.http.get<PodcastSearchDTO[]>(this.API_URL).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
-    */
 }

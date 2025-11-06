@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { FormError } from '../../../components/shared/form-error/form-error';
 import { UserService } from '../../../services/client/user-service';
 import { UserRegisterDTO } from '../../../models/user/userRegister/user-register-dto';
-import Swal from 'sweetalert2';
+import { AlertService } from '../../../services/ui/alert.service';
 
 @Component({
   selector: 'app-register',
@@ -56,7 +56,11 @@ export class Register implements OnInit {
     }
   };
 
-  constructor(public router: Router, public userService: UserService) {}
+  constructor(
+    public router: Router, 
+    public userService: UserService,
+    private alertService: AlertService
+  ) {}
 
   ngOnInit(): void {
     this.registerForm = new FormGroup({
@@ -134,7 +138,7 @@ export class Register implements OnInit {
       }
     };
     const start = Date.now();
-    this.isSubmitting = true;
+    this.isSubmitting = true; // arranca la ruedita de carga
     this.errorMessage = null;
 
     this.userService.registerUser(payload).subscribe({
@@ -142,7 +146,8 @@ export class Register implements OnInit {
         const elapsed = Date.now() - start;
         const remaining = Math.max(0, 1000 - elapsed);
         setTimeout(() => {
-          this.isSubmitting = false;
+          this.isSubmitting = false; // para la ruedita de cargando
+          this.alertService.successAlert(); // Mostrar alerta de éxito
           this.router.navigate(['/auth/login']);
         }, remaining);
       },
@@ -152,6 +157,7 @@ export class Register implements OnInit {
         setTimeout(() => {
           this.errorMessage = this.formatError(err);
           this.isSubmitting = false;
+          this.alertService.errorAlert(); // Mostrar alerta de error
         }, remaining);
       }
     });

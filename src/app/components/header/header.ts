@@ -5,6 +5,8 @@ import { UserSearchDTO } from '../../models/user/userSearchDTO';
 import { User } from '../../models/user/user';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth/auth.service';
+import { PodcastService } from '../../services/podcast/podcast-service';
+import { PodcastSearchDTO } from '../../models/podcast/podcast-search-dto';
 
 @Component({
   selector: 'app-header',
@@ -15,7 +17,8 @@ import { AuthService } from '../../services/auth/auth.service';
 export class Header implements OnInit{
   searchQuery: string = '';
   showDropdown: boolean = false;
-  searchResults: UserSearchDTO[] = []; // Resultados filtrados a mostrar
+  searchResults: UserSearchDTO[] = []; // Resultados de usuarios filtrados a mostrar
+  podcastResults: PodcastSearchDTO[] = []; // Resultados de podcasts filtrados a mostrar
   error: string | null = null;
   isLoggedIn: boolean = false;
   user: User | null = null;
@@ -23,6 +26,7 @@ export class Header implements OnInit{
 
   constructor(
     private userService: UserService,
+    private podcastService: PodcastService,
     private router: Router,
     private authService: AuthService,
     private elementRef: ElementRef
@@ -74,13 +78,13 @@ export class Header implements OnInit{
     
     if (this.searchQuery.length > 0) {
       this.showDropdown = true;
+      const queryClean = this.searchQuery.trim().toLowerCase();
 
       // Trae los usuarios y filtra el cliente por nickname
       this.userService.getUsersDTO().subscribe({
         next: (users) => {
-          const queryClean = this.searchQuery.trim().toLowerCase();
           this.searchResults = users.filter(u => 
-        u.nickname.toLowerCase().includes(queryClean)
+            u.nickname.toLowerCase().includes(queryClean)
           );
         },
         error: (err) => {
@@ -89,8 +93,22 @@ export class Header implements OnInit{
         }
       });
 
+      // Trae los podcasts y filtra por título
+      this.podcastService.getAll().subscribe({
+        next: (podcasts) => {
+          this.podcastResults = podcasts.filter(p => 
+            p.title.toLowerCase().includes(queryClean)
+          );
+        },
+        error: (err) => {
+          this.error = err?.message || 'Error al buscar podcasts';
+          this.podcastResults = [];
+        }
+      });
+
     } else {
       this.searchResults = [];
+      this.podcastResults = [];
     }
   }
 
@@ -104,6 +122,14 @@ export class Header implements OnInit{
     // navegar al perfil publico(DTO) del usuario usando rutas paramétricas
     if (result && result.id) {
       this.router.navigate(['/profile', result.id]);
+    }
+    this.showDropdown = false;
+  }
+
+  selectPodcast(podcast: PodcastSearchDTO) {
+    // navegar al podcast específico usando rutas paramétricas
+    if (podcast && podcast.id) {
+      this.router.navigate(['/podcast', podcast.id]); // Asumiendo que tienes una ruta para podcasts
     }
     this.showDropdown = false;
   }

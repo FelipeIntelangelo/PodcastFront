@@ -19,18 +19,39 @@
                     <span class="search-icon"></span>
                 </button>
             </div>
-            <div class="search-dropdown" [class.show]="showDropdown && searchResults.length > 0">
+            <div class="search-dropdown" [class.show]="showDropdown && (searchResults.length > 0 || podcastResults.length > 0)">
                 <div class="search-results">
+                    <!-- Resultados de Podcasts -->
+                    @for (podcast of podcastResults; track podcast.id) {
+                        <div
+                            class="search-result-item podcast-result"
+                            (click)="selectPodcast(podcast)">
+                            <span class="result-type">🎙️</span>
+                            <div class="result-content">
+                                <div class="result-title">{{ podcast.title }}</div>
+                                @if (podcast.description && podcast.description.length > 0) {
+                                    <div class="result-subtitle">
+                                        {{ podcast.description.length > 20 ? (podcast.description.slice(0, 20) + '…') : podcast.description }}
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
+                    
+                    <!-- Resultados de Usuarios -->
                     @for (result of searchResults; track result.id) {
                         <div
-                            class="search-result-item"
+                            class="search-result-item user-result"
                             (click)="selectResult(result)">
-                            <div class="result-title">{{ result.nickname }}</div>
-                            @if (result.bio && result.bio.length > 0) {
-                                <div class="result-subtitle">
-                                    {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
-                                </div>
-                            }
+                            <span class="result-type">👤</span>
+                            <div class="result-content">
+                                <div class="result-title">{{ result.nickname }}</div>
+                                @if (result.bio && result.bio.length > 0) {
+                                    <div class="result-subtitle">
+                                        {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
+                                    </div>
+                                }
+                            </div>
                         </div>
                     }
                 </div>
