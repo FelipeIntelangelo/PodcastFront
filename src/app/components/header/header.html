@@ -58,13 +58,18 @@
             </div>
         </div>
         @if (isLoggedIn && user) {
+            <button class="create-button" routerLink="/create-podcast" title="Crear Podcast">
+                <span class="create-icon">➕</span>
+                <span class="create-text">Crear</span>
+            </button>
             <div class="profile-section">
                 <div (click)="toggleProfileMenu()" class="profile-picture-container">
-                    <img [src]="user?.profilePicture ? user.profilePicture : 'assets/default-pfp.png'" alt="User Profile" class="profile-picture" />
+                    <img [src]="user.profilePicture ? user.profilePicture : 'assets/default-pfp.png'" alt="User Profile" class="profile-picture" />
                 </div>
                 @if (showProfileMenu) {
                     <div class="profile-menu">
                         <a routerLink="/profile" class="menu-item">My Profile</a>
+                        <a routerLink="/my-podcasts" class="menu-item">My Podcasts</a>
                         <div (click)="logout()" class="menu-item logout-item">Logout</div>
                     </div>
                 }
