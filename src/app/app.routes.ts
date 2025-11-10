@@ -16,6 +16,5 @@ export const routes: Routes = [
     {path: "profile", component: Profile},
     {path: "search/:term", component: Search},
     {path: "search", component:Search},
-    {path: "podcast", component:Podcast},
     {path: "podcast/:id", component:Podcast}
 ];
