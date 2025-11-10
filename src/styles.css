@@ -9,4 +9,11 @@
 }
 
 main {
+    min-height: 100vh;
+}
+
+html, body {
+    background-color: #131313;
+    color: #fff;
+    min-height: 100%;
 }

@@ -1,1 +1,71 @@
-<p>podcast works!</p>
+@if (isLoading) {
+  <div class="loading-container">
+    <p>Cargando podcast...</p>
+  </div>
+} @else if (podcast) {
+  <div class="podcast-detail">
+    <section class="hero">
+      <div class="podcast-header">
+      <!-- Imagen del podcast -->
+      <div class="podcast-image">
+        <img [src]="podcast.imageUrl || 'assets/default-podcast.png'" [alt]="podcast.title">
+      </div>
+
+      <!-- Información principal -->
+  <div class="podcast-info">
+        <!-- Título y Valoración -->
+        <div class="title-rating">
+          <h1>{{ podcast.title }}</h1>
+          <div class="rating" title="Valoración promedio">
+            <span class="icon-star"></span>
+            <span class="rating-value">{{ podcast.averageRating || 0 }}</span>
+          </div>
+          <button type="button" class="favorite-btn" [class.is-favorited]="isFavorited" (click)="toggleFavorite()" [attr.aria-pressed]="isFavorited" [attr.aria-label]="isFavorited ? 'Quitar de favoritos' : 'Agregar a favoritos'">
+          </button>
+        </div>
+
+        <!-- Creador y Visualizaciones -->
+        <div class="creator-views">
+          <div class="creator">
+            <div class="avatar">
+              @if (podcast.user.profilePicture) {
+                <img [src]="podcast.user.profilePicture" [alt]="podcast.user.nickname">
+              } @else {
+                <div class="avatar-fallback">{{ getUserInitial() }}</div>
+              }
+            </div>
+            <span class="label">Creador:</span>
+            <span class="value">{{ podcast.user.nickname }}</span>
+          </div>
+          <div class="views">
+            <span class="label">Visualizaciones:</span>
+            <span class="icon-eye"></span>
+            <span class="value">{{ formatViews(getTotalViews()) }}</span>
+          </div>
+        </div>
+
+        @if (podcast.categories.length) {
+          <div class="categories">
+            @for (cat of podcast.categories.slice(0, 4); track $index) {
+              <span class="chip">{{ cat }}</span>
+            }
+            @if (podcast.categories.length > 4) {
+              <span class="chip chip-more">+{{ podcast.categories.length - 4 }}</span>
+            }
+          </div>
+        }
+
+        <!-- Descripción -->
+        <div class="description">
+          <h3>Descripción</h3>
+          <p>{{ podcast.description }}</p>
+        </div>
+      </div>
+      </div>
+    </section>
+  </div>
+} @else {
+  <div class="error-container">
+    <p>No se pudo cargar el podcast</p>
+  </div>
+}
