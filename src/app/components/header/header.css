@@ -40,15 +40,16 @@ a{
 
 /* Botón Crear Podcast */
 .create-button {
-  background-color: rgba(157, 101, 215, 0.9);
-  border: 1px solid rgba(157, 101, 215, 0.6);
+  background-color: #333;
+  border: 1px solid #333;
   color: white;
-  padding: 0.6rem 1rem;
-  border-radius: 6px;
-  font-size: 0.9rem;
+  padding: 0rem 1rem;
+  border-radius: 2rem;
+  font-size: 16px;
+  height: 3.5rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, transform 0.3s ease;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -56,8 +57,8 @@ a{
 }
 
 .create-button:hover {
-  background-color: rgba(157, 101, 215, 1);
-  border-color: rgba(157, 101, 215, 0.8);
+  background-color: #9D65D7;
+  border-color: #9D65D7;
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(157, 101, 215, 0.3);
 }

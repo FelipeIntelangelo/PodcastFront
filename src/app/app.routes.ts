@@ -6,6 +6,7 @@ import { Profile } from './pages/profile/profile';
 import { Search } from './pages/search/search';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { Podcast } from './pages/podcast/podcast';
+import { CreatePodcastComponent } from './pages/create-podcast/create-podcast'; // Import the new component
 
 export const routes: Routes = [
     {path: "", component: Home},
@@ -16,5 +17,6 @@ export const routes: Routes = [
     {path: "profile", component: Profile},
     {path: "search/:term", component: Search},
     {path: "search", component:Search},
-    {path: "podcast/:id", component:Podcast}
+    {path: "podcast/:id", component:Podcast},
+    {path: "create-podcast", component: CreatePodcastComponent} // Add the new route
 ];

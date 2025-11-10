@@ -5,6 +5,8 @@ import { ErrorHandlerService } from '../error/error-handler.service';
 import { PodcastSearchDTO } from '../../models/podcast/podcast-search-dto';
 import { Podcast } from '../../models/podcast/podcast';
 
+import { PodcastCreateDTO } from '../../models/podcast/podcast-create-dto';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -42,6 +44,12 @@ export class PodcastService {
 
   getPodcastById(podcastId: number): Observable<Podcast> {
     return this.http.get<Podcast>(`${this.API_URL}/${podcastId}`).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  createPodcast(podcast: PodcastCreateDTO): Observable<string> {
+    return this.http.post(`${this.API_URL}`, podcast, { responseType: 'text' }).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }

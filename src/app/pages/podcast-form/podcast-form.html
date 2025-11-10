@@ -1,0 +1,54 @@
+<form [formGroup]="podcastForm" (ngSubmit)="onSubmit()">
+  <div class="form-container">
+    <h2>{{ podcast ? 'Edit Podcast' : 'Create Podcast' }}</h2>
+
+    <fieldset>
+      <label for="title">Title</label>
+      <input type="text" id="title" formControlName="title" placeholder="My Awesome Podcast"
+             [class.error-input]="podcastForm.get('title')?.invalid && podcastForm.get('title')?.touched">
+      <app-form-error controlName="title" [customMessages]="customErrors['title']"></app-form-error>
+    </fieldset>
+
+    <fieldset>
+      <label for="description">Description</label>
+      <textarea id="description" formControlName="description" placeholder="A podcast about..."
+                [class.error-input]="podcastForm.get('description')?.invalid && podcastForm.get('description')?.touched"></textarea>
+      <app-form-error controlName="description" [customMessages]="customErrors['description']"></app-form-error>
+    </fieldset>
+
+    <fieldset>
+      <label for="imageUrl">Image URL (Optional)</label>
+      <input type="text" id="imageUrl" formControlName="imageUrl" placeholder="https://example.com/image.png">
+    </fieldset>
+
+    <fieldset formArrayName="categories" class="categories-fieldset">
+      <label class="categories-label">Categories</label>
+      <div class="categories-grid">
+        @for (category of categoryKeys; track category; let i = $index) {
+          <div class="category-item">
+            <input type="checkbox" [formControlName]="i" [id]="'cat-' + i">
+            <label [for]="'cat-' + i">{{ category }}</label>
+          </div>
+        }
+      </div>
+      @if (categories.invalid && categories.touched) {
+        <div class="server-error">
+          {{ customErrors['categories']['required'] }}
+        </div>
+      }
+    </fieldset>
+
+    <div class="button-container">
+      <button type="submit" [disabled]="isSubmitting">
+        {{ isSubmitting ? 'Saving...' : (podcast ? 'Save Changes' : 'Create Podcast') }}
+        @if (isSubmitting) {
+          <span class="spinner"></span>
+        }
+      </button>
+    </div>
+
+    @if (errorMessage) {
+      <p class="server-error">{{ errorMessage }}</p>
+    }
+  </div>
+</form>
