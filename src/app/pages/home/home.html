@@ -8,89 +8,176 @@
         </ul>
     </aside>
     <main>
-        <h2>Novedades</h2>    <!-- MAS ESCUCHADOS -->
-        <div class="containerCards">
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
+        <!-- NOVEDADES -->
+        <div class="carouselSection">
+            <h2>Novedades</h2>
+            <div class="carouselContainer">
+                <!-- Flecha izquierda (visible solo después del primer clic) -->
+                <button 
+                    *ngIf="carousels['novedades'].hasBeenClicked"
+                    class="arrowButton arrowBack"
+                    (click)="goBack('novedades')"
+                    [disabled]="carousels['novedades'].currentIndex === 0">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <!-- Contenedor de cards con scroll -->
+                <div class="carouselWrapper">
+                    <div class="carouselContent" [ngStyle]="{'transform': getCarouselTranslate('novedades')}">
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 1</h3>
+                            <h4>Podcast 1</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 2</h3>
+                            <h4>Podcast 2</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 3</h3>
+                            <h4>Podcast 3</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 4</h3>
+                            <h4>Podcast 4</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 5</h3>
+                            <h4>Podcast 5</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 6</h3>
+                            <h4>Podcast 6</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 7</h3>
+                            <h4>Podcast 7</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 8</h3>
+                            <h4>Podcast 8</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 9</h3>
+                            <h4>Podcast 9</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 10</h3>
+                            <h4>Podcast 10</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Flecha inicial (solo visible al principio, en posición derecha) -->
+                <button 
+                    *ngIf="!carousels['novedades'].hasBeenClicked"
+                    class="arrowButton arrowNext arrowInitial"
+                    (click)="onArrowClick('novedades')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Flecha siguiente (visible después del primer clic, mientras no esté al final) -->
+                <button 
+                    *ngIf="carousels['novedades'].hasBeenClicked && !isAtEnd('novedades')"
+                    class="arrowButton arrowNext"
+                    (click)="goNext('novedades')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <!-- Botón Ver todos (reemplaza la flecha derecha al final) -->
+                <button 
+                    *ngIf="carousels['novedades'].hasBeenClicked && isAtEnd('novedades')"
+                    class="verTodosButton">
+                    Ver todos
+                </button>
             </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <button class="verMas">Ver mas</button>
-        </div>
-        <h2>Mas escuchados</h2>    <!-- FAVORITOS -->
-        <div class="containerCards">
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <button class="verMas">Ver mas</button>
-        </div>
-        <h2>Mejor calificados</h2>   <!-- HISTORIAL -->
-        <div class="containerCards">
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <div class="cardHome">
-                <div class="ejampleImg"></div>
-                <h3>Nombre Creador</h3>
-                <h4>Nombre Creador</h4>
-                <a href="#" class="ver-mas-link">ver mas</a>
-            </div>
-            <button class="verMas">Ver mas</button>
         </div>
     </main>
 </body>
+
+
+
+
+
+        <!-- EJEMPLO DE OTRO CARRUSEL -->
+
+        <!-- <div class="carouselSection">
+            <h2>Mis favoritos</h2>
+            <div class="carouselContainer">
+                <button 
+                    *ngIf="carousels['misFavoritos'].hasBeenClicked"
+                    class="arrowButton arrowBack"
+                    (click)="goBack('misFavoritos')"
+                    [disabled]="carousels['misFavoritos'].currentIndex === 0">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+
+                <div class="carouselWrapper">
+                    <div class="carouselContent" [ngStyle]="{'transform': getCarouselTranslate('misFavoritos')}">
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 1</h3>
+                            <h4>Podcast 1</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 2</h3>
+                            <h4>Podcast 2</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 3</h3>
+                            <h4>Podcast 3</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                        <div class="cardHome">
+                            <div class="ejampleImg"></div>
+                            <h3>Nombre Creador 4</h3>
+                            <h4>Podcast 4</h4>
+                            <a href="#" class="ver-mas-link">ver mas</a>
+                        </div>
+                    </div>
+                </div>
+
+                <button 
+                    *ngIf="!carousels['misFavoritos'].hasBeenClicked"
+                    class="arrowButton arrowNext arrowInitial"
+                    (click)="onArrowClick('misFavoritos')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <button 
+                    *ngIf="carousels['misFavoritos'].hasBeenClicked && !isAtEnd('misFavoritos')"
+                    class="arrowButton arrowNext"
+                    (click)="goNext('misFavoritos')">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+
+                <button 
+                    *ngIf="carousels['misFavoritos'].hasBeenClicked && isAtEnd('misFavoritos')"
+                    class="verTodosButton">
+                    Ver todos
+                </button>
+            </div>
+        </div> -->

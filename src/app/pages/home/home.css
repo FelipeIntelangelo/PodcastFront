@@ -108,3 +108,108 @@ h2{
     color: #9D65D7;
     text-decoration: none;
 }
+
+/* CAROUSEL STYLES */
+.carouselSection {
+    margin-top: 3rem;
+}
+
+.carouselContainer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+    background: linear-gradient(to right, rgba(19,19,19,0.8), rgba(0,0,0,0.5));
+    border-radius: 0rem 3rem 3rem 0rem;
+    border-right: 1px solid rgb(69, 69, 69);
+}
+
+.carouselWrapper {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.carouselContent {
+    display: flex;
+    gap: 1.5rem;
+    transition: transform 0.5s ease;
+}
+
+.arrowButton {
+    background-color: #9D65D7;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    flex-shrink: 0;
+}
+
+.arrowButton:hover:not(:disabled) {
+    background-color: #b88dd9;
+    transform: scale(1.1);
+}
+
+.arrowButton:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.arrowInitial {
+    position: relative;
+    left: 0;
+}
+
+.verTodosButton {
+    background-color: #9D65D7;
+    color: white;
+    border: none;
+    border-radius: 2rem;
+    padding: 0.8rem 2rem;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.verTodosButton:hover {
+    background-color: #b88dd9;
+}
+
+.cardHome {
+    flex: 0 0 calc(25% - 1.125rem);
+    min-width: 200px;
+}
+
+.ejampleImg {
+    width: 100%;
+    height: 150px;
+    background-color: #9D65D7;
+    border-radius: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.cardHome h3 {
+    font-size: 1rem;
+    margin: 0.5rem 0;
+}
+
+.cardHome h4 {
+    font-size: 0.9rem;
+    color: #999;
+    margin: 0.3rem 0;
+}
+
+.cardHome .ver-mas-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+}
