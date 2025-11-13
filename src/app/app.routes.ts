@@ -7,6 +7,7 @@ import { Search } from './pages/search/search';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { Podcast } from './pages/podcast/podcast';
 import { CreatePodcastComponent } from './pages/create-podcast/create-podcast'; // Import the new component
+import { MyPodcasts } from './pages/my-podcasts/my-podcasts';
 
 export const routes: Routes = [
     {path: "", component: Home},
@@ -18,5 +19,6 @@ export const routes: Routes = [
     {path: "search/:term", component: Search},
     {path: "search", component:Search},
     {path: "podcast/:id", component:Podcast},
-    {path: "create-podcast", component: CreatePodcastComponent} // Add the new route
+    {path: "create-podcast", component: CreatePodcastComponent},
+    {path: "myPodcasts", component: MyPodcasts}
 ];

@@ -24,7 +24,7 @@ export class CreatePodcastComponent {
     private podcastService: PodcastService,
     private alertService: AlertService,
     private router: Router,
-    private userService: UserService // Inject UserService
+    private userService: UserService 
   ) {}
 
   onCreatePodcast(podcastData: PodcastCreateDTO): void {

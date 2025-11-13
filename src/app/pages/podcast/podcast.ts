@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { PodcastService } from '../../services/podcast/podcast-service';
 import { Podcast as PodcastModel } from '../../models/podcast/podcast';
+import { UserService } from '../../services/client/user-service';
+import { AlertService } from '../../services/ui/alert.service';
+import { User } from '../../models/user/user';
 
 @Component({
   selector: 'app-podcast',
@@ -14,17 +17,36 @@ export class Podcast implements OnInit{
   isLoading = true;
   podcastId?: number;
   isFavorited = false; // estado local temporal hasta integrar backend
+  currentUser?: User;
+  isAdmin = false;
 
   constructor(
     private route: ActivatedRoute,
-    private podcastService: PodcastService
+    private podcastService: PodcastService,
+    private userService: UserService,
+    private alertService: AlertService,
+    private router: Router
   ){}
 
   ngOnInit(): void {
+    this.loadCurrentUser();
     this.route.params.subscribe(params => {
       this.podcastId = +params['id']; // El + convierte string a number
       if (this.podcastId) {
         this.loadPodcast(this.podcastId);
+      }
+    });
+  }
+
+  loadCurrentUser(): void {
+    this.userService.getCurrentUserProfile().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        this.isAdmin = user.credential.roles.includes('ADMIN');
+      },
+      error: () => {
+        this.currentUser = undefined;
+        this.isAdmin = false;
       }
     });
   }
@@ -71,5 +93,27 @@ export class Podcast implements OnInit{
   toggleFavorite(): void {
     this.isFavorited = !this.isFavorited;
     // TODO: integrar con servicio (POST /api/podcasts/{id}/favorite o similar)
+  }
+
+  canDeletePodcast(): boolean {
+    if (!this.podcast || !this.currentUser) return false;
+    return this.isAdmin || this.podcast.user.id === this.currentUser.id;
+  }
+
+  async deletePodcast(): Promise<void> {
+    if (!this.podcastId) return;
+    
+    const confirmed = await this.alertService.confirmDeletePodcast();
+    if (confirmed) {
+      this.podcastService.deletePodcast(this.podcastId).subscribe({
+        next: () => {
+          this.alertService.deletePodcastSuccess();
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.alertService.deletePodcastError();
+        }
+      });
+    }
   }
 }

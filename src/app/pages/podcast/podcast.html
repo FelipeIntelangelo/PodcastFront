@@ -22,6 +22,12 @@
           </div>
           <button type="button" class="favorite-btn" [class.is-favorited]="isFavorited" (click)="toggleFavorite()" [attr.aria-pressed]="isFavorited" [attr.aria-label]="isFavorited ? 'Quitar de favoritos' : 'Agregar a favoritos'">
           </button>
+          @if (canDeletePodcast()) {
+            <button type="button" class="delete-podcast-btn" (click)="deletePodcast()" title="Eliminar podcast">
+              <span class="icon-delete"></span>
+              Eliminar
+            </button>
+          }
         </div>
 
         <!-- Creador y Visualizaciones -->

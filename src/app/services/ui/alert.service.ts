@@ -72,4 +72,42 @@ export class AlertService {
             timer: 2000
         });
     }
+
+    // Confirmación para eliminar podcast
+    confirmDeletePodcast(): Promise<boolean> {
+        return Swal.fire({
+            title: "¿Estás seguro?",
+            text: "No podrás revertir esta acción",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#9D65D7",
+            cancelButtonColor: "#dc3545",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            return result.isConfirmed;
+        });
+    }
+
+    // Alert de eliminación exitosa
+    deletePodcastSuccess(){
+        Swal.fire({
+            title: "¡Eliminado!",
+            text: "El podcast ha sido eliminado exitosamente",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
+
+    // Alert de error al eliminar
+    deletePodcastError(){
+        Swal.fire({
+            title: "Error al eliminar",
+            text: "No se pudo eliminar el podcast",
+            icon: "error",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
 }

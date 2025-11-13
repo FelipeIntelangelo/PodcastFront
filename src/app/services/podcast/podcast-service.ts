@@ -4,7 +4,7 @@ import { catchError, Observable } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { PodcastSearchDTO } from '../../models/podcast/podcast-search-dto';
 import { Podcast } from '../../models/podcast/podcast';
-
+import { PodcastTotalDTO } from '../../models/podcast/podcast-total-dto';
 import { PodcastCreateDTO } from '../../models/podcast/podcast-create-dto';
 
 @Injectable({
@@ -50,6 +50,18 @@ export class PodcastService {
 
   createPodcast(podcast: PodcastCreateDTO): Observable<string> {
     return this.http.post(`${this.API_URL}`, podcast, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  getMyPodcasts(): Observable<PodcastTotalDTO[]> {
+    return this.http.get<PodcastTotalDTO[]>(`${this.API_URL}/myPodcasts`).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  deletePodcast(podcastId: number): Observable<string> {
+    return this.http.delete(`${this.API_URL}/${podcastId}`, { responseType: 'text' }).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }

@@ -36,7 +36,9 @@
         <!-- Optional: Display counts for lists if they exist (only for full User) -->
         @if (isFullUser(user)) {
           @if (user.podcasts?.length) {
-            <p><strong>Podcasts:</strong> {{ user.podcasts?.length }}</p>
+            <p class="podcasts-link">
+              <a routerLink="/myPodcasts"><strong>Podcasts:</strong> {{ user.podcasts?.length }}</a>
+            </p>
           }
           @if (user.favorites?.length) {
             <p><strong>Favorites:</strong> {{ user.favorites?.length }}</p>
@@ -48,7 +50,7 @@
       </div>
       <div class="profile-actions">
           @if (isFullUser(user)) {
-            <a routerLink="/profile/edit" class="edit-button">Edit Profile</a>
+            <a routerLink="/profile/edit" class="action-button edit-button">Edit Profile</a>
             <a (click)="deleteAccount($event)" class="delete-account-link">Delete Account</a>
           }
       </div>

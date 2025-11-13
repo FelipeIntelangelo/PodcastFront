@@ -66,6 +66,36 @@
   color: #dc3545;
 }
 
+.action-button {
+    background-color: #9D65D7;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s, transform 0.15s;
+}
+
+.action-button:hover {
+    background-color: #8B4FC5;
+    transform: translateY(-2px);
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+.podcasts-button {
+    background: linear-gradient(135deg, rgba(157, 101, 215, 0.25) 0%, rgba(157, 101, 215, 0.15) 100%);
+    border: 1px solid rgba(157, 101, 215, 0.5);
+}
+
+.podcasts-button:hover {
+    background: linear-gradient(135deg, rgba(157, 101, 215, 0.35) 0%, rgba(157, 101, 215, 0.22) 100%);
+}
+
 .edit-button {
     background-color: #9D65D7;
     color: white;
@@ -118,4 +148,21 @@
 
 .delete-account-link:hover {
     text-decoration: underline;
+}
+
+.podcasts-link a {
+    color: #9D65D7;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+}
+
+.podcasts-link a:hover {
+    color: #B384E6;
+    border-bottom: 2px solid #9D65D7;
+}
+
+.podcasts-link a strong {
+    color: white;
 }
