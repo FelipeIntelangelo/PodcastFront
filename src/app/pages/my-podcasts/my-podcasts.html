@@ -15,7 +15,7 @@
   } @else {
     <div class="podcasts-list">
       @for (podcast of myPodcasts; track podcast.id) {
-        <article class="podcast-card">
+        <article class="podcast-card" (click)="viewPodcast(podcast.id)">
           <div class="podcast-header">
             <div class="podcast-info">
               <h3 class="podcast-title">{{ podcast.title }}</h3>
@@ -31,10 +31,10 @@
               </div>
             </div>
             <div class="action-buttons">
-              <button type="button" class="action-btn edit-btn" (click)="editPodcast(podcast.id)" title="Editar podcast">
+              <button type="button" class="action-btn edit-btn" (click)="editPodcast(podcast.id); $event.stopPropagation()" title="Editar podcast">
                 <span class="icon-edit"></span>
               </button>
-              <button type="button" class="action-btn delete-btn" (click)="deletePodcast(podcast.id)" title="Eliminar podcast">
+              <button type="button" class="action-btn delete-btn" (click)="deletePodcast(podcast.id); $event.stopPropagation()" title="Eliminar podcast">
                 <span class="icon-trash"></span>
               </button>
             </div>

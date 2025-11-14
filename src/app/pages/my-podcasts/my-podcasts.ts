@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PodcastService } from '../../services/podcast/podcast-service';
 import { PodcastTotalDTO } from '../../models/podcast/podcast-total-dto';
 import { AlertService } from '../../services/ui/alert.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-my-podcasts',
@@ -15,7 +16,8 @@ export class MyPodcasts implements OnInit {
 
   constructor(
     private podcastService: PodcastService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -48,6 +50,10 @@ export class MyPodcasts implements OnInit {
       if (abs >= 1_000) return sign + (abs / 1_000).toFixed(1) + 'K';
       return String(value);
     }
+  }
+
+  viewPodcast(id: number): void {
+    this.router.navigate(['/podcast', id]);
   }
 
   editPodcast(id: number): void {

@@ -5,7 +5,7 @@ import { Login } from './pages/auth/login/login';
 import { Profile } from './pages/profile/profile';
 import { Search } from './pages/search/search';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
-import { Podcast } from './pages/podcast/podcast';
+import { PodcastDetail } from './pages/podcast-detail/podcast-detail';
 import { CreatePodcastComponent } from './pages/create-podcast/create-podcast'; // Import the new component
 import { MyPodcasts } from './pages/my-podcasts/my-podcasts';
 
@@ -18,7 +18,7 @@ export const routes: Routes = [
     {path: "profile", component: Profile},
     {path: "search/:term", component: Search},
     {path: "search", component:Search},
-    {path: "podcast/:id", component:Podcast},
+    {path: "podcast/:id", component:PodcastDetail},
     {path: "create-podcast", component: CreatePodcastComponent},
     {path: "myPodcasts", component: MyPodcasts}
 ];

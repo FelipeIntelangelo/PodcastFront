@@ -7,12 +7,12 @@ import { AlertService } from '../../services/ui/alert.service';
 import { User } from '../../models/user/user';
 
 @Component({
-  selector: 'app-podcast',
+  selector: 'app-podcast-detail',
   imports: [],
-  templateUrl: './podcast.html',
-  styleUrl: './podcast.css'
+  templateUrl: './podcast-detail.html',
+  styleUrl: './podcast-detail.css'
 })
-export class Podcast implements OnInit{
+export class PodcastDetail implements OnInit{
   podcast?: PodcastModel;
   isLoading = true;
   podcastId?: number;
@@ -98,6 +98,11 @@ export class Podcast implements OnInit{
   canDeletePodcast(): boolean {
     if (!this.podcast || !this.currentUser) return false;
     return this.isAdmin || this.podcast.user.id === this.currentUser.id;
+  }
+
+  editPodcast(): void {
+    // TODO: Navegar a página de edición
+    console.log('Edit podcast:', this.podcastId);
   }
 
   async deletePodcast(): Promise<void> {
