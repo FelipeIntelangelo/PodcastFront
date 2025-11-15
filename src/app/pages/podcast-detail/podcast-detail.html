@@ -52,6 +52,14 @@
             <span class="icon-eye"></span>
             <span class="value">{{ formatViews(getTotalViews()) }}</span>
           </div>
+          <div class="stat-item">
+            <span class="label">Episodios:</span>
+            <span class="value">{{ getTotalEpisodes() }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="label">Temporadas:</span>
+            <span class="value">{{ getTotalSeasons() }}</span>
+          </div>
         </div>
 
         @if (podcast.categories.length) {
@@ -72,6 +80,47 @@
         </div>
       </div>
       </div>
+    </section>
+
+    <!-- Sección de Episodios -->
+    <section class="episodes-section">
+      <h2>Episodios</h2>
+      @if (isLoadingEpisodes) {
+        <div class="loading-episodes">
+          <p>Cargando episodios...</p>
+        </div>
+      } @else if (episodes.length === 0) {
+        <div class="no-episodes">
+          <p>Este podcast aún no tiene episodios</p>
+        </div>
+      } @else {
+        <div class="episodes-list">
+          @for (episode of episodes; track episode.id) {
+            <article class="episode-card" (click)="viewEpisode(episode.id)">
+              <div class="episode-image">
+                <img [src]="episode.imageUrl || podcast.imageUrl || 'assets/default-episode.png'" [alt]="episode.title">
+              </div>
+              <div class="episode-info">
+                <div class="episode-header">
+                  <h3 class="episode-title">{{ episode.title }}</h3>
+                  <span class="episode-meta">S{{ episode.season }} · E{{ episode.chapter }}</span>
+                </div>
+                <p class="episode-description">{{ episode.description }}</p>
+                <div class="episode-footer">
+                  <span class="episode-views">
+                    <span class="icon-eye-small"></span>
+                    {{ formatViews(episode.views) }}
+                  </span>
+                  <span class="episode-date">
+                    <span class="icon-calendar"></span>
+                    {{ episode.publicationDate | date:'dd/MM/yyyy' }}
+                  </span>
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
     </section>
   </div>
 } @else {

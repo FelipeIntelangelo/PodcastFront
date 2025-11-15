@@ -1,0 +1,56 @@
+@if (isLoading) {
+  <div class="loading-container">
+    <p>Cargando episodio...</p>
+  </div>
+} @else if (episode) {
+  <div class="episode-detail">
+    <section class="hero">
+      <div class="episode-header">
+        <!-- Imagen del episodio -->
+        <div class="episode-image">
+          <img [src]="episode.imageUrl || 'assets/default-episode.png'" [alt]="episode.title">
+        </div>
+
+        <!-- Información principal -->
+        <div class="episode-info">
+          <div class="title-meta">
+            <h1>{{ episode.title }}</h1>
+            <span class="episode-badge">S{{ episode.season }} · E{{ episode.chapter }}</span>
+          </div>
+
+          <div class="podcast-link">
+            <span class="label">Podcast:</span>
+            <span class="value">{{ episode.podcast.title }}</span>
+          </div>
+
+          <div class="episode-stats">
+            <div class="stat">
+              <span class="icon-eye"></span>
+              <span>{{ formatViews(episode.views) }} visualizaciones</span>
+            </div>
+            <div class="stat">
+              <span class="icon-calendar"></span>
+              <span>{{ episode.publicationDate | date:'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+
+          <div class="description">
+            <h3>Descripción</h3>
+            <p>{{ episode.description }}</p>
+          </div>
+
+          <!-- Audio Player -->
+          <div class="audio-player">
+            <audio controls [src]="episode.audioPath">
+              Tu navegador no soporta el elemento de audio.
+            </audio>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+} @else {
+  <div class="error-container">
+    <p>No se pudo cargar el episodio</p>
+  </div>
+}

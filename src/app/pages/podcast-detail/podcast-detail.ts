@@ -5,10 +5,13 @@ import { Podcast as PodcastModel } from '../../models/podcast/podcast';
 import { UserService } from '../../services/client/user-service';
 import { AlertService } from '../../services/ui/alert.service';
 import { User } from '../../models/user/user';
+import { EpisodeService } from '../../services/episode/episode.service';
+import { EpisodeDTO } from '../../models/episode/episode-dto';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-podcast-detail',
-  imports: [],
+  imports: [DatePipe],
   templateUrl: './podcast-detail.html',
   styleUrl: './podcast-detail.css'
 })
@@ -19,13 +22,16 @@ export class PodcastDetail implements OnInit{
   isFavorited = false; // estado local temporal hasta integrar backend
   currentUser?: User;
   isAdmin = false;
+  episodes: EpisodeDTO[] = [];
+  isLoadingEpisodes = false;
 
   constructor(
     private route: ActivatedRoute,
     private podcastService: PodcastService,
     private userService: UserService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private episodeService: EpisodeService
   ){}
 
   ngOnInit(): void {
@@ -57,6 +63,7 @@ export class PodcastDetail implements OnInit{
       next: (podcast) => {
         this.podcast = podcast;
         this.isLoading = false;
+        this.loadEpisodes(id);
       },
       error: (error) => {
         console.error('Error loading podcast:', error);
@@ -65,9 +72,33 @@ export class PodcastDetail implements OnInit{
     });
   }
 
+  loadEpisodes(podcastId: number): void {
+    this.isLoadingEpisodes = true;
+    this.episodeService.getAll(undefined, podcastId).subscribe({
+      next: (episodes) => {
+        this.episodes = episodes;
+        this.isLoadingEpisodes = false;
+      },
+      error: (error) => {
+        console.error('Error loading episodes:', error);
+        this.isLoadingEpisodes = false;
+      }
+    });
+  }
+
   getTotalViews(): number {
     if (!this.podcast?.episodes) return 0;
     return this.podcast.episodes.reduce((total, episode) => total + (episode.views || 0), 0);
+  }
+
+  getTotalEpisodes(): number {
+    return this.episodes.length;
+  }
+
+  getTotalSeasons(): number {
+    if (this.episodes.length === 0) return 0;
+    const seasons = this.episodes.map(ep => ep.season).filter(s => s !== null && s !== undefined);
+    return seasons.length > 0 ? Math.max(...seasons) : 0;
   }
 
   formatViews(value: number): string {
@@ -98,6 +129,10 @@ export class PodcastDetail implements OnInit{
   canDeletePodcast(): boolean {
     if (!this.podcast || !this.currentUser) return false;
     return this.isAdmin || this.podcast.user.id === this.currentUser.id;
+  }
+
+  viewEpisode(episodeId: number): void {
+    this.router.navigate(['/episode', episodeId]);
   }
 
   editPodcast(): void {

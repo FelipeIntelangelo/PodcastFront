@@ -1,8 +1,8 @@
 import { Commentary } from '../commentary/commentary';
 import { Rating } from '../rating/rating';
+import { Podcast } from '../podcast/podcast';
 
 export interface Episode {
-    
   id: number;
   title: string;
   description: string;
@@ -14,7 +14,7 @@ export interface Episode {
   audioPath: string;
   duration: string; // Duration as ISO-8601 duration string (e.g., "PT1H30M")
   createdAt: string; // LocalDateTime as ISO string
-  commentaries?: Commentary[];
+  podcast: Podcast; // Relación con Podcast (sin episodes)
+  commentaries?: number; // Cantidad de comentarios (getCommentariesCount del backend)
   ratings?: Rating[];
-
 }
