@@ -5,6 +5,7 @@ import { Episode } from '../../models/episode/episode';
 import { DatePipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MediaPlayerService } from '../../services/media-player/media-player.service';
+import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
   selector: 'app-episode-detail',
@@ -19,20 +20,31 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   cachedYouTubeUrl: SafeResourceUrl | null = null;
   cachedEpisodeId: number | null = null;
   hideInlinePlayer = false;
+  showIframe = false;
   
   // Contador de tiempo manual
   playbackStartTime: number | null = null;
   timerInterval: any = null;
   estimatedPlaybackTime = 0;
+  
+  // Contador de views
+  viewTimerInterval: any = null;
+  viewCounted = false;
+  isUserLoggedIn = false;
 
   constructor(
     private route: ActivatedRoute,
     private episodeService: EpisodeService,
     private sanitizer: DomSanitizer,
-    private mediaPlayerService: MediaPlayerService
+    private mediaPlayerService: MediaPlayerService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
+    this.authService.getIsLoggedIn().subscribe(loggedIn => {
+      this.isUserLoggedIn = loggedIn;
+    });
+    
     this.route.params.subscribe(params => {
       this.episodeId = +params['id'];
       if (this.episodeId) {
@@ -45,15 +57,18 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     this.isLoading = true;
     // Limpiar timer anterior
     this.stopTimer();
+    this.stopViewTimer();
     this.episodeService.getById(id).subscribe({
       next: (episode) => {
         this.episode = episode;
         this.isLoading = false;
         this.hideInlinePlayer = false;
+        this.showIframe = false;
         // Limpiar cache cuando cambia de episodio
         this.cachedYouTubeUrl = null;
         this.cachedEpisodeId = null;
         this.estimatedPlaybackTime = 0;
+        this.viewCounted = false;
       },
       error: (error) => {
         console.error('Error loading episode:', error);
@@ -97,17 +112,27 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       videoId = url.split('youtu.be/')[1].split('?')[0];
     }
     
-    this.cachedYouTubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+    // Agregar autoplay=1 para que se reproduzca automáticamente
+    this.cachedYouTubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}?autoplay=1`);
     this.cachedEpisodeId = this.episode?.id || null;
     return this.cachedYouTubeUrl;
   }
 
+  startInlinePlayback(): void {
+    this.showIframe = true;
+    // Iniciar contador de views solo si el usuario está logeado
+    if (this.isUserLoggedIn) {
+      this.startViewTimer();
+    }
+  }
+
   onIframeLoad(): void {
-    // Cuando el iframe carga, asumimos que el usuario va a reproducir
-    // Iniciamos el contador después de 2 segundos (tiempo estimado de autoplay)
-    setTimeout(() => {
-      this.startTimer();
-    }, 2000);
+    // Cuando el iframe carga (después de presionar play), iniciamos el contador de tiempo solo si está logeado
+    if (this.isUserLoggedIn) {
+      setTimeout(() => {
+        this.startTimer();
+      }, 2000);
+    }
   }
 
   startTimer(): void {
@@ -128,13 +153,38 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     }
   }
 
+  startViewTimer(): void {
+    if (this.viewCounted || this.viewTimerInterval) return;
+    
+    this.viewTimerInterval = setTimeout(() => {
+      if (this.episode && !this.viewCounted) {
+        this.episodeService.incrementView(this.episode.id).subscribe({
+          next: () => {
+            this.viewCounted = true;
+            console.log('View contabilizada para episodio:', this.episode?.id);
+          },
+          error: (error) => console.error('Error al contabilizar view:', error)
+        });
+      }
+    }, 30000); // 30 segundos
+  }
+
+  stopViewTimer(): void {
+    if (this.viewTimerInterval) {
+      clearTimeout(this.viewTimerInterval);
+      this.viewTimerInterval = null;
+    }
+  }
+
   playInFloatingPlayer(): void {
     if (this.episode) {
-      // Detener el timer y usar el tiempo acumulado
+      // Detener el timer de tiempo
       this.stopTimer();
       this.hideInlinePlayer = true;
-      // Pasar el tiempo estimado acumulado
-      this.mediaPlayerService.openPlayer(this.episode, this.estimatedPlaybackTime, true);
+      
+      // Abrir el reproductor flotante
+      // Pasar el estado de viewCounted para evitar contar dos veces
+      this.mediaPlayerService.openPlayer(this.episode, this.estimatedPlaybackTime, true, this.viewCounted);
     }
   }
 
@@ -147,5 +197,6 @@ export class EpisodeDetail implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.stopTimer();
+    this.stopViewTimer();
   }
 }

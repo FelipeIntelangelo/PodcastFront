@@ -28,7 +28,7 @@ export class MediaPlayerService {
 
   constructor(private episodeService: EpisodeService) {}
 
-  openPlayer(episode: Episode, startTime: number = 0, autoplay: boolean = true) {
+  openPlayer(episode: Episode, startTime: number = 0, autoplay: boolean = true, viewAlreadyCounted: boolean = false) {
     const currentState = this.playerState();
     
     // Si ya está abierto el mismo episodio, solo expandir si estaba minimizado
@@ -49,12 +49,15 @@ export class MediaPlayerService {
       episode,
       isOpen: true,
       isMinimized: false,
-      viewCounted: false,
+      viewCounted: viewAlreadyCounted,
       startTime,
       autoplay
     }));
     
-    this.startViewCountdown();
+    // Solo iniciar countdown si no se ha contado ya
+    if (!viewAlreadyCounted) {
+      this.startViewCountdown();
+    }
   }
 
   closePlayer() {
