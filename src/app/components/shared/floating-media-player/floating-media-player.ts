@@ -48,10 +48,6 @@ export class FloatingMediaPlayerComponent {
     return url.includes('youtube.com') || url.includes('youtu.be');
   }
 
-  isSoundCloudUrl(url: string): boolean {
-    return url.includes('soundcloud.com');
-  }
-
   getYouTubeEmbedUrl(url: string): SafeResourceUrl {
     const episode = this.playerState().episode;
     const state = this.playerState();
@@ -75,24 +71,6 @@ export class FloatingMediaPlayerComponent {
     
     this.cachedEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       `https://www.youtube.com/embed/${videoId}?enablejsapi=1${startParam}${autoplayParam}`
-    );
-    this.cachedEpisodeId = episode?.id || null;
-    return this.cachedEmbedUrl;
-  }
-
-  getSoundCloudEmbedUrl(url: string): SafeResourceUrl {
-    const episode = this.playerState().episode;
-    const state = this.playerState();
-    
-    if (episode && this.cachedEpisodeId === episode.id && this.cachedEmbedUrl) {
-      return this.cachedEmbedUrl;
-    }
-
-    const encodedUrl = encodeURIComponent(url);
-    const autoplayParam = state.autoplay ? 'true' : 'false';
-    
-    this.cachedEmbedUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%239D65D7&auto_play=${autoplayParam}&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`
     );
     this.cachedEpisodeId = episode?.id || null;
     return this.cachedEmbedUrl;

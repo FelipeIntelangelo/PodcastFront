@@ -17,7 +17,6 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   isLoading = true;
   episodeId?: number;
   cachedYouTubeUrl: SafeResourceUrl | null = null;
-  cachedSoundCloudUrl: SafeResourceUrl | null = null;
   cachedEpisodeId: number | null = null;
   hideInlinePlayer = false;
   
@@ -53,7 +52,6 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         this.hideInlinePlayer = false;
         // Limpiar cache cuando cambia de episodio
         this.cachedYouTubeUrl = null;
-        this.cachedSoundCloudUrl = null;
         this.cachedEpisodeId = null;
         this.estimatedPlaybackTime = 0;
       },
@@ -81,10 +79,6 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     return url.includes('youtube.com') || url.includes('youtu.be');
   }
 
-  isSoundCloudUrl(url: string): boolean {
-    return url.includes('soundcloud.com');
-  }
-
   getYouTubeEmbedUrl(url: string): SafeResourceUrl {
     // Si ya tenemos el URL cacheado para este episodio, devolverlo
     if (this.episode && this.cachedEpisodeId === this.episode.id && this.cachedYouTubeUrl) {
@@ -106,21 +100,6 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     this.cachedYouTubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
     this.cachedEpisodeId = this.episode?.id || null;
     return this.cachedYouTubeUrl;
-  }
-
-  getSoundCloudEmbedUrl(url: string): SafeResourceUrl {
-    // Si ya tenemos el URL cacheado para este episodio, devolverlo
-    if (this.episode && this.cachedEpisodeId === this.episode.id && this.cachedSoundCloudUrl) {
-      return this.cachedSoundCloudUrl;
-    }
-
-    // SoundCloud necesita la URL codificada
-    const encodedUrl = encodeURIComponent(url);
-    this.cachedSoundCloudUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%239D65D7&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`
-    );
-    this.cachedEpisodeId = this.episode?.id || null;
-    return this.cachedSoundCloudUrl;
   }
 
   onIframeLoad(): void {

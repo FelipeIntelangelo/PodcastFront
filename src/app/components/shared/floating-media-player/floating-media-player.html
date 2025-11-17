@@ -55,16 +55,6 @@
             allowfullscreen
             class="media-iframe">
           </iframe>
-        } @else if (isSoundCloudUrl(playerState().episode!.audioPath)) {
-          <iframe 
-            [src]="getSoundCloudEmbedUrl(playerState().episode!.audioPath)" 
-            width="100%" 
-            height="100%" 
-            scrolling="no" 
-            frameborder="no" 
-            allow="autoplay"
-            class="media-iframe">
-          </iframe>
         } @else {
           <div class="audio-container">
             <audio 
