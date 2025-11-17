@@ -35,5 +35,10 @@ export class EpisodeService {
     );
   }
 
-  // Métodos se irán agregando según las necesidades de la API
+  incrementView(episodeId: number): Observable<string> {
+    return this.http.get(`${this.API_URL}/${episodeId}/play`, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
 }

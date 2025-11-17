@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EpisodeService } from '../../services/episode/episode.service';
 import { Episode } from '../../models/episode/episode';
 import { DatePipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MediaPlayerService } from '../../services/media-player/media-player.service';
 
 @Component({
   selector: 'app-episode-detail',
@@ -11,15 +12,25 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
   templateUrl: './episode-detail.html',
   styleUrl: './episode-detail.css'
 })
-export class EpisodeDetail implements OnInit {
+export class EpisodeDetail implements OnInit, OnDestroy {
   episode?: Episode;
   isLoading = true;
   episodeId?: number;
+  cachedYouTubeUrl: SafeResourceUrl | null = null;
+  cachedSoundCloudUrl: SafeResourceUrl | null = null;
+  cachedEpisodeId: number | null = null;
+  hideInlinePlayer = false;
+  
+  // Contador de tiempo manual
+  playbackStartTime: number | null = null;
+  timerInterval: any = null;
+  estimatedPlaybackTime = 0;
 
   constructor(
     private route: ActivatedRoute,
     private episodeService: EpisodeService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private mediaPlayerService: MediaPlayerService
   ) {}
 
   ngOnInit(): void {
@@ -33,10 +44,18 @@ export class EpisodeDetail implements OnInit {
 
   loadEpisode(id: number): void {
     this.isLoading = true;
+    // Limpiar timer anterior
+    this.stopTimer();
     this.episodeService.getById(id).subscribe({
       next: (episode) => {
         this.episode = episode;
         this.isLoading = false;
+        this.hideInlinePlayer = false;
+        // Limpiar cache cuando cambia de episodio
+        this.cachedYouTubeUrl = null;
+        this.cachedSoundCloudUrl = null;
+        this.cachedEpisodeId = null;
+        this.estimatedPlaybackTime = 0;
       },
       error: (error) => {
         console.error('Error loading episode:', error);
@@ -67,6 +86,11 @@ export class EpisodeDetail implements OnInit {
   }
 
   getYouTubeEmbedUrl(url: string): SafeResourceUrl {
+    // Si ya tenemos el URL cacheado para este episodio, devolverlo
+    if (this.episode && this.cachedEpisodeId === this.episode.id && this.cachedYouTubeUrl) {
+      return this.cachedYouTubeUrl;
+    }
+
     let videoId = '';
     
     // Formato: https://www.youtube.com/watch?v=VIDEO_ID
@@ -79,14 +103,63 @@ export class EpisodeDetail implements OnInit {
       videoId = url.split('youtu.be/')[1].split('?')[0];
     }
     
-    return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+    this.cachedYouTubeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+    this.cachedEpisodeId = this.episode?.id || null;
+    return this.cachedYouTubeUrl;
   }
 
   getSoundCloudEmbedUrl(url: string): SafeResourceUrl {
+    // Si ya tenemos el URL cacheado para este episodio, devolverlo
+    if (this.episode && this.cachedEpisodeId === this.episode.id && this.cachedSoundCloudUrl) {
+      return this.cachedSoundCloudUrl;
+    }
+
     // SoundCloud necesita la URL codificada
     const encodedUrl = encodeURIComponent(url);
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
+    this.cachedSoundCloudUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
       `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%239D65D7&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`
     );
+    this.cachedEpisodeId = this.episode?.id || null;
+    return this.cachedSoundCloudUrl;
+  }
+
+  onIframeLoad(): void {
+    // Cuando el iframe carga, asumimos que el usuario va a reproducir
+    // Iniciamos el contador después de 2 segundos (tiempo estimado de autoplay)
+    setTimeout(() => {
+      this.startTimer();
+    }, 2000);
+  }
+
+  startTimer(): void {
+    if (this.timerInterval) return; // Ya está corriendo
+    
+    this.playbackStartTime = Date.now();
+    this.timerInterval = setInterval(() => {
+      if (this.playbackStartTime) {
+        this.estimatedPlaybackTime = Math.floor((Date.now() - this.playbackStartTime) / 1000);
+      }
+    }, 1000);
+  }
+
+  stopTimer(): void {
+    if (this.timerInterval) {
+      clearInterval(this.timerInterval);
+      this.timerInterval = null;
+    }
+  }
+
+  playInFloatingPlayer(): void {
+    if (this.episode) {
+      // Detener el timer y usar el tiempo acumulado
+      this.stopTimer();
+      this.hideInlinePlayer = true;
+      // Pasar el tiempo estimado acumulado
+      this.mediaPlayerService.openPlayer(this.episode, this.estimatedPlaybackTime, true);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stopTimer();
   }
 }

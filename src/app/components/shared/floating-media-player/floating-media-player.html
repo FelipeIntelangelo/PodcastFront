@@ -1,0 +1,89 @@
+@if (playerState().isOpen && playerState().episode) {
+  <div class="floating-player" [class.minimized]="playerState().isMinimized">
+    <!-- Header del player -->
+    <div class="player-header">
+      <div class="episode-info-mini">
+        <img 
+          [src]="playerState().episode?.imageUrl || 'assets/default-episode.png'" 
+          [alt]="playerState().episode?.title"
+          class="episode-thumbnail">
+        <div class="episode-text">
+          <div class="episode-title">{{ playerState().episode?.title }}</div>
+          <div class="podcast-name">{{ playerState().episode?.podcast?.title }}</div>
+        </div>
+      </div>
+      
+      <div class="header-controls">
+        <button 
+          class="control-btn minimize-btn" 
+          (click)="toggleMinimize()"
+          [attr.aria-label]="playerState().isMinimized ? 'Expandir' : 'Minimizar'">
+          @if (playerState().isMinimized) {
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 14l5-5 5 5z"/>
+            </svg>
+          } @else {
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M7 10l5 5 5-5z"/>
+            </svg>
+          }
+        </button>
+        
+        <button 
+          class="control-btn close-btn" 
+          (click)="closePlayer()"
+          aria-label="Cerrar">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Contenido del player (solo visible cuando está expandido) -->
+    @if (!playerState().isMinimized) {
+      <div class="player-content">
+        @if (isYouTubeUrl(playerState().episode!.audioPath)) {
+          <iframe 
+            [src]="getYouTubeEmbedUrl(playerState().episode!.audioPath)" 
+            width="100%" 
+            height="100%" 
+            frameborder="0" 
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+            class="media-iframe">
+          </iframe>
+        } @else if (isSoundCloudUrl(playerState().episode!.audioPath)) {
+          <iframe 
+            [src]="getSoundCloudEmbedUrl(playerState().episode!.audioPath)" 
+            width="100%" 
+            height="100%" 
+            scrolling="no" 
+            frameborder="no" 
+            allow="autoplay"
+            class="media-iframe">
+          </iframe>
+        } @else {
+          <div class="audio-container">
+            <audio 
+              controls 
+              [src]="playerState().episode!.audioPath" 
+              [autoplay]="playerState().autoplay"
+              class="audio-player">
+              Tu navegador no soporta el elemento de audio.
+            </audio>
+          </div>
+        }
+
+        <button class="go-to-episode-btn" (click)="goToEpisode()">
+          Ver episodio completo
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9.29 6.71a.996.996 0 0 0 0 1.41L13.17 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01z"/>
+          </svg>
+        </button>
+      </div>
+    }
+  </div>
+}
