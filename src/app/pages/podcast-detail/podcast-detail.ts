@@ -123,7 +123,7 @@ export class PodcastDetail implements OnInit{
 
   toggleFavorite(): void {
     this.isFavorited = !this.isFavorited;
-    // TODO: integrar con servicio (POST /api/podcasts/{id}/favorite o similar)
+    // integrar con servicio (POST /api/podcasts/{id}/favorite o similar)
   }
 
   canDeletePodcast(): boolean {

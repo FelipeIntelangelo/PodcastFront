@@ -18,7 +18,6 @@ export class EpisodeService {
 
   getAll(title?: string, podcastId?: number): Observable<EpisodeDTO[]> {
     const params = new URLSearchParams();
-    
     if (title) params.append('title', title);
     if (podcastId) params.append('podcastId', podcastId.toString());
     

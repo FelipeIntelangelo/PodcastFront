@@ -3,6 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { EpisodeService } from '../../services/episode/episode.service';
 import { Episode } from '../../models/episode/episode';
 import { DatePipe } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-episode-detail',
@@ -17,7 +18,8 @@ export class EpisodeDetail implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private episodeService: EpisodeService
+    private episodeService: EpisodeService,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -54,5 +56,37 @@ export class EpisodeDetail implements OnInit {
       if (abs >= 1_000) return sign + (abs / 1_000).toFixed(1) + 'K';
       return String(value);
     }
+  }
+
+  isYouTubeUrl(url: string): boolean {
+    return url.includes('youtube.com') || url.includes('youtu.be');
+  }
+
+  isSoundCloudUrl(url: string): boolean {
+    return url.includes('soundcloud.com');
+  }
+
+  getYouTubeEmbedUrl(url: string): SafeResourceUrl {
+    let videoId = '';
+    
+    // Formato: https://www.youtube.com/watch?v=VIDEO_ID
+    if (url.includes('youtube.com/watch')) {
+      const urlParams = new URLSearchParams(url.split('?')[1]);
+      videoId = urlParams.get('v') || '';
+    }
+    // Formato: https://youtu.be/VIDEO_ID
+    else if (url.includes('youtu.be/')) {
+      videoId = url.split('youtu.be/')[1].split('?')[0];
+    }
+    
+    return this.sanitizer.bypassSecurityTrustResourceUrl(`https://www.youtube.com/embed/${videoId}`);
+  }
+
+  getSoundCloudEmbedUrl(url: string): SafeResourceUrl {
+    // SoundCloud necesita la URL codificada
+    const encodedUrl = encodeURIComponent(url);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(
+      `https://w.soundcloud.com/player/?url=${encodedUrl}&color=%239D65D7&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true&visual=true`
+    );
   }
 }

@@ -39,11 +39,33 @@
             <p>{{ episode.description }}</p>
           </div>
 
-          <!-- Audio Player -->
-          <div class="audio-player">
-            <audio controls [src]="episode.audioPath">
-              Tu navegador no soporta el elemento de audio.
-            </audio>
+          <!-- Audio/Video Player -->
+          <div class="media-player">
+            @if (isYouTubeUrl(episode.audioPath)) {
+              <iframe 
+                [src]="getYouTubeEmbedUrl(episode.audioPath)" 
+                width="100%" 
+                height="400" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen
+                class="youtube-player">
+              </iframe>
+            } @else if (isSoundCloudUrl(episode.audioPath)) {
+              <iframe 
+                [src]="getSoundCloudEmbedUrl(episode.audioPath)" 
+                width="100%" 
+                height="300" 
+                scrolling="no" 
+                frameborder="no" 
+                allow="autoplay"
+                class="soundcloud-player">
+              </iframe>
+            } @else {
+              <audio controls [src]="episode.audioPath">
+                Tu navegador no soporta el elemento de audio.
+              </audio>
+            }
           </div>
         </div>
       </div>
