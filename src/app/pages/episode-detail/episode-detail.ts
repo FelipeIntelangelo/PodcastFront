@@ -138,6 +138,13 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     }
   }
 
+  showInlinePlayer(): void {
+    this.hideInlinePlayer = false;
+    this.mediaPlayerService.closePlayer();
+    this.estimatedPlaybackTime = 0;
+    this.stopTimer();
+  }
+
   ngOnDestroy(): void {
     this.stopTimer();
   }

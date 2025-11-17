@@ -1,13 +1,14 @@
 @if (playerState().isOpen && playerState().episode) {
   <div class="floating-player" [class.minimized]="playerState().isMinimized">
     <!-- Header del player -->
-    <div class="player-header">
+    <div class="player-header" (click)="toggleMinimize()">
       <div class="episode-info-mini">
         <img 
           [src]="playerState().episode?.imageUrl || 'assets/default-episode.png'" 
           [alt]="playerState().episode?.title"
-          class="episode-thumbnail">
-        <div class="episode-text">
+          class="episode-thumbnail"
+          (click)="$event.stopPropagation()">
+        <div class="episode-text" (click)="$event.stopPropagation()">
           <div class="episode-title">{{ playerState().episode?.title }}</div>
           <div class="podcast-name">{{ playerState().episode?.podcast?.title }}</div>
         </div>
@@ -16,7 +17,7 @@
       <div class="header-controls">
         <button 
           class="control-btn minimize-btn" 
-          (click)="toggleMinimize()"
+          (click)="toggleMinimize(); $event.stopPropagation()"
           [attr.aria-label]="playerState().isMinimized ? 'Expandir' : 'Minimizar'">
           @if (playerState().isMinimized) {
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -31,7 +32,7 @@
         
         <button 
           class="control-btn close-btn" 
-          (click)="closePlayer()"
+          (click)="closePlayer(); $event.stopPropagation()"
           aria-label="Cerrar">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -41,8 +42,7 @@
     </div>
 
     <!-- Contenido del player (solo visible cuando está expandido) -->
-    @if (!playerState().isMinimized) {
-      <div class="player-content">
+    <div class="player-content" [class.hidden]="playerState().isMinimized">
         @if (isYouTubeUrl(playerState().episode!.audioPath)) {
           <iframe 
             [src]="getYouTubeEmbedUrl(playerState().episode!.audioPath)" 
@@ -68,12 +68,11 @@
         }
 
         <button class="go-to-episode-btn" (click)="goToEpisode()">
-          Ver episodio completo
+          Volver al detalle
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
             <path d="M9.29 6.71a.996.996 0 0 0 0 1.41L13.17 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01z"/>
           </svg>
         </button>
-      </div>
-    }
+    </div>
   </div>
 }
