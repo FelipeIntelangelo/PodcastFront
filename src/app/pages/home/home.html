@@ -13,13 +13,14 @@
             <h2>Novedades</h2>
             <div class="carouselContainer">
                 <!-- Flecha izquierda (visible solo después del primer clic) -->
-                <button 
-                    *ngIf="carousels['novedades'].hasBeenClicked"
-                    class="arrowButton arrowBack"
-                    (click)="goBack('novedades')"
-                    [disabled]="carousels['novedades'].currentIndex === 0">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
+                @if (carousels['novedades'].hasBeenClicked) {
+                    <button 
+                        class="arrowButton arrowBack"
+                        (click)="goBack('novedades')"
+                        [disabled]="carousels['novedades'].currentIndex === 0">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                }
 
                 <!-- Contenedor de cards con scroll -->
                 <div class="carouselWrapper">
@@ -88,27 +89,30 @@
                 </div>
 
                 <!-- Flecha inicial (solo visible al principio, en posición derecha) -->
-                <button 
-                    *ngIf="!carousels['novedades'].hasBeenClicked"
-                    class="arrowButton arrowNext arrowInitial"
-                    (click)="onArrowClick('novedades')">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                @if (!carousels['novedades'].hasBeenClicked) {
+                    <button 
+                        class="arrowButton arrowNext arrowInitial"
+                        (click)="onArrowClick('novedades')">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                }
 
                 <!-- Flecha siguiente (visible después del primer clic, mientras no esté al final) -->
-                <button 
-                    *ngIf="carousels['novedades'].hasBeenClicked && !isAtEnd('novedades')"
-                    class="arrowButton arrowNext"
-                    (click)="goNext('novedades')">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
+                @if (carousels['novedades'].hasBeenClicked && !isAtEnd('novedades')) {
+                    <button 
+                        class="arrowButton arrowNext"
+                        (click)="goNext('novedades')">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                }
 
                 <!-- Botón Ver todos (reemplaza la flecha derecha al final) -->
-                <button 
-                    *ngIf="carousels['novedades'].hasBeenClicked && isAtEnd('novedades')"
-                    class="verTodosButton">
-                    Ver todos
-                </button>
+                @if (carousels['novedades'].hasBeenClicked && isAtEnd('novedades')) {
+                    <button 
+                        class="verTodosButton">
+                        Ver todos
+                    </button>
+                }
             </div>
         </div>
     </main>

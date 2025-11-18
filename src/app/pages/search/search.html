@@ -52,8 +52,8 @@
                 <div class="podcasts-grid">
                     @for (podcast of filteredPodcasts; track podcast.id) {
                         <div class="podcast-card" (click)="navigateToPodcast(podcast.id)">
-                            <div class="podcast-icon">
-                                🎙️
+                            <div class="podcast-image">
+                                <img [src]="podcast.imageUrl || 'assets/default-podcast.png'" [alt]="podcast.title">
                             </div>
                             <div class="podcast-info">
                                 <h3 class="podcast-title">{{ podcast.title }}</h3>

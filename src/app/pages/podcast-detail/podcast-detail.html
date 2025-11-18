@@ -84,7 +84,15 @@
 
     <!-- Sección de Episodios -->
     <section class="episodes-section">
-      <h2>Episodios</h2>
+      <div class="episodes-header">
+        <h2>Episodios</h2>
+        @if (canAddEpisode()) {
+          <button type="button" class="add-episode-btn" (click)="goToAddEpisode()" title="Agregar episodio" aria-label="Agregar episodio">
+            <span class="icon-plus"></span>
+            <span class="btn-text">Agregar episodio</span>
+          </button>
+        }
+      </div>
       @if (isLoadingEpisodes) {
         <div class="loading-episodes">
           <p>Cargando episodios...</p>

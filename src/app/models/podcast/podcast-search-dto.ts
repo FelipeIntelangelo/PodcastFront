@@ -3,4 +3,5 @@ export interface PodcastSearchDTO {
     title: string;
     description?: string;
     averageViews: number;
+    imageUrl?: string;
 }

@@ -70,9 +70,15 @@ export class Search implements OnInit, OnDestroy {
   }
 
   private loadPodcasts(): void {
-    this.podcastService.getAllFiltered(this.term, undefined, undefined, this.isOrderedByViews).subscribe({
-      next: (apiPodcasts) => {
-        this.filteredPodcasts = apiPodcasts; // Ya vienen filtrados de la API
+    // Traer TODOS los podcasts sin filtro y filtrar del lado del cliente
+    this.podcastService.getAll(this.isOrderedByViews).subscribe({
+      next: (allPodcasts) => {
+        // Filtrar en el cliente porque el backend tiene un bug
+        const q = this.term.toLowerCase();
+        this.filteredPodcasts = allPodcasts.filter(p => 
+          (p.title ?? '').toLowerCase().includes(q) ||
+          (p.description ?? '').toLowerCase().includes(q)
+        );
         this.isLoading = false;
       },
       error: (err) => {

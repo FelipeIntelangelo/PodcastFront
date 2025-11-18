@@ -1,0 +1,113 @@
+@if (podcast) {
+  <div class="add-episode-page">
+  <h2>Nuevo episodio para: {{ podcast.title }}</h2>
+
+  @if (!isAuthorized && errorMessage) {
+    <div class="error">{{ errorMessage }}</div>
+  }
+
+  @if (isAuthorized) {
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <fieldset>
+      <label>Título</label>
+      <input type="text" formControlName="title" />
+    </fieldset>
+
+    <fieldset>
+      <label>Descripción</label>
+      <textarea formControlName="description"></textarea>
+    </fieldset>
+
+    <div class="grid">
+      <fieldset>
+        <label>Temporada</label>
+        <input type="number" formControlName="season" min="1" />
+      </fieldset>
+      <fieldset>
+        <label>Episodio</label>
+        <input type="number" formControlName="chapter" min="1" />
+      </fieldset>
+    </div>
+
+    <fieldset>
+      <label>Duración</label>
+      <div class="grid">
+        <div>
+          <label>Horas</label>
+          <input type="number" formControlName="durationHours" min="0" />
+        </div>
+        <div>
+          <label>Minutos</label>
+          <input type="number" formControlName="durationMinutes" min="0" max="59" />
+        </div>
+        <div>
+          <label>Segundos</label>
+          <input type="number" formControlName="durationSeconds" min="0" max="59" />
+        </div>
+      </div>
+      <div class="hint">Completa al menos un valor mayor a 0.</div>
+    </fieldset>
+
+    <fieldset>
+      <label>Imagen</label>
+      <app-cloudinary-upload
+        acceptedTypes="image/*"
+        resourceType="image"
+        label="Subir portada"
+        [maxSizeMB]="10"
+        [defer]="true"
+        #imageUp
+        (uploadComplete)="onImageUploaded($event)"
+        (uploadError)="onUploadError($event)">
+      </app-cloudinary-upload>
+    </fieldset>
+
+    <fieldset>
+      <label>Video/Audio</label>
+      @if (!form.value.audioPath) {
+        <app-cloudinary-upload
+          acceptedTypes="video/*,audio/*"
+          resourceType="auto"
+          label="Subir video/audio del episodio"
+          [maxSizeMB]="500"
+          [defer]="true"
+          #mediaUp
+          (uploadComplete)="onAudioUploaded($event)"
+          (uploadError)="onUploadError($event)">
+        </app-cloudinary-upload>
+        <div class="hint">Sube un archivo para habilitar el envío.</div>
+      } @else {
+        <div class="media-preview">
+          <div class="player">
+            @if (isVideo(form.value.audioPath)) {
+              <video [src]="form.value.audioPath" controls playsinline></video>
+            } @else {
+              <audio [src]="form.value.audioPath" controls></audio>
+            }
+          </div>
+          <div class="meta">
+            <span class="ok">Archivo cargado ✔</span>
+            <span class="name">{{ getFileName(form.value.audioPath) }}</span>
+            <button type="button" class="link-btn" (click)="clearAudio()">Reemplazar archivo</button>
+          </div>
+        </div>
+      }
+    </fieldset>
+
+    <div class="actions">
+      <button type="submit" [disabled]="isSubmitting || form.invalid">{{ isSubmitting ? 'Creando…' : 'Crear episodio' }}</button>
+      <a [routerLink]="['/podcast', podcast.id]" class="cancel">Cancelar</a>
+    </div>
+
+    @if (errorMessage) {
+      <div class="error">{{ errorMessage }}</div>
+    }
+  </form>
+  }
+  </div>
+} @else {
+  <p>Cargando podcast…</p>
+  @if (errorMessage) {
+    <div class="error">{{ errorMessage }}</div>
+  }
+}

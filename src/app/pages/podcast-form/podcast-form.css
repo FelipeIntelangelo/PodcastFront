@@ -157,6 +157,31 @@ button[type="submit"]:disabled {
   text-align: center;
 }
 
+.current-image {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(157, 101, 215, 0.1);
+  border-radius: 0.5rem;
+  border: 1px solid rgba(157, 101, 215, 0.3);
+}
+
+.image-url-label {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0 0 0.5rem 0;
+}
+
+.image-url-link {
+  color: #9D65D7;
+  text-decoration: none;
+  word-break: break-all;
+  font-size: 0.875rem;
+}
+
+.image-url-link:hover {
+  text-decoration: underline;
+}
+
 @keyframes spin {
   to {
     transform: rotate(360deg);

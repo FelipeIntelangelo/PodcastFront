@@ -131,6 +131,13 @@
   background: #000;
 }
 
+.media-video {
+  flex: 1;
+  border: none;
+  background: #000;
+  object-fit: contain;
+}
+
 .audio-container {
   flex: 1;
   display: flex;

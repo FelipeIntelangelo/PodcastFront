@@ -4,6 +4,7 @@ import { catchError, Observable } from 'rxjs';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { EpisodeDTO } from '../../models/episode/episode-dto';
 import { Episode } from '../../models/episode/episode';
+import { EpisodeCreatePayload } from '../../models/episode/episode-create-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,15 @@ export class EpisodeService {
 
   incrementView(episodeId: number): Observable<string> {
     return this.http.get(`${this.API_URL}/${episodeId}/play`, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  createEpisode(payload: EpisodeCreatePayload): Observable<string> {
+    return this.http.post(`${this.API_URL}`,
+      payload,
+      { responseType: 'text' }
+    ).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }

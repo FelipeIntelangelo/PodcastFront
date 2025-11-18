@@ -73,8 +73,8 @@
 .podcast-info {
   grid-column: 2;
   display: grid;
-  grid-template-rows: auto auto 1fr;
-  gap: 1.5rem;
+  grid-template-rows: auto auto auto 1fr;
+  gap: 1rem;
 }
 
 .title-rating {
@@ -293,6 +293,7 @@
   display: flex;
   gap: 0.5rem;
   flex-wrap: wrap;
+  align-items: center; /* evita que los chips se estiren en altura */
 }
 
 .chip {
@@ -304,6 +305,12 @@
   border: 1px solid rgba(var(--accent-rgb), 0.25);
   border-radius: var(--radius-pill);
   padding: 0.25rem 0.6rem;
+  display: inline-flex;       /* tamaño según contenido, no estirar */
+  align-items: center;
+  line-height: 1;            /* corrige altura excesiva por line-height heredado */
+  height: auto;
+  align-self: center;        /* ignora stretch por defecto en contenedor flex */
+  white-space: nowrap;       /* evita salto de línea dentro del chip */
 }
 
 .chip-more {
@@ -317,10 +324,54 @@
   margin-top: 2rem;
 }
 
-.episodes-section h2 {
-  margin: 0 0 1.5rem 0;
+.episodes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.episodes-header h2 {
+  margin: 0;
   font-size: 1.8rem;
   color: var(--text-primary);
+}
+
+.add-episode-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-radius: 8px;
+  background: rgba(var(--accent-rgb), 0.15);
+  border: 1px solid rgba(var(--accent-rgb), 0.35);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .15s;
+}
+
+.add-episode-btn:hover {
+  background: rgba(var(--accent-rgb), 0.25);
+  border-color: rgba(var(--accent-rgb), 0.5);
+}
+
+.add-episode-btn:active {
+  transform: translateY(1px);
+}
+
+.add-episode-btn .btn-text {
+  font-weight: 500;
+}
+
+.icon-plus {
+  width: 18px;
+  height: 18px;
+  display: inline-block;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%239D65D7' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='12' y1='5' x2='12' y2='19'/%3E%3Cline x1='5' y1='12' x2='19' y2='12'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  filter: drop-shadow(0 0 4px rgba(var(--accent-rgb), 0.25));
 }
 
 .loading-episodes,

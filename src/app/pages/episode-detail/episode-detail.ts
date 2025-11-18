@@ -62,13 +62,25 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       next: (episode) => {
         this.episode = episode;
         this.isLoading = false;
-        this.hideInlinePlayer = false;
-        this.showIframe = false;
+        
+        // Verificar si este episodio está reproduciéndose en el flotante
+        const playerState = this.mediaPlayerService.playerState();
+        if (playerState.isOpen && playerState.episode?.id === episode.id) {
+          // El episodio está en el flotante, mostrar mensaje
+          this.hideInlinePlayer = true;
+          this.showIframe = false;
+          this.viewCounted = playerState.viewCounted;
+        } else {
+          // Episodio no está en el flotante, resetear estado
+          this.hideInlinePlayer = false;
+          this.showIframe = false;
+          this.viewCounted = false;
+        }
+        
         // Limpiar cache cuando cambia de episodio
         this.cachedYouTubeUrl = null;
         this.cachedEpisodeId = null;
         this.estimatedPlaybackTime = 0;
-        this.viewCounted = false;
       },
       error: (error) => {
         console.error('Error loading episode:', error);
@@ -92,6 +104,14 @@ export class EpisodeDetail implements OnInit, OnDestroy {
 
   isYouTubeUrl(url: string): boolean {
     return url.includes('youtube.com') || url.includes('youtu.be');
+  }
+
+  isCloudinaryVideo(url: string): boolean {
+    return url.includes('cloudinary.com') && (url.includes('/video/') || url.includes('.mp4') || url.includes('.webm'));
+  }
+
+  isCloudinaryAudio(url: string): boolean {
+    return url.includes('cloudinary.com') && (url.includes('.mp3') || url.includes('.wav') || url.includes('.m4a'));
   }
 
   getYouTubeEmbedUrl(url: string): SafeResourceUrl {

@@ -131,6 +131,16 @@ export class PodcastDetail implements OnInit{
     return this.isAdmin || this.podcast.user.id === this.currentUser.id;
   }
 
+  canAddEpisode(): boolean {
+    if (!this.podcast || !this.currentUser) return false;
+    return this.isAdmin || this.podcast.user.id === this.currentUser.id;
+  }
+
+  goToAddEpisode(): void {
+    if (!this.podcast) return;
+    this.router.navigate(['/podcast', this.podcast.id, 'add-episode']);
+  }
+
   viewEpisode(episodeId: number): void {
     this.router.navigate(['/episode', episodeId]);
   }

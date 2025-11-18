@@ -1,14 +1,15 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Podcast } from '../../models/podcast/podcast';
 import { Category } from '../../models/enums/category.enum';
 import { FormError } from '../../components/shared/form-error/form-error';
+import { CloudinaryUploadComponent } from '../../components/shared/cloudinary-upload/cloudinary-upload';
 
 @Component({
   selector: 'app-podcast-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormError],
+  imports: [CommonModule, ReactiveFormsModule, FormError, CloudinaryUploadComponent],
   templateUrl: './podcast-form.html',
   styleUrls: ['./podcast-form.css']
 })
@@ -20,6 +21,7 @@ export class PodcastFormComponent implements OnInit, OnChanges {
 
   podcastForm!: FormGroup;
   categoryKeys: string[] = [];
+  @ViewChild('imageUp') imageUp?: CloudinaryUploadComponent;
 
   customErrors = {
     title: {
@@ -88,7 +90,16 @@ export class PodcastFormComponent implements OnInit, OnChanges {
     return this.podcastForm.get('categories') as FormArray;
   }
 
-  onSubmit(): void {
+  onImageUploaded(url: string): void {
+    this.podcastForm.patchValue({ imageUrl: url });
+  }
+
+  onUploadError(error: string): void {
+    console.error('Upload error:', error);
+    // Aquí podrías mostrar un mensaje al usuario
+  }
+
+  async onSubmit(): Promise<void> {
     if (this.podcastForm.valid) {
       const selectedCategories = this.podcastForm.value.categories
         .map((checked: boolean, i: number) => checked ? this.categoryKeys[i] : null)
@@ -97,6 +108,16 @@ export class PodcastFormComponent implements OnInit, OnChanges {
       if (selectedCategories.length === 0) {
         this.categories.setErrors({ required: true });
         return;
+      }
+
+      // Subida diferida de imagen si el usuario seleccionó un archivo
+      try {
+        if (this.imageUp && this.imageUp.hasFileSelected()) {
+          const imgUrl = await this.imageUp.performUpload();
+          this.podcastForm.patchValue({ imageUrl: imgUrl });
+        }
+      } catch (e) {
+        return; // el uploader ya mostró el error
       }
 
       const formValue = {

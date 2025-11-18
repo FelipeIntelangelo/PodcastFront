@@ -17,8 +17,26 @@
     </fieldset>
 
     <fieldset>
-      <label for="imageUrl">Image URL (Optional)</label>
-      <input type="text" id="imageUrl" formControlName="imageUrl" placeholder="https://example.com/image.png">
+      <label>Imagen del Podcast</label>
+      <app-cloudinary-upload
+        acceptedTypes="image/*"
+        resourceType="image"
+        label="Subir imagen del podcast"
+        [maxSizeMB]="10"
+        [defer]="true"
+        #imageUp
+        (uploadComplete)="onImageUploaded($event)"
+        (uploadError)="onUploadError($event)">
+      </app-cloudinary-upload>
+      
+      @if (podcastForm.get('imageUrl')?.value) {
+        <div class="current-image">
+          <p class="image-url-label">URL actual:</p>
+          <a [href]="podcastForm.get('imageUrl')?.value" target="_blank" class="image-url-link">
+            {{ podcastForm.get('imageUrl')?.value }}
+          </a>
+        </div>
+      }
     </fieldset>
 
     <fieldset formArrayName="categories" class="categories-fieldset">

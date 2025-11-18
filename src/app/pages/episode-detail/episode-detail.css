@@ -305,15 +305,18 @@
 }
 
 .youtube-player,
-.soundcloud-player {
+.soundcloud-player,
+.cloudinary-player {
   border-radius: var(--radius-md);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6);
+  background: #000;
   display: block;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .youtube-player:hover,
-.soundcloud-player:hover {
+.soundcloud-player:hover,
+.cloudinary-player:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 32px rgba(var(--accent-rgb), 0.4), 0 8px 24px rgba(0, 0, 0, 0.6);
 }
