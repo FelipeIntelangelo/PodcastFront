@@ -26,6 +26,7 @@ export class AddEpisodePage implements OnInit {
   errorMessage: string | null = null;
 
   form!: FormGroup;
+  detectedDuration: number = 0; // Duración en segundos detectada automáticamente
 
   @ViewChild('mediaUp') mediaUp?: CloudinaryUploadComponent;
   @ViewChild('imageUp') imageUp?: CloudinaryUploadComponent;
@@ -79,10 +80,7 @@ export class AddEpisodePage implements OnInit {
       season: [1, [Validators.required, Validators.min(1)]],
       chapter: [1, [Validators.required, Validators.min(1)]],
       imageUrl: [''],
-      audioPath: ['', Validators.required],
-      durationHours: [0, [Validators.min(0)]],
-      durationMinutes: [0, [Validators.min(0), Validators.max(59)]],
-      durationSeconds: [0, [Validators.min(0), Validators.max(59)]]
+      audioPath: ['']
     });
   }
 
@@ -113,6 +111,22 @@ export class AddEpisodePage implements OnInit {
     this.errorMessage = message;
   }
 
+  onDurationDetected(durationInSeconds: number): void {
+    this.detectedDuration = durationInSeconds;
+  }
+
+  getFormattedDuration(): string {
+    if (!this.detectedDuration) return 'No detectada';
+    const hours = Math.floor(this.detectedDuration / 3600);
+    const minutes = Math.floor((this.detectedDuration % 3600) / 60);
+    const seconds = this.detectedDuration % 60;
+    const parts = [];
+    if (hours > 0) parts.push(`${hours}h`);
+    if (minutes > 0) parts.push(`${minutes}m`);
+    if (seconds > 0) parts.push(`${seconds}s`);
+    return parts.join(' ') || '0s';
+  }
+
   isVideo(url?: string): boolean {
     if (!url) return false;
     const u = url.toLowerCase();
@@ -137,6 +151,13 @@ export class AddEpisodePage implements OnInit {
     this.form.patchValue({ audioPath: '' });
   }
 
+  canSubmit(): boolean {
+    // Verificar que haya archivo seleccionado y duración detectada
+    const hasFile = (this.mediaUp?.hasFileSelected() || !!this.form.value.audioPath);
+    const hasDuration = this.detectedDuration > 0;
+    return hasFile && hasDuration;
+  }
+
   async submit() {
     if (!this.isAuthorized) return;
     if (this.form.invalid) {
@@ -146,6 +167,13 @@ export class AddEpisodePage implements OnInit {
 
     this.isSubmitting = true;
     this.errorMessage = null;
+
+    // Validar que se detectó una duración
+    if (!this.detectedDuration || this.detectedDuration <= 0) {
+      this.isSubmitting = false;
+      this.errorMessage = 'No se pudo detectar la duración del archivo. Asegurate de seleccionar un archivo de audio/video válido.';
+      return;
+    }
 
     // Subir medios en modo diferido
     try {
@@ -168,16 +196,10 @@ export class AddEpisodePage implements OnInit {
       return;
     }
 
-    const h = Number(this.form.value.durationHours || 0);
-    const m = Number(this.form.value.durationMinutes || 0);
-    const s = Number(this.form.value.durationSeconds || 0);
-    const totalSeconds = h * 3600 + m * 60 + s;
-    if (totalSeconds <= 0) {
-      this.isSubmitting = false;
-      this.errorMessage = 'La duración debe ser mayor a 0 segundos';
-      return;
-    }
-
+    // Convertir duración detectada a ISO-8601
+    const h = Math.floor(this.detectedDuration / 3600);
+    const m = Math.floor((this.detectedDuration % 3600) / 60);
+    const s = this.detectedDuration % 60;
     const durationIso = `PT${h ? h + 'H' : ''}${m ? m + 'M' : ''}${s ? s + 'S' : ''}`;
     const payload: EpisodeCreatePayload = {
       title: this.form.value.title,

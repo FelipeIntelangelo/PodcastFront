@@ -19,6 +19,7 @@ export class CloudinaryUploadComponent {
   @Output() uploadComplete = new EventEmitter<string>(); // Emite la URL del archivo subido
   @Output() uploadError = new EventEmitter<string>();
   @Output() fileSelected = new EventEmitter<File>();
+  @Output() durationDetected = new EventEmitter<number>(); // Emite duración en segundos para audio/video
 
   isUploading = false;
   uploadProgress = 0;
@@ -50,12 +51,34 @@ export class CloudinaryUploadComponent {
       reader.readAsDataURL(file);
     }
 
+    // Detectar duración si es audio o video
+    if (file.type.startsWith('audio/') || file.type.startsWith('video/')) {
+      this.detectDuration(file);
+    }
+
     this.selectedFile = file;
     this.fileSelected.emit(file);
 
     if (!this.defer) {
       void this.uploadFile(file);
     }
+  }
+
+  private detectDuration(file: File): void {
+    const url = URL.createObjectURL(file);
+    const media = document.createElement(file.type.startsWith('video/') ? 'video' : 'audio');
+    
+    media.onloadedmetadata = () => {
+      const duration = Math.floor(media.duration);
+      this.durationDetected.emit(duration);
+      URL.revokeObjectURL(url);
+    };
+
+    media.onerror = () => {
+      URL.revokeObjectURL(url);
+    };
+
+    media.src = url;
   }
 
   async uploadFile(file: File): Promise<string> {

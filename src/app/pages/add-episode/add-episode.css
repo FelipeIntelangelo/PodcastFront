@@ -28,6 +28,18 @@ button { background: #9D65D7; color: #fff; border: none; padding: .6rem 1rem; bo
 button[disabled] { opacity: .6; cursor: not-allowed; }
 .cancel { color: #ddd; text-decoration: none; }
 .hint { color: #aaa; font-size: .9rem; margin-top: .25rem; }
+.duration-info { 
+  color: #9D65D7; 
+  font-size: .9rem; 
+  margin-top: .5rem; 
+  font-weight: 500;
+}
+.field-error {
+  color: #ff6b6b;
+  font-size: .85rem;
+  margin-top: .4rem;
+  display: block;
+}
 .error { color: #ffb3b3; margin-top: .5rem; }
 
 /* Media preview sizing */

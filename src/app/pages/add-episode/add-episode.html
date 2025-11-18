@@ -11,42 +11,59 @@
     <fieldset>
       <label>Título</label>
       <input type="text" formControlName="title" />
+      @if (form.get('title')?.invalid && form.get('title')?.touched) {
+        <div class="field-error">
+          @if (form.get('title')?.errors?.['required']) {
+            El título es obligatorio
+          }
+          @if (form.get('title')?.errors?.['minlength']) {
+            El título debe tener al menos 3 caracteres
+          }
+          @if (form.get('title')?.errors?.['maxlength']) {
+            El título no puede superar 50 caracteres
+          }
+        </div>
+      }
     </fieldset>
 
     <fieldset>
       <label>Descripción</label>
       <textarea formControlName="description"></textarea>
+      @if (form.get('description')?.invalid && form.get('description')?.touched) {
+        <div class="field-error">
+          @if (form.get('description')?.errors?.['required']) {
+            La descripción es obligatoria
+          }
+          @if (form.get('description')?.errors?.['minlength']) {
+            La descripción debe tener al menos 5 caracteres
+          }
+          @if (form.get('description')?.errors?.['maxlength']) {
+            La descripción no puede superar 500 caracteres
+          }
+        </div>
+      }
     </fieldset>
 
     <div class="grid">
       <fieldset>
         <label>Temporada</label>
         <input type="number" formControlName="season" min="1" />
+        @if (form.get('season')?.invalid && form.get('season')?.touched) {
+          <div class="field-error">
+            La temporada debe ser al menos 1
+          </div>
+        }
       </fieldset>
       <fieldset>
         <label>Episodio</label>
         <input type="number" formControlName="chapter" min="1" />
+        @if (form.get('chapter')?.invalid && form.get('chapter')?.touched) {
+          <div class="field-error">
+            El episodio debe ser al menos 1
+          </div>
+        }
       </fieldset>
     </div>
-
-    <fieldset>
-      <label>Duración</label>
-      <div class="grid">
-        <div>
-          <label>Horas</label>
-          <input type="number" formControlName="durationHours" min="0" />
-        </div>
-        <div>
-          <label>Minutos</label>
-          <input type="number" formControlName="durationMinutes" min="0" max="59" />
-        </div>
-        <div>
-          <label>Segundos</label>
-          <input type="number" formControlName="durationSeconds" min="0" max="59" />
-        </div>
-      </div>
-      <div class="hint">Completa al menos un valor mayor a 0.</div>
-    </fieldset>
 
     <fieldset>
       <label>Imagen</label>
@@ -66,16 +83,25 @@
       <label>Video/Audio</label>
       @if (!form.value.audioPath) {
         <app-cloudinary-upload
-          acceptedTypes="video/*,audio/*"
+          acceptedTypes="video/*,audio/*,.mp3,.wav,.ogg,.m4a,.aac,.flac,.mp4,.webm,.mov,.avi"
           resourceType="auto"
           label="Subir video/audio del episodio"
           [maxSizeMB]="500"
           [defer]="true"
           #mediaUp
           (uploadComplete)="onAudioUploaded($event)"
-          (uploadError)="onUploadError($event)">
+          (uploadError)="onUploadError($event)"
+          (durationDetected)="onDurationDetected($event)">
         </app-cloudinary-upload>
         <div class="hint">Sube un archivo para habilitar el envío.</div>
+        @if (detectedDuration > 0) {
+          <div class="duration-info">Duración detectada: {{ getFormattedDuration() }}</div>
+        }
+        @if (form.get('title')?.touched && form.get('description')?.touched && !canSubmit()) {
+          <div class="field-error">
+            Debes seleccionar un archivo de audio/video válido
+          </div>
+        }
       } @else {
         <div class="media-preview">
           <div class="player">
@@ -95,7 +121,7 @@
     </fieldset>
 
     <div class="actions">
-      <button type="submit" [disabled]="isSubmitting || form.invalid">{{ isSubmitting ? 'Creando…' : 'Crear episodio' }}</button>
+      <button type="submit" [disabled]="isSubmitting || form.invalid || !canSubmit()">{{ isSubmitting ? 'Creando…' : 'Crear episodio' }}</button>
       <a [routerLink]="['/podcast', podcast.id]" class="cancel">Cancelar</a>
     </div>
 
