@@ -110,4 +110,42 @@ export class AlertService {
             timer: 2000
         });
     }
+
+    // Método genérico de confirmación
+    confirm(title: string, text: string): Promise<boolean> {
+        return Swal.fire({
+            title,
+            text,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#9D65D7",
+            cancelButtonColor: "#dc3545",
+            confirmButtonText: "Sí, continuar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            return result.isConfirmed;
+        });
+    }
+
+    // Método genérico de éxito
+    success(title: string, text: string): void {
+        Swal.fire({
+            title,
+            text,
+            icon: "success",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
+
+    // Método genérico de error
+    error(title: string, text: string): void {
+        Swal.fire({
+            title,
+            text,
+            icon: "error",
+            showConfirmButton: false,
+            timer: 2000
+        });
+    }
 }

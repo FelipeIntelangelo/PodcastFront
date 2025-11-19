@@ -78,6 +78,13 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  cursor: pointer;              /* indicar que es clickeable */
+  text-decoration: none;
+}
+
+.podcast-name:hover {
+  text-decoration: underline;   /* subrayado al pasar el mouse */
+  color: var(--text-secondary);
 }
 
 /* Controles del header */
@@ -113,8 +120,8 @@
 
 /* Contenido del player */
 .player-content {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto; /* el área de media puede contraerse para dejar espacio al botón */
   height: 400px;
   position: relative;
   transition: all 0.3s ease;
@@ -126,20 +133,24 @@
 }
 
 .media-iframe {
-  flex: 1;
+  grid-row: 1;
   border: none;
   background: #000;
+  width: 100%;
+  height: 100%;
 }
 
 .media-video {
-  flex: 1;
+  grid-row: 1;
   border: none;
   background: #000;
   object-fit: contain;
+  width: 100%;
+  height: 100%;
 }
 
 .audio-container {
-  flex: 1;
+  grid-row: 1;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -157,6 +168,7 @@
 
 /* Botón para ir al episodio */
 .go-to-episode-btn {
+  grid-row: 2;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -16,6 +16,11 @@
           <div class="title-meta">
             <h1>{{ episode.title }}</h1>
             <span class="episode-badge">S{{ episode.season }} · E{{ episode.chapter }}</span>
+            @if (canDeleteEpisode()) {
+              <button type="button" class="delete-episode-btn" (click)="deleteEpisode()" title="Eliminar episodio" aria-label="Eliminar episodio">
+                <span class="icon-delete-detail"></span>
+              </button>
+            }
           </div>
 
           <div class="podcast-link">
@@ -36,7 +41,12 @@
 
           <div class="description">
             <h3>Descripción</h3>
-            <p>{{ episode.description }}</p>
+            <p [class.collapsed]="!isDescriptionExpanded" [class.expanded]="isDescriptionExpanded">{{ episode.description }}</p>
+            @if (episode.description && episode.description.length > 240) {
+              <button type="button" class="toggle-desc-btn" (click)="toggleDescription()">
+                {{ isDescriptionExpanded ? 'Ver menos' : 'Ver más' }}
+              </button>
+            }
           </div>
 
           <!-- Audio/Video Player -->

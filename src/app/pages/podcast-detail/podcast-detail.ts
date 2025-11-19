@@ -160,10 +160,44 @@ export class PodcastDetail implements OnInit{
           this.alertService.deletePodcastSuccess();
           this.router.navigate(['/']);
         },
-        error: () => {
-          this.alertService.deletePodcastError();
+        error: (err) => {
+          const msg = 'No podés eliminar un podcast con episodios. Eliminá los episodios primero.';
+          const isConstraint = err?.status === 409 || err?.status === 400 || (err?.status === 500 && (err?.error?.message?.includes('constraint') || err?.message?.includes('constraint') || err?.error?.toString?.().includes('constraint')));
+          if (isConstraint) {
+            this.alertService.error('Acción no permitida', msg);
+          } else {
+            this.alertService.deletePodcastError();
+          }
         }
       });
     }
+  }
+
+  canDeleteEpisode(episode: EpisodeDTO): boolean {
+    if (!this.currentUser || !this.podcast) return false;
+    const isOwner = this.podcast.user?.id === this.currentUser.id;
+    return isOwner || this.isAdmin;
+  }
+
+  deleteEpisode(episode: EpisodeDTO, event: Event): void {
+    event.stopPropagation();
+    if (!this.canDeleteEpisode(episode)) return;
+
+    this.alertService.confirm(
+      '¿Eliminar episodio?',
+      `¿Estás seguro de eliminar "${episode.title}"? Esta acción no se puede deshacer.`
+    ).then((confirmed) => {
+      if (confirmed && this.podcast) {
+        this.episodeService.deleteEpisode(episode.id).subscribe({
+          next: () => {
+            this.alertService.success('Episodio eliminado', 'El episodio fue eliminado correctamente.');
+            this.loadEpisodes(this.podcast!.id);
+          },
+          error: (err) => {
+            this.alertService.error('Error', err.message || 'No se pudo eliminar el episodio.');
+          }
+        });
+      }
+    });
   }
 }

@@ -27,7 +27,11 @@
               <button type="button" class="action-btn-detail edit-btn-detail" (click)="editPodcast()" title="Editar podcast">
                 <span class="icon-edit-detail"></span>
               </button>
-              <button type="button" class="action-btn-detail delete-btn-detail" (click)="deletePodcast()" title="Eliminar podcast">
+                    <button type="button" class="action-btn-detail delete-btn-detail"
+                      (click)="deletePodcast()"
+                      [disabled]="episodes.length > 0"
+                      [attr.title]="episodes.length > 0 ? 'Primero eliminá los episodios' : 'Eliminar podcast'"
+                      [attr.data-tooltip]="episodes.length > 0 ? 'Primero eliminá los episodios' : null">
                 <span class="icon-delete-detail"></span>
               </button>
             </div>
@@ -109,6 +113,11 @@
                 <img [src]="episode.imageUrl || podcast.imageUrl || 'assets/default-episode.png'" [alt]="episode.title">
               </div>
               <div class="episode-info">
+                @if (canDeleteEpisode(episode)) {
+                  <button type="button" class="episode-delete-btn" (click)="deleteEpisode(episode, $event)" title="Eliminar episodio" aria-label="Eliminar episodio">
+                    <span class="icon-delete-episode"></span>
+                  </button>
+                }
                 <div class="episode-header">
                   <h3 class="episode-title">{{ episode.title }}</h3>
                   <span class="episode-meta">S{{ episode.season }} · E{{ episode.chapter }}</span>

@@ -69,8 +69,14 @@ export class MyPodcasts implements OnInit {
           this.alertService.deletePodcastSuccess();
           this.loadMyPodcasts();
         },
-        error: () => {
-          this.alertService.deletePodcastError();
+        error: (err) => {
+          const msg = 'No podés eliminar un podcast con episodios. Eliminá los episodios primero.';
+          const isConstraint = err?.status === 409 || err?.status === 400 || (err?.status === 500 && (err?.error?.message?.includes('constraint') || err?.message?.includes('constraint') || err?.error?.toString?.().includes('constraint')));
+          if (isConstraint) {
+            this.alertService.error('Acción no permitida', msg);
+          } else {
+            this.alertService.deletePodcastError();
+          }
         }
       });
     }

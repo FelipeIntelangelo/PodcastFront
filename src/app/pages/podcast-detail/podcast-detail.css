@@ -260,6 +260,48 @@
   border-color: rgba(220, 38, 38, 0.5);
 }
 
+/* Disabled state for action buttons (e.g., delete podcast when has episodes) */
+.action-btn-detail:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(20%);
+  position: relative;
+}
+.action-btn-detail:disabled:hover,
+.action-btn-detail:disabled:active {
+  background: rgba(var(--accent-rgb), 0.15);
+  border-color: rgba(var(--accent-rgb), 0.3);
+  transform: none;
+}
+
+/* Tooltip for disabled action buttons using data-tooltip */
+.action-btn-detail[disabled][data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: #2b2b2b;
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.1);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+  pointer-events: none;
+  z-index: 20;
+}
+.action-btn-detail[disabled][data-tooltip]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-top-color: rgba(255,255,255,0.1);
+}
+
 .icon-edit-detail,
 .icon-delete-detail {
   width: 20px;
@@ -427,6 +469,42 @@
   flex-direction: column;
   gap: 0.5rem;
   min-width: 0;
+  position: relative;
+}
+
+.episode-delete-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: rgba(220, 38, 38, 0.15);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  border-radius: 6px;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: background .2s, border-color .2s, transform .15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  z-index: 10;
+}
+
+.episode-delete-btn:hover {
+  background: rgba(220, 38, 38, 0.25);
+  border-color: rgba(220, 38, 38, 0.5);
+}
+
+.episode-delete-btn:active {
+  transform: scale(0.95);
+}
+
+.icon-delete-episode {
+  width: 16px;
+  height: 16px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 .episode-header {
@@ -434,6 +512,7 @@
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+  padding-right: 3rem;
 }
 
 .episode-title {

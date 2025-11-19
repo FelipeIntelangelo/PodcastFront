@@ -1,11 +1,14 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { EpisodeService } from '../../services/episode/episode.service';
 import { Episode } from '../../models/episode/episode';
 import { DatePipe } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MediaPlayerService } from '../../services/media-player/media-player.service';
 import { AuthService } from '../../services/auth/auth.service';
+import { UserService } from '../../services/client/user-service';
+import { AlertService } from '../../services/ui/alert.service';
+import { User } from '../../models/user/user';
 
 @Component({
   selector: 'app-episode-detail',
@@ -31,18 +34,36 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   viewTimerInterval: any = null;
   viewCounted = false;
   isUserLoggedIn = false;
+  currentUser?: User;
+  isAdmin = false;
+  // Descripción expandida
+  isDescriptionExpanded = false;
 
   constructor(
     private route: ActivatedRoute,
     private episodeService: EpisodeService,
     private sanitizer: DomSanitizer,
     private mediaPlayerService: MediaPlayerService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService,
+    private alertService: AlertService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.authService.getIsLoggedIn().subscribe(loggedIn => {
       this.isUserLoggedIn = loggedIn;
+    });
+
+    this.userService.getCurrentUserProfile().subscribe({
+      next: (user) => {
+        this.currentUser = user;
+        this.isAdmin = user.credential.roles.includes('ADMIN');
+      },
+      error: () => {
+        this.currentUser = undefined;
+        this.isAdmin = false;
+      }
     });
     
     this.route.params.subscribe(params => {
@@ -218,5 +239,37 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.stopTimer();
     this.stopViewTimer();
+  }
+
+  canDeleteEpisode(): boolean {
+    if (!this.currentUser || !this.episode) return false;
+    const isOwner = this.episode.podcast?.user?.id === this.currentUser.id;
+    return isOwner || this.isAdmin;
+  }
+
+  deleteEpisode(): void {
+    if (!this.episode || !this.canDeleteEpisode()) return;
+
+    this.alertService.confirm(
+      '¿Eliminar episodio?',
+      `¿Estás seguro de eliminar "${this.episode.title}"? Esta acción no se puede deshacer.`
+    ).then((confirmed) => {
+      if (confirmed && this.episode) {
+        const podcastId = this.episode.podcast.id;
+        this.episodeService.deleteEpisode(this.episode.id).subscribe({
+          next: () => {
+            this.alertService.success('Episodio eliminado', 'El episodio fue eliminado correctamente.');
+            this.router.navigate(['/podcast', podcastId]);
+          },
+          error: (err) => {
+            this.alertService.error('Error', err.message || 'No se pudo eliminar el episodio.');
+          }
+        });
+      }
+    });
+  }
+
+  toggleDescription(): void {
+    this.isDescriptionExpanded = !this.isDescriptionExpanded;
   }
 }

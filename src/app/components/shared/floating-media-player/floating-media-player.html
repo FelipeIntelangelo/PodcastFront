@@ -6,11 +6,12 @@
         <img 
           [src]="playerState().episode?.imageUrl || 'assets/default-episode.png'" 
           [alt]="playerState().episode?.title"
-          class="episode-thumbnail"
-          (click)="$event.stopPropagation()">
-        <div class="episode-text" (click)="$event.stopPropagation()">
+          class="episode-thumbnail">
+        <div class="episode-text">
+          <!-- Al hacer click en el título se alterna minimizado (burbujea al header) -->
           <div class="episode-title">{{ playerState().episode?.title }}</div>
-          <div class="podcast-name">{{ playerState().episode?.podcast?.title }}</div>
+          <!-- En el nombre del podcast NO se minimiza/expande; navega al detalle -->
+          <div class="podcast-name" (click)="goToPodcast(); $event.stopPropagation()">{{ playerState().episode?.podcast?.title }}</div>
         </div>
       </div>
       

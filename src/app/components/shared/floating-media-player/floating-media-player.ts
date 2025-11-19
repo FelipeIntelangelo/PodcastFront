@@ -48,6 +48,14 @@ export class FloatingMediaPlayerComponent {
     return url.includes('youtube.com') || url.includes('youtu.be');
   }
 
+  goToPodcast() {
+    const ep = this.playerState().episode;
+    const podcastId = ep?.podcast?.id;
+    if (podcastId) {
+      this.router.navigate(['/podcast', podcastId]);
+    }
+  }
+
   isCloudinaryVideo(url: string): boolean {
     return url.includes('cloudinary.com') && (url.includes('/video/') || url.includes('.mp4') || url.includes('.webm'));
   }

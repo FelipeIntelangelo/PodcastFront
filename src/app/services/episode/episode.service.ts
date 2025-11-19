@@ -51,4 +51,10 @@ export class EpisodeService {
     );
   }
 
+  deleteEpisode(episodeId: number): Observable<void> {
+    return this.http.delete<void>(`${this.API_URL}/${episodeId}`, { responseType: 'text' as 'json' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
 }
