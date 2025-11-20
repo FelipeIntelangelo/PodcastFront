@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EpisodeService } from '../../services/episode/episode.service';
 import { Episode } from '../../models/episode/episode';
 import { DatePipe } from '@angular/common';
@@ -12,7 +12,7 @@ import { User } from '../../models/user/user';
 
 @Component({
   selector: 'app-episode-detail',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './episode-detail.html',
   styleUrl: './episode-detail.css'
 })

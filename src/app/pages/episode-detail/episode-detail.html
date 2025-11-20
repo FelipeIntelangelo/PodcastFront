@@ -25,7 +25,9 @@
 
           <div class="podcast-link">
             <span class="label">Podcast:</span>
-            <span class="value">{{ episode.podcast.title }}</span>
+            <a class="value" [routerLink]="['/podcast', episode.podcast.id]" aria-label="Ir al podcast">
+              {{ episode.podcast.title }}
+            </a>
           </div>
 
           <div class="episode-stats">

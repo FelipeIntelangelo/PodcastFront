@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Podcast } from '../../models/podcast/podcast';
 import { Category } from '../../models/enums/category.enum';
@@ -42,6 +42,37 @@ export class PodcastFormComponent implements OnInit, OnChanges {
     this.categoryKeys = Object.keys(Category);
   }
 
+  // estado UI dropdown categorias
+  categoriesOpen = false;
+
+  toggleCategories(): void {
+    this.categoriesOpen = !this.categoriesOpen;
+  }
+
+  isCategorySelected(cat: string): boolean {
+    const sel: string[] = this.podcastForm.get('categories')?.value || [];
+    return sel.includes(cat);
+  }
+
+  onCategoryToggle(cat: string): void {
+    const control = this.podcastForm.get('categories');
+    if (!control) return;
+    const current: string[] = control.value || [];
+    let updated: string[];
+    if (current.includes(cat)) {
+      updated = current.filter(c => c !== cat);
+    } else {
+      updated = [...current, cat];
+    }
+    control.setValue(updated);
+    control.markAsDirty();
+    control.markAsTouched();
+  }
+
+  get selectedCategories(): string[] {
+    return this.podcastForm?.get('categories')?.value || [];
+  }
+
   ngOnInit(): void {
     this.initForm();
   }
@@ -52,12 +83,20 @@ export class PodcastFormComponent implements OnInit, OnChanges {
     }
   }
 
+  private categoriesRequiredValidator(control: AbstractControl): ValidationErrors | null {
+    const value = control.value;
+    if (!value || (Array.isArray(value) && value.length === 0)) {
+      return { required: true };
+    }
+    return null;
+  }
+
   private initForm(): void {
     this.podcastForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.minLength(10)]],
       imageUrl: [''],
-      categories: this.buildCategories()
+      categories: new FormControl([], [this.categoriesRequiredValidator.bind(this)])
     });
   }
 
@@ -66,28 +105,14 @@ export class PodcastFormComponent implements OnInit, OnChanges {
       this.podcastForm.patchValue({
         title: this.podcast.title,
         description: this.podcast.description,
-        imageUrl: this.podcast.imageUrl
+        imageUrl: this.podcast.imageUrl,
+        categories: this.podcast.categories
       });
-      this.updateCategories();
     }
   }
 
-  private buildCategories(): FormArray {
-    const categories = this.categoryKeys.map(category => 
-      this.fb.control(this.podcast?.categories.includes(category as Category) || false)
-    );
-    return this.fb.array(categories, Validators.required);
-  }
-
-  private updateCategories(): void {
-    this.categories.controls.forEach((control, i) => {
-      const category = this.categoryKeys[i] as Category;
-      control.setValue(this.podcast?.categories.includes(category) || false);
-    });
-  }
-
-  get categories(): FormArray {
-    return this.podcastForm.get('categories') as FormArray;
+  get categories(): AbstractControl | null {
+    return this.podcastForm.get('categories');
   }
 
   onImageUploaded(url: string): void {
@@ -101,12 +126,10 @@ export class PodcastFormComponent implements OnInit, OnChanges {
 
   async onSubmit(): Promise<void> {
     if (this.podcastForm.valid) {
-      const selectedCategories = this.podcastForm.value.categories
-        .map((checked: boolean, i: number) => checked ? this.categoryKeys[i] : null)
-        .filter((value: string | null) => value !== null);
-
+      const selectedCategories: string[] = this.podcastForm.value.categories || [];
       if (selectedCategories.length === 0) {
-        this.categories.setErrors({ required: true });
+        this.categories?.markAsTouched();
+        this.categories?.setErrors({ required: true });
         return;
       }
 
