@@ -146,6 +146,51 @@
         </div>
       </div>
     </section>
+    <!-- Sección Comentarios -->
+    <section class="commentaries-section">
+      <div class="commentaries-header">
+        <h2>Comentarios</h2>
+      </div>
+      @if (isLoadingCommentaries) {
+        <div class="loading-commentaries"><p>Cargando comentarios...</p></div>
+      } @else if (commentariesError) {
+        <div class="error-commentaries"><p>{{ commentariesError }}</p></div>
+      } @else if (commentaries.length === 0) {
+        <div class="no-commentaries"><p>Este episodio no tiene comentarios aún</p></div>
+      } @else {
+        <div class="commentaries-list">
+          @for (comment of paginatedCommentaries; track $index) {
+            <article class="commentary-card">
+              <div class="commentary-avatar">
+                @if (comment.userProfilePicture) {
+                  <img [src]="comment.userProfilePicture" [alt]="comment.userName" />
+                } @else {
+                  <div class="avatar-fallback">{{ comment.userName.charAt(0).toUpperCase() }}</div>
+                }
+              </div>
+              <div class="commentary-content">
+                <div class="commentary-meta">
+                  <span class="commentary-user">{{ comment.userName }}</span>
+                  <span class="commentary-date">{{ comment.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <p class="commentary-text">{{ comment.content }}</p>
+              </div>
+            </article>
+          }
+        </div>
+        @if (totalPages > 1) {
+          <div class="commentaries-pagination">
+            <button type="button" class="page-btn" (click)="prevPage()" [disabled]="currentPage === 1">Anterior</button>
+            <div class="pages">
+              @for (page of pageNumbers; track page) {
+                <button type="button" class="page-index-btn" (click)="goToPage(page)" [class.active]="page === currentPage">{{ page }}</button>
+              }
+            </div>
+            <button type="button" class="page-btn" (click)="nextPage()" [disabled]="currentPage === totalPages">Siguiente</button>
+          </div>
+        }
+      }
+    </section>
   </div>
 } @else {
   <div class="error-container">

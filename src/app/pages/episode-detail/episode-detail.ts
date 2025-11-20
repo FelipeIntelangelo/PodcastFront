@@ -1,8 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EpisodeService } from '../../services/episode/episode.service';
+import { CommentaryService } from '../../services/commentary/commentary.service';
 import { Episode } from '../../models/episode/episode';
-import { DatePipe } from '@angular/common';
+import { CommentaryDTO } from '../../models/commentary/commentary-dto';
+import { DatePipe, CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MediaPlayerService } from '../../services/media-player/media-player.service';
 import { AuthService } from '../../services/auth/auth.service';
@@ -12,7 +14,7 @@ import { User } from '../../models/user/user';
 
 @Component({
   selector: 'app-episode-detail',
-  imports: [DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink, CommonModule],
   templateUrl: './episode-detail.html',
   styleUrl: './episode-detail.css'
 })
@@ -38,10 +40,18 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   isAdmin = false;
   // Descripción expandida
   isDescriptionExpanded = false;
+  // Comentarios
+  commentaries: CommentaryDTO[] = [];
+  isLoadingCommentaries = false;
+  commentariesError: string | null = null;
+  pageSize = 10;
+  currentPage = 1;
 
+  
   constructor(
     private route: ActivatedRoute,
     private episodeService: EpisodeService,
+    private commentaryService: CommentaryService,
     private sanitizer: DomSanitizer,
     private mediaPlayerService: MediaPlayerService,
     private authService: AuthService,
@@ -49,12 +59,12 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     private alertService: AlertService,
     private router: Router
   ) {}
-
+  
   ngOnInit(): void {
     this.authService.getIsLoggedIn().subscribe(loggedIn => {
       this.isUserLoggedIn = loggedIn;
     });
-
+    
     this.userService.getCurrentUserProfile().subscribe({
       next: (user) => {
         this.currentUser = user;
@@ -73,7 +83,20 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       }
     });
   }
+  
+  get totalPages(): number {
+    return Math.ceil(this.commentaries.length / this.pageSize) || 1;
+  }
 
+  get paginatedCommentaries(): CommentaryDTO[] {
+    const start = (this.currentPage - 1) * this.pageSize;
+    return this.commentaries.slice(start, start + this.pageSize);
+  }
+
+  get pageNumbers(): number[] {
+    return Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  }
+  
   loadEpisode(id: number): void {
     this.isLoading = true;
     // Limpiar timer anterior
@@ -83,6 +106,7 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       next: (episode) => {
         this.episode = episode;
         this.isLoading = false;
+          this.loadCommentaries(episode.id);
         
         // Verificar si este episodio está reproduciéndose en el flotante
         const playerState = this.mediaPlayerService.playerState();
@@ -108,6 +132,36 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         this.isLoading = false;
       }
     });
+  }
+
+  loadCommentaries(episodeId: number): void {
+    this.isLoadingCommentaries = true;
+    this.commentariesError = null;
+    this.commentaryService.getByEpisode(episodeId).subscribe({
+      next: (data) => {
+        this.commentaries = data;
+        this.isLoadingCommentaries = false;
+        this.currentPage = 1;
+      },
+      error: (err) => {
+        console.error('Error loading commentaries:', err);
+        this.commentariesError = err.message || 'No se pudieron cargar los comentarios';
+        this.isLoadingCommentaries = false;
+      }
+    });
+  }
+
+  goToPage(page: number): void {
+    if (page < 1 || page > this.totalPages) return;
+    this.currentPage = page;
+  }
+
+  prevPage(): void {
+    if (this.currentPage > 1) this.currentPage--;
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) this.currentPage++;
   }
 
   formatViews(value: number): string {

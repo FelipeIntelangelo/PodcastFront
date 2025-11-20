@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter, OnChanges, SimpleChanges, ViewChild, ElementRef, HostListener } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormControl, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Podcast } from '../../models/podcast/podcast';
@@ -38,7 +38,7 @@ export class PodcastFormComponent implements OnInit, OnChanges {
     }
   };
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private elRef: ElementRef) {
     this.categoryKeys = Object.keys(Category);
   }
 
@@ -47,6 +47,9 @@ export class PodcastFormComponent implements OnInit, OnChanges {
 
   toggleCategories(): void {
     this.categoriesOpen = !this.categoriesOpen;
+    if (!this.categoriesOpen) {
+      this.touchCategoriesForValidation();
+    }
   }
 
   isCategorySelected(cat: string): boolean {
@@ -71,6 +74,34 @@ export class PodcastFormComponent implements OnInit, OnChanges {
 
   get selectedCategories(): string[] {
     return this.podcastForm?.get('categories')?.value || [];
+  }
+
+  private touchCategoriesForValidation(): void {
+    const control = this.podcastForm.get('categories');
+    control?.markAsTouched();
+    control?.updateValueAndValidity();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    if (!this.categoriesOpen) return;
+    const target = event.target as Node;
+    const host: HTMLElement = this.elRef.nativeElement as HTMLElement;
+    const combobox = host.querySelector('.categories-combobox');
+    const dropdown = host.querySelector('.categories-dropdown');
+    const clickedInside = (combobox?.contains(target) || dropdown?.contains(target));
+    if (!clickedInside) {
+      this.categoriesOpen = false;
+      this.touchCategoriesForValidation();
+    }
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape(): void {
+    if (this.categoriesOpen) {
+      this.categoriesOpen = false;
+      this.touchCategoriesForValidation();
+    }
   }
 
   ngOnInit(): void {

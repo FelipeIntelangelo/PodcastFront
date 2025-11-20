@@ -30,12 +30,31 @@
           <label for="bio">Bio:</label>
           <textarea id="bio" formControlName="bio"></textarea>
         </div>
-  
+
         <div class="form-group">
-          <label for="profilePicture">Profile Picture URL:</label>
-          <input type="text" id="profilePicture" formControlName="profilePicture">
+          <label>Profile Picture:</label>
+          <app-cloudinary-upload
+            acceptedTypes="image/*"
+            resourceType="image"
+            label="Subir imagen de perfil"
+            [maxSizeMB]="5"
+            [defer]="true"
+            #profilePictureUpload
+            (uploadComplete)="onImageUploaded($event)"
+            (uploadError)="onUploadError($event)">
+          </app-cloudinary-upload>
+          
+          @if (editProfileForm.get('profilePicture')?.value) {
+            <div class="current-profile-picture">
+              <img [src]="editProfileForm.get('profilePicture')?.value" alt="Profile preview" class="profile-preview">
+              <p class="image-url-label">URL actual:</p>
+              <a [href]="editProfileForm.get('profilePicture')?.value" target="_blank" class="image-url-link">
+                {{ editProfileForm.get('profilePicture')?.value }}
+              </a>
+            </div>
+          }
         </div>
-  
+
         <div class="form-group">
           <label for="email">Email:</label>
           <input type="email" id="email" formControlName="email">
