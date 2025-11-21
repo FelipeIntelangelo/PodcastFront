@@ -1,14 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/client/user-service';
 import { User } from '../../models/user/user';
 import { CommonModule } from '@angular/common';
+import { CloudinaryUploadComponent } from '../../components/shared/cloudinary-upload/cloudinary-upload';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CloudinaryUploadComponent],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css'
 })
@@ -17,6 +18,7 @@ export class EditProfileComponent implements OnInit {
   currentUser: User | null = null;
   isLoading: boolean = true;
   error: string | null = null;
+  @ViewChild('profilePictureUpload') profilePictureUpload?: CloudinaryUploadComponent;
 
   constructor(
     private fb: FormBuilder,
@@ -53,8 +55,28 @@ export class EditProfileComponent implements OnInit {
     }
   }
 
-  onSave(): void {
+  onImageUploaded(url: string): void {
+    this.editProfileForm.patchValue({ profilePicture: url });
+  }
+
+  onUploadError(error: string): void {
+    console.error('Upload error:', error);
+    this.error = 'Error al subir la imagen: ' + error;
+  }
+
+  async onSave(): Promise<void> {
     if (this.editProfileForm.valid && this.currentUser) {
+      // Subida diferida de imagen si el usuario seleccionó un archivo
+      try {
+        if (this.profilePictureUpload && this.profilePictureUpload.hasFileSelected()) {
+          const imgUrl = await this.profilePictureUpload.performUpload();
+          this.editProfileForm.patchValue({ profilePicture: imgUrl });
+        }
+      } catch (e) {
+        this.error = 'Error al subir la imagen de perfil';
+        return;
+      }
+
       const updatedData: Partial<User> = {
         ...this.currentUser,
         ...this.editProfileForm.value,
