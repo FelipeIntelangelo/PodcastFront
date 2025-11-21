@@ -1,6 +1,6 @@
 body{
     display: grid;
-    grid-template-columns: 15% 85%;
+    grid-template-columns: 14% 86%;
     grid-template-rows: 1fr 1fr;
     grid-template-areas:
         "aside main"
@@ -10,36 +10,57 @@ body{
 
 aside {
     grid-area: aside;
-    background-color: #131313;
+    background-color: #050307;
     color: white;
     padding: 3rem 0rem;
     padding-right: 2rem;
-    border-right: 1px solid rgb(60, 60, 60);
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 aside ul li{
     list-style: none;
     margin: 0.5rem 0rem;
     padding: 0.8rem 0rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.396);
 }
 
 aside ul li a {
     display: flex;
-    align-items: center;
     gap: 1rem;
     color: #ffffff;
     text-decoration: none;
-    transition: transform 0.4s ease, color 0.4s ease;
-    padding-left: 3rem;
+    padding-left: 1.7rem;
+    position: relative;
+    transition: color 0.3s ease;
+    font-size: 1.2rem;
+}
+
+aside ul li a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: #b88dd9;
+    transform: translateX(-200%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 aside ul li a i {
     color: #9D65D7;
+    transition: color 0.3s ease;
 }
 
-aside ul li a:hover{
-    transform: scale(1.1) translateX(12px);
+aside ul li a:hover {
+    color: #E0C7FF;
+}
+
+aside ul li a:hover::before {
+    transform: translateX(0);
+}
+
+aside ul li a:hover i {
+    color: #E0C7FF;
 }
 
 a{
@@ -48,13 +69,14 @@ a{
 }
 
 #liFirst{
-    border-top: 1px solid rgba(255, 255, 255, 0.396);
+    /* No border-top */
 }
 
 main {
     grid-area: main;
-    background-color: #131313;
+    background: radial-gradient(circle at top left, #2a0050 0%, #0A0A0A 30%);
     padding: 1rem;
+    height: 100%;
 }
 
 h2, h3, h4{
@@ -64,7 +86,6 @@ h2, h3, h4{
 h2{
     margin-top: 6rem;
     margin-bottom: 1rem;
-    margin-left: 2rem;
 }
 
 .containerCards{
@@ -77,36 +98,15 @@ h2{
     border-right: 1px solid rgb(69, 69, 69); 
 }
 
-.cardHome{
+.cardHome {
+    width: 220px;
+    min-width: 200px;
     border-radius: 3rem;
+    scroll-snap-align: start;
 }
 
-.ejampleImg{
-    width: 250px;
-    height: 150px;
-    background-color: #9D65D7;
-    border-radius: 1rem;
-}
-
-.verMas{
-    background-color: #333;
-    color: white;
-    border: 1px solid #333;
-    border-radius: 2rem;
-    padding: 0rem 1rem;
-    font-size: 16px;
-    height: 3.5rem;
-    transition: background-color 0.3s ease;
-}
-
-.verMas:hover{
-    background-color: #9D65D7;
-}
-
-.ver-mas-link {
-    font-size: 0.9rem;
-    color: #9D65D7;
-    text-decoration: none;
+.cardHome:hover .ejampleImg {
+    opacity: 0.7;
 }
 
 /* CAROUSEL STYLES */
@@ -114,26 +114,54 @@ h2{
     margin-top: 3rem;
 }
 
-.carouselContainer {
+.carousel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 1.6rem;
+}
+
+.carousel-header h2 {
+    margin: 0;
+    font-size: 3.5rem;
+    font-family: 'Roboto', sans-serif;
+    padding: 0 1.6rem;
+}
+
+.carousel-navigation {
     display: flex;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
+}
+
+.carouselContainer {
+    display: flex;
     padding: 2rem;
-    background: linear-gradient(to right, rgba(19,19,19,0.8), rgba(0,0,0,0.5));
-    border-radius: 0rem 3rem 3rem 0rem;
-    border-right: 1px solid rgb(69, 69, 69);
+    /* Removed background */
+    border-radius: 1rem;
+    /* Removed backdrop-filter */
+    /* Removed -webkit-backdrop-filter */
 }
 
 .carouselWrapper {
     flex: 1;
-    overflow: hidden;
+    overflow-x: auto;
     border-radius: 1rem;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    /* Hide scrollbar */
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.carouselWrapper::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, and Opera */
 }
 
 .carouselContent {
     display: flex;
-    gap: 1.5rem;
-    transition: transform 0.5s ease;
+    gap: 3.2rem;
+    padding: 0 1.6rem;
 }
 
 .arrowButton {
@@ -141,9 +169,9 @@ h2{
     color: white;
     border: none;
     border-radius: 50%;
-    width: 3rem;
-    height: 3rem;
-    font-size: 1.2rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    font-size: 1rem;
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -185,31 +213,23 @@ h2{
     background-color: #b88dd9;
 }
 
-.cardHome {
-    flex: 0 0 calc(25% - 1.125rem);
-    min-width: 200px;
-}
-
 .ejampleImg {
-    width: 100%;
-    height: 150px;
+    width: 220px;
+    height: 220px;
     background-color: #9D65D7;
     border-radius: 1rem;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
+    transition: opacity 0.3s ease;
 }
 
 .cardHome h3 {
-    font-size: 1rem;
-    margin: 0.5rem 0;
+    font-size: 1.2rem;
+    margin: 0;
+    font-weight: normal;
 }
 
 .cardHome h4 {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     color: #999;
-    margin: 0.3rem 0;
-}
-
-.cardHome .ver-mas-link {
-    display: inline-block;
-    margin-top: 0.5rem;
+    margin: 0;
 }

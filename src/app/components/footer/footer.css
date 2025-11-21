@@ -1,16 +1,10 @@
 footer{
-    background-color: black;
+    background-color: #050307;
     display: flex;
     justify-content: space-around;
     align-items: center;
     padding: 3rem 2rem;
     border-top: 1px solid rgba(255, 255, 255, 0.2);
-
-    /* CODIGO FIJAR ABAJO */
-    /* position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%; */
 }
 
 a{
@@ -31,25 +25,64 @@ p{
     gap: 1rem;
 }
 
-#footerRedes a {
-    background-color: #333;
-    color: white;
-    padding: 0.5rem;
-    border: 1px solid #333;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    transition: all 0.3s ease;
+.button {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50px;
+  border: none;
+  background: linear-gradient(120deg, #833ab4, #fd1d1d, #fcb045);
+  position: relative;
+  z-index: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 10px;
+  transition: 0.1s;
+}
+.button svg {
+  color: white;
+  width: 24px;
+  height: 24px;
+  z-index: 9;
 }
 
-#footerRedes a:hover {
-    background-color: #9D65D7;
-    border-color: #9D65D7;
+/* button:nth-child(2) was WhatsApp, now it's Twitter */
+.button:nth-child(2) {
+  background: #1DA1F2; /* Twitter Blue */
 }
 
-#footerRedes i {
-    font-size: 20px;
+/* button:nth-child(3) was Twitter, now it's YouTube */
+.button:nth-child(3) {
+  background: #FF0000; /* YouTube Red */
+}
+
+/* button:nth-child(4) was YouTube, now it's GitHub */
+.button:nth-child(4) {
+  background: #000000; /* GitHub Black */
+}
+
+/* button:nth-child(5) was GitHub (no explicit rule), now it's the 5th button, which does not exist*/
+/* button:nth-child(6) removed as it is out of bounds */
+
+
+.button:active {
+  transform: scale(0.85);
+}
+
+.button::before {
+  content: "";
+  position: absolute;
+  width: 55px;
+  height: 55px;
+  background-color: #212121;
+  border-radius: 50px;
+  z-index: -1;
+  border: 0px solid rgba(255, 255, 255, 0.411);
+  transition: 0.4s;
+}
+
+.button:hover::before {
+  width: 0px;
+  height: 0px;
 }

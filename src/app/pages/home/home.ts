@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, AfterViewInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import Swal from 'sweetalert2';
 import { AlertService } from '../../services/ui/alert.service';
 
 interface CarouselState {
-  currentIndex: number;
   hasBeenClicked: boolean;
-  itemsPerView: number;
-  totalItems: number;
+  atStart: boolean;
+  atEnd: boolean;
 }
 
 @Component({
@@ -17,19 +16,37 @@ interface CarouselState {
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
+export class Home implements AfterViewInit {
+  @ViewChild('novedadesWrapper') novedadesWrapper!: ElementRef<HTMLElement>;
+  // Add other @ViewChild decorators for other carousels here
 
-export class Home {
   carousels: { [key: string]: CarouselState } = {
-    novedades: { currentIndex: 0, hasBeenClicked: false, itemsPerView: 4, totalItems: 16 },
-    masEscuchados: { currentIndex: 0, hasBeenClicked: false, itemsPerView: 4, totalItems: 16 },
-    mejorCalificados: { currentIndex: 0, hasBeenClicked: false, itemsPerView: 4, totalItems: 16 },
-    misFavoritos: { currentIndex: 0, hasBeenClicked: false, itemsPerView: 4, totalItems: 16 }
+    novedades: { hasBeenClicked: false, atStart: true, atEnd: false },
+    // masEscuchados: { hasBeenClicked: false, atStart: true, atEnd: false },
   };
 
-  constructor(private alertService : AlertService){}
+  constructor(private alertService: AlertService) {}
 
-  alertaTrue(){
-    this.alertService.warningAlert();
+  ngAfterViewInit() {
+    // Check initial state after view is initialized
+    this.handleScroll('novedades', this.novedadesWrapper.nativeElement);
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    // Re-check scroll state on window resize
+    this.handleScroll('novedades', this.novedadesWrapper.nativeElement);
+  }
+
+  handleScroll(carouselKey: string, element: HTMLElement): void {
+    if (!element) return;
+    const carousel = this.carousels[carouselKey];
+    if (!carousel) return;
+
+    // A small tolerance for floating point inaccuracies
+    const tolerance = 5;
+    carousel.atStart = element.scrollLeft <= tolerance;
+    carousel.atEnd = element.scrollLeft + element.clientWidth >= element.scrollWidth - tolerance;
   }
 
   onArrowClick(carouselKey: string): void {
@@ -38,28 +55,30 @@ export class Home {
   }
 
   goNext(carouselKey: string): void {
-    const carousel = this.carousels[carouselKey];
-    if (carousel.currentIndex + carousel.itemsPerView < carousel.totalItems) {
-      carousel.currentIndex++;
+    const element = this.getWrapperElement(carouselKey);
+    if (element) {
+      // Scroll by 80% of the viewport width for a smoother multi-item scroll
+      const scrollAmount = element.clientWidth * 0.8;
+      element.scrollLeft += scrollAmount;
     }
   }
 
   goBack(carouselKey: string): void {
-    const carousel = this.carousels[carouselKey];
-    if (carousel.currentIndex > 0) {
-      carousel.currentIndex--;
+    const element = this.getWrapperElement(carouselKey);
+    if (element) {
+      const scrollAmount = element.clientWidth * 0.8;
+      element.scrollLeft -= scrollAmount;
     }
   }
 
-  isAtEnd(carouselKey: string): boolean {
-    const carousel = this.carousels[carouselKey];
-    return carousel.currentIndex + carousel.itemsPerView >= carousel.totalItems;
+  private getWrapperElement(key: string): HTMLElement | null {
+    if (key === 'novedades' && this.novedadesWrapper) {
+      return this.novedadesWrapper.nativeElement;
+    }
+    // Add other carousels here, e.g.:
+    // if (key === 'masEscuchados' && this.masEscuchadosWrapper) {
+    //   return this.masEscuchadosWrapper.nativeElement;
+    // }
+    return null;
   }
-
-  getCarouselTranslate(carouselKey: string): string {
-    const carousel = this.carousels[carouselKey];
-    const cardWidth = 100 / carousel.itemsPerView;
-    return `translateX(-${carousel.currentIndex * cardWidth}%)`;
-  }
-
 }
