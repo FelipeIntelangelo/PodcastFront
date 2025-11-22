@@ -114,9 +114,14 @@
               </div>
               <div class="episode-info">
                 @if (canDeleteEpisode(episode)) {
-                  <button type="button" class="episode-delete-btn" (click)="deleteEpisode(episode, $event)" title="Eliminar episodio" aria-label="Eliminar episodio">
-                    <span class="icon-delete-episode"></span>
-                  </button>
+                  <div class="episode-actions">
+                    <button type="button" class="episode-edit-btn" (click)="editEpisode(episode, $event)" title="Editar episodio" aria-label="Editar episodio">
+                      <span class="icon-edit-episode"></span>
+                    </button>
+                    <button type="button" class="episode-delete-btn" (click)="deleteEpisode(episode, $event)" title="Eliminar episodio" aria-label="Eliminar episodio">
+                      <span class="icon-delete-episode"></span>
+                    </button>
+                  </div>
                 }
                 <div class="episode-header">
                   <h3 class="episode-title">{{ episode.title }}</h3>

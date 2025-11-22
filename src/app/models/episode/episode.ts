@@ -17,4 +17,5 @@ export interface Episode {
   podcast: Podcast; // Relación con Podcast (sin episodes)
   commentaries?: number; // Cantidad de comentarios (getCommentariesCount del backend)
   ratings?: Rating[];
+  categories?: string[]; // Lista de categorías del episodio
 }

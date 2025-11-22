@@ -10,6 +10,7 @@ import { CreatePodcastComponent } from './pages/create-podcast/create-podcast'; 
 import { MyPodcasts } from './pages/my-podcasts/my-podcasts';
 import { EpisodeDetail } from './pages/episode-detail/episode-detail';
 import { AddEpisodePage } from './pages/add-episode/add-episode';
+import { EditEpisodePage } from './pages/edit-episode/edit-episode';
 
 export const routes: Routes = [
     {path: "", component: Home},
@@ -22,6 +23,7 @@ export const routes: Routes = [
     {path: "search", component:Search},
     {path: "podcast/:id", component:PodcastDetail},
     {path: "episode/:id", component:EpisodeDetail},
+    {path: "episode/:id/edit", component:EditEpisodePage},
     {path: "podcast/:id/add-episode", component: AddEpisodePage},
     {path: "create-podcast", component: CreatePodcastComponent},
     {path: "myPodcasts", component: MyPodcasts}

@@ -16,42 +16,54 @@
     <div class="podcasts-list">
       @for (podcast of myPodcasts; track podcast.id) {
         <article class="podcast-card" (click)="viewPodcast(podcast.id)">
-          <div class="podcast-header">
-            <div class="podcast-info">
-              <h3 class="podcast-title">{{ podcast.title }}</h3>
-              <div class="podcast-stats">
-                <div class="stat">
-                  <span class="icon-star-small"></span>
-                  <span>{{ podcast.averageRating || 0 }}</span>
-                </div>
-                <div class="stat">
-                  <span class="icon-eye-small"></span>
-                  <span>{{ formatViews(podcast.averageViews || 0) }}</span>
-                </div>
+          <div class="podcast-image">
+            @if (podcast.imageUrl) {
+              <img [src]="podcast.imageUrl" [alt]="podcast.title">
+            } @else {
+              <div class="image-placeholder">
+                <span class="icon-podcast-placeholder"></span>
               </div>
-            </div>
-            <div class="action-buttons">
-              <button type="button" class="action-btn edit-btn" (click)="editPodcast(podcast.id); $event.stopPropagation()" title="Editar podcast">
-                <span class="icon-edit"></span>
-              </button>
-              <button type="button" class="action-btn delete-btn" (click)="deletePodcast(podcast.id); $event.stopPropagation()" title="Eliminar podcast">
-                <span class="icon-trash"></span>
-              </button>
-            </div>
+            }
           </div>
           
-          <p class="podcast-description">{{ podcast.description }}</p>
-          
-          @if (podcast.categories && podcast.categories.length) {
-            <div class="podcast-categories">
-              @for (cat of podcast.categories.slice(0, 3); track $index) {
-                <span class="chip">{{ cat }}</span>
-              }
-              @if (podcast.categories.length > 3) {
-                <span class="chip chip-more">+{{ podcast.categories.length - 3 }}</span>
-              }
+          <div class="podcast-content">
+            <div class="podcast-header">
+              <div class="podcast-info">
+                <h3 class="podcast-title">{{ podcast.title }}</h3>
+                <div class="podcast-stats">
+                  <div class="stat">
+                    <span class="icon-star-small"></span>
+                    <span>{{ podcast.averageRating || 0 }}</span>
+                  </div>
+                  <div class="stat">
+                    <span class="icon-eye-small"></span>
+                    <span>{{ formatViews(podcast.averageViews || 0) }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="action-buttons">
+                <button type="button" class="action-btn edit-btn" (click)="editPodcast(podcast.id); $event.stopPropagation()" title="Editar podcast">
+                  <span class="icon-edit"></span>
+                </button>
+                <button type="button" class="action-btn delete-btn" (click)="deletePodcast(podcast.id); $event.stopPropagation()" title="Eliminar podcast">
+                  <span class="icon-trash"></span>
+                </button>
+              </div>
             </div>
-          }
+            
+            <p class="podcast-description">{{ podcast.description }}</p>
+            
+            @if (podcast.categories && podcast.categories.length) {
+              <div class="podcast-categories">
+                @for (cat of podcast.categories.slice(0, 3); track $index) {
+                  <span class="chip">{{ cat }}</span>
+                }
+                @if (podcast.categories.length > 3) {
+                  <span class="chip chip-more">+{{ podcast.categories.length - 3 }}</span>
+                }
+              </div>
+            }
+          </div>
         </article>
       }
     </div>

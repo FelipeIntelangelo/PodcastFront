@@ -49,10 +49,24 @@ export class PodcastDetail implements OnInit{
       next: (user) => {
         this.currentUser = user;
         this.isAdmin = user.credential.roles.includes('ADMIN');
+        this.loadFavoriteStatus();
       },
       error: () => {
         this.currentUser = undefined;
         this.isAdmin = false;
+      }
+    });
+  }
+
+  loadFavoriteStatus(): void {
+    if (!this.currentUser || !this.podcastId) return;
+    
+    this.userService.getMyFavorites().subscribe({
+      next: (favorites) => {
+        this.isFavorited = favorites.some(fav => fav.id === this.podcastId);
+      },
+      error: () => {
+        this.isFavorited = false;
       }
     });
   }
@@ -122,8 +136,27 @@ export class PodcastDetail implements OnInit{
   }
 
   toggleFavorite(): void {
-    this.isFavorited = !this.isFavorited;
-    // integrar con servicio (POST /api/podcasts/{id}/favorite o similar)
+    if (!this.podcastId || !this.currentUser) {
+      this.alertService.error('Error', 'Debes iniciar sesión para agregar favoritos');
+      return;
+    }
+
+    const action = this.isFavorited 
+      ? this.userService.removePodcastFromFavorites(this.podcastId)
+      : this.userService.addPodcastToFavorites(this.podcastId);
+
+    action.subscribe({
+      next: () => {
+        this.isFavorited = !this.isFavorited;
+        const message = this.isFavorited 
+          ? 'Podcast agregado a favoritos' 
+          : 'Podcast eliminado de favoritos';
+        this.alertService.success('¡Listo!', message);
+      },
+      error: (err) => {
+        this.alertService.error('Error', err.message || 'No se pudo actualizar favoritos');
+      }
+    });
   }
 
   canDeletePodcast(): boolean {
@@ -199,5 +232,10 @@ export class PodcastDetail implements OnInit{
         });
       }
     });
+  }
+
+  editEpisode(episode: EpisodeDTO, event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/episode', episode.id, 'edit']);
   }
 }

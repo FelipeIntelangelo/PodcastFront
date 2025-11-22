@@ -5,7 +5,9 @@ import { Observable, catchError } from 'rxjs';
 import { User } from '../../models/user/user';
 import { UserLoginDTO } from '../../models/user/userLogin/user-login-dto';
 import { UserSearchDTO } from '../../models/user/userSearchDTO';
+import { EpisodeHistoryDTO } from '../../models/episode/episode-history-dto';
 import { ErrorHandlerService } from '../error/error-handler.service';
+import { PodcastDTO } from '../../models/podcast/podcast-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -75,4 +77,28 @@ export class UserService {
       );
   }
   /* -------------------- END OF LOGIN AND REGISTER LOGIC -------------------- */
+
+  getMyHistory(): Observable<EpisodeHistoryDTO[]> {
+    return this.http.get<EpisodeHistoryDTO[]>(`${this.API_URL}/myHistory`).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  addPodcastToFavorites(podcastId: number): Observable<string> {
+    return this.http.post(`${this.API_URL}/favorites/${podcastId}`, {}, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  removePodcastFromFavorites(podcastId: number): Observable<string> {
+    return this.http.delete(`${this.API_URL}/favorites/${podcastId}`, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  getMyFavorites(): Observable<PodcastDTO[]> {
+    return this.http.get<PodcastDTO[]>(`${this.API_URL}/myFavorites`).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
 }

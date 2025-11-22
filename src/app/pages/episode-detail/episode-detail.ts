@@ -4,6 +4,8 @@ import { EpisodeService } from '../../services/episode/episode.service';
 import { CommentaryService } from '../../services/commentary/commentary.service';
 import { Episode } from '../../models/episode/episode';
 import { CommentaryDTO } from '../../models/commentary/commentary-dto';
+import { CommentaryCreateDTO } from '../../models/commentary/commentary-create-dto';
+import { EpisodeHistoryDTO } from '../../models/episode/episode-history-dto';
 import { DatePipe, CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MediaPlayerService } from '../../services/media-player/media-player.service';
@@ -11,10 +13,11 @@ import { AuthService } from '../../services/auth/auth.service';
 import { UserService } from '../../services/client/user-service';
 import { AlertService } from '../../services/ui/alert.service';
 import { User } from '../../models/user/user';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-episode-detail',
-  imports: [DatePipe, RouterLink, CommonModule],
+  imports: [DatePipe, RouterLink, CommonModule, FormsModule],
   templateUrl: './episode-detail.html',
   styleUrl: './episode-detail.css'
 })
@@ -46,6 +49,12 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   commentariesError: string | null = null;
   pageSize = 10;
   currentPage = 1;
+  // Nuevo comentario
+  newCommentContent = '';
+  isSubmittingComment = false;
+  // Historial del usuario
+  isInHistory = false;
+  isLoadingHistory = false;
 
   
   constructor(
@@ -63,6 +72,9 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authService.getIsLoggedIn().subscribe(loggedIn => {
       this.isUserLoggedIn = loggedIn;
+      if (loggedIn) {
+        this.loadUserHistory();
+      }
     });
     
     this.userService.getCurrentUserProfile().subscribe({
@@ -147,6 +159,24 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         console.error('Error loading commentaries:', err);
         this.commentariesError = err.message || 'No se pudieron cargar los comentarios';
         this.isLoadingCommentaries = false;
+      }
+    });
+  }
+
+  loadUserHistory(): void {
+    this.isLoadingHistory = true;
+    this.userService.getMyHistory().subscribe({
+      next: (history: EpisodeHistoryDTO[]) => {
+        this.isLoadingHistory = false;
+        // Verificar si el episodio actual está en el historial
+        if (this.episodeId) {
+          this.isInHistory = history.some(h => h.episode.id === this.episodeId);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading history:', err);
+        this.isLoadingHistory = false;
+        this.isInHistory = false;
       }
     });
   }
@@ -257,6 +287,10 @@ export class EpisodeDetail implements OnInit, OnDestroy {
           next: () => {
             this.viewCounted = true;
             console.log('View contabilizada para episodio:', this.episode?.id);
+            // Recargar el historial para actualizar isInHistory
+            if (this.isUserLoggedIn) {
+              this.loadUserHistory();
+            }
           },
           error: (error) => console.error('Error al contabilizar view:', error)
         });
@@ -325,5 +359,39 @@ export class EpisodeDetail implements OnInit, OnDestroy {
 
   toggleDescription(): void {
     this.isDescriptionExpanded = !this.isDescriptionExpanded;
+  }
+
+  canComment(): boolean {
+    return this.isUserLoggedIn && this.isInHistory;
+  }
+
+  submitComment(): void {
+    if (!this.episode || !this.canComment() || !this.newCommentContent.trim()) {
+      return;
+    }
+
+    if (this.newCommentContent.trim().length > 1000) {
+      this.alertService.error('Comentario muy largo', 'El comentario no puede exceder los 1000 caracteres.');
+      return;
+    }
+
+    this.isSubmittingComment = true;
+    const commentDto: CommentaryCreateDTO = {
+      commentary: this.newCommentContent.trim()
+    };
+
+    this.commentaryService.createCommentary(this.episode.id, commentDto).subscribe({
+      next: () => {
+        // Recargar los comentarios desde el servidor
+        this.loadCommentaries(this.episode!.id);
+        this.newCommentContent = '';
+        this.isSubmittingComment = false;
+        this.alertService.success('¡Comentario publicado!', 'Tu comentario se ha agregado correctamente.');
+      },
+      error: (err) => {
+        this.isSubmittingComment = false;
+        this.alertService.error('Error', err.message || 'No se pudo publicar el comentario.');
+      }
+    });
   }
 }

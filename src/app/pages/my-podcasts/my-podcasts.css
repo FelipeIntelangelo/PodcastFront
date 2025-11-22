@@ -76,6 +76,10 @@
   padding: 1.5rem;
   transition: transform .2s, box-shadow .2s, border-color .2s;
   cursor: pointer;
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 1.5rem;
+  align-items: start;
 }
 
 .podcast-card:hover {
@@ -84,12 +88,54 @@
   border-color: rgba(var(--accent-rgb), 0.3);
 }
 
+.podcast-image {
+  width: 140px;
+  height: 140px;
+  border-radius: 8px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(var(--accent-rgb), 0.1);
+  border: 1px solid rgba(var(--accent-rgb), 0.2);
+}
+
+.podcast-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--accent-rgb), 0.05));
+}
+
+.icon-podcast-placeholder {
+  width: 50px;
+  height: 50px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239D65D7' stroke-width='1.5'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.4;
+}
+
+.podcast-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
 .podcast-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   gap: 1rem;
-  margin-bottom: 0.75rem;
 }
 
 .podcast-info {
@@ -190,7 +236,7 @@
 }
 
 .podcast-description {
-  margin: 0 0 1rem 0;
+  margin: 0;
   color: var(--text-secondary);
   line-height: 1.5;
   font-size: 0.95rem;
@@ -230,6 +276,17 @@
     font-size: 1.6rem;
   }
 
+  .podcast-card {
+    grid-template-columns: 100px 1fr;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .podcast-image {
+    width: 100px;
+    height: 100px;
+  }
+
   .podcast-header {
     flex-direction: column;
     align-items: flex-start;
@@ -237,5 +294,9 @@
 
   .podcast-title {
     font-size: 1.1rem;
+  }
+  
+  .action-buttons {
+    margin-top: 0.5rem;
   }
 }

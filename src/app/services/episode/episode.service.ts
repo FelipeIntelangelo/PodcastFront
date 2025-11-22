@@ -57,4 +57,10 @@ export class EpisodeService {
     );
   }
 
+  updateEpisode(episodeId: number, payload: { title?: string; description?: string; imageUrl?: string }): Observable<Episode> {
+    return this.http.patch<Episode>(`${this.API_URL}/${episodeId}`, payload).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
 }

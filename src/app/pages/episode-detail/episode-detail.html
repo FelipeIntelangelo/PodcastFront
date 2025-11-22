@@ -17,9 +17,14 @@
             <h1>{{ episode.title }}</h1>
             <span class="episode-badge">S{{ episode.season }} · E{{ episode.chapter }}</span>
             @if (canDeleteEpisode()) {
-              <button type="button" class="delete-episode-btn" (click)="deleteEpisode()" title="Eliminar episodio" aria-label="Eliminar episodio">
-                <span class="icon-delete-detail"></span>
-              </button>
+              <div class="episode-actions">
+                <button type="button" class="edit-episode-btn" [routerLink]="['/episode', episode.id, 'edit']" title="Editar episodio" aria-label="Editar episodio">
+                  <span class="icon-edit-detail"></span>
+                </button>
+                <button type="button" class="delete-episode-btn" (click)="deleteEpisode()" title="Eliminar episodio" aria-label="Eliminar episodio">
+                  <span class="icon-delete-detail"></span>
+                </button>
+              </div>
             }
           </div>
 
@@ -151,12 +156,88 @@
       <div class="commentaries-header">
         <h2>Comentarios</h2>
       </div>
+
+      <!-- Box para crear comentario (estilo YouTube) -->
+      <div class="comment-box">
+        @if (isUserLoggedIn) {
+          @if (isInHistory) {
+            <div class="comment-form">
+              <div class="user-avatar">
+                @if (currentUser?.profilePicture) {
+                  <img [src]="currentUser!.profilePicture" [alt]="currentUser!.nickname" />
+                } @else {
+                  <div class="avatar-fallback">{{ currentUser?.nickname?.charAt(0)?.toUpperCase() || 'U' }}</div>
+                }
+              </div>
+              <div class="comment-input-wrapper">
+                <textarea
+                  class="comment-input"
+                  [(ngModel)]="newCommentContent"
+                  placeholder="Añade un comentario..."
+                  rows="1"
+                  maxlength="1000"
+                  [disabled]="isSubmittingComment"
+                  (focus)="$any($event.target).rows = 3"
+                  (blur)="newCommentContent.trim() === '' ? $any($event.target).rows = 1 : null"
+                ></textarea>
+                <div class="comment-actions">
+                  <span class="char-counter" [class.warning]="newCommentContent.length > 900">
+                    {{ newCommentContent.length }}/1000
+                  </span>
+                  <div class="action-buttons">
+                    <button
+                      type="button"
+                      class="cancel-btn"
+                      (click)="newCommentContent = ''"
+                      [disabled]="isSubmittingComment || !newCommentContent.trim()"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="button"
+                      class="submit-btn"
+                      (click)="submitComment()"
+                      [disabled]="isSubmittingComment || !newCommentContent.trim()"
+                    >
+                      @if (isSubmittingComment) {
+                        <span class="spinner"></span>
+                        Publicando...
+                      } @else {
+                        Comentar
+                      }
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          } @else {
+            <div class="comment-locked">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <p>Debes reproducir el episodio durante al menos 30 segundos para poder comentar</p>
+            </div>
+          }
+        } @else {
+          <div class="comment-locked">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <p>Debes <a [routerLink]="['/auth/login']">iniciar sesión</a> para comentar</p>
+          </div>
+        }
+      </div>
+
+      <!-- Lista de comentarios -->
       @if (isLoadingCommentaries) {
         <div class="loading-commentaries"><p>Cargando comentarios...</p></div>
       } @else if (commentariesError) {
         <div class="error-commentaries"><p>{{ commentariesError }}</p></div>
       } @else if (commentaries.length === 0) {
-        <div class="no-commentaries"><p>Este episodio no tiene comentarios aún</p></div>
+        <div class="no-commentaries"><p>Este episodio no tiene comentarios aún. ¡Sé el primero en comentar!</p></div>
       } @else {
         <div class="commentaries-list">
           @for (comment of paginatedCommentaries; track $index) {

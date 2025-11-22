@@ -5,6 +5,7 @@ export interface PodcastTotalDTO {
     title: string;
     description: string;
     categories: Category[];
+    imageUrl?: string;
     averageViews: number;
     averageRating: number;
 }
