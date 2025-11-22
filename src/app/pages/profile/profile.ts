@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
+import { AlertService } from '../../services/ui/alert.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,7 +26,8 @@ export class Profile implements OnInit, OnDestroy {
     private userService: UserService, 
     private route: ActivatedRoute,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -65,16 +67,40 @@ export class Profile implements OnInit, OnDestroy {
     });
   }
 
-  deleteAccount(event: Event): void {
-    event.preventDefault(); // Prevent default link behavior
-    if (window.confirm('Are you sure you want to delete your account? This action cannot be undone.')) {
+  async deleteAccount(event: Event): Promise<void> {
+    event.preventDefault();
+    
+    const confirmed = await this.alertService.confirm(
+      '¿Eliminar cuenta?',
+      '¿Estás seguro de que querés eliminar tu cuenta? Esta acción no se puede deshacer.'
+    );
+    
+    if (confirmed) {
       this.userService.deleteCurrentUser().subscribe({
         next: () => {
+          this.alertService.success('Cuenta eliminada', 'Tu cuenta ha sido eliminada correctamente.');
           this.authService.logout();
-          this.router.navigate(['/']); // Redirect to home page
+          this.router.navigate(['/']);
         },
         error: (err) => {
-          this.error = 'Failed to delete account.';
+          // Extraer el mensaje de error de la API
+          let errorMessage = 'No se pudo eliminar la cuenta. Intentá nuevamente.';
+          
+          if (err?.error?.error) {
+            // Si el error viene en formato {"error": "mensaje"}
+            errorMessage = err.error.error;
+          } else if (typeof err?.error === 'string') {
+            // Si el error es un string directo
+            try {
+              const parsed = JSON.parse(err.error);
+              errorMessage = parsed.error || errorMessage;
+            } catch {
+              errorMessage = err.error;
+            }
+          } else if (err?.message) {
+            errorMessage = err.message;
+          }
+          this.alertService.error('Error', errorMessage);
           console.error(err);
         }
       });

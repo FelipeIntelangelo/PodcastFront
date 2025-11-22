@@ -70,10 +70,33 @@ export class MyPodcasts implements OnInit {
           this.loadMyPodcasts();
         },
         error: (err) => {
-          const msg = 'No podés eliminar un podcast con episodios. Eliminá los episodios primero.';
-          const isConstraint = err?.status === 409 || err?.status === 400 || (err?.status === 500 && (err?.error?.message?.includes('constraint') || err?.message?.includes('constraint') || err?.error?.toString?.().includes('constraint')));
-          if (isConstraint) {
-            this.alertService.error('Acción no permitida', msg);
+          console.error('Error deleting podcast:', err);
+          
+          // Extraer mensaje de error personalizado del backend
+          let errorMessage = 'No podés eliminar un podcast con episodios. Eliminá los episodios primero.';
+          
+          if (err?.error?.error) {
+            errorMessage = err.error.error;
+          } else if (typeof err?.error === 'string') {
+            try {
+              const parsed = JSON.parse(err.error);
+              errorMessage = parsed.error || errorMessage;
+            } catch {
+              errorMessage = err.error;
+            }
+          } else if (err?.message) {
+            errorMessage = err.message;
+          }
+          
+          // Detectar si es error de constraint o validación de negocio
+          const isConstraintOrValidation = 
+            err?.status === 409 || 
+            err?.status === 400 || 
+            errorMessage.toLowerCase().includes('episodio') ||
+            errorMessage.toLowerCase().includes('constraint');
+          
+          if (isConstraintOrValidation) {
+            this.alertService.error('Acción no permitida', errorMessage);
           } else {
             this.alertService.deletePodcastError();
           }
