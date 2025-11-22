@@ -41,15 +41,17 @@
         <!-- Creador y Visualizaciones -->
         <div class="creator-views">
           <div class="creator">
-            <div class="avatar">
-              @if (podcast.user.profilePicture) {
-                <img [src]="podcast.user.profilePicture" [alt]="podcast.user.nickname">
-              } @else {
-                <div class="avatar-fallback">{{ getUserInitial() }}</div>
-              }
-            </div>
-            <span class="label">Creador:</span>
-            <span class="value">{{ podcast.user.nickname }}</span>
+            <a [routerLink]="['/profile', podcast.user.id]" class="creator-link">
+              <div class="avatar">
+                @if (podcast.user.profilePicture) {
+                  <img [src]="podcast.user.profilePicture" [alt]="podcast.user.nickname">
+                } @else {
+                  <div class="avatar-fallback">{{ getUserInitial() }}</div>
+                }
+              </div>
+              <span class="label">Creador:</span>
+              <span class="value">{{ podcast.user.nickname }}</span>
+            </a>
           </div>
           <div class="views">
             <span class="label">Visualizaciones:</span>

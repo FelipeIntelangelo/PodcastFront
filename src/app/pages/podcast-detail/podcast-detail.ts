@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PodcastService } from '../../services/podcast/podcast-service';
 import { Podcast as PodcastModel } from '../../models/podcast/podcast';
 import { UserService } from '../../services/client/user-service';
@@ -11,7 +11,7 @@ import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-podcast-detail',
-  imports: [DatePipe],
+  imports: [DatePipe, RouterLink],
   templateUrl: './podcast-detail.html',
   styleUrl: './podcast-detail.css'
 })
