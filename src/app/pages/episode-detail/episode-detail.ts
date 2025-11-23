@@ -55,6 +55,9 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   // Historial del usuario
   isInHistory = false;
   isLoadingHistory = false;
+  // Rating
+  userRating: number = 0;
+  isSubmittingRating = false;
 
   
   constructor(
@@ -359,6 +362,30 @@ export class EpisodeDetail implements OnInit, OnDestroy {
 
   toggleDescription(): void {
     this.isDescriptionExpanded = !this.isDescriptionExpanded;
+  }
+
+  rateEpisode(score: number): void {
+    if (!this.episode || !this.isUserLoggedIn) {
+      this.alertService.error('Error', 'Debes iniciar sesión para valorar episodios');
+      return;
+    }
+
+    this.isSubmittingRating = true;
+    this.episodeService.rateEpisode(this.episode.id, score).subscribe({
+      next: () => {
+        this.userRating = score;
+        this.isSubmittingRating = false;
+        this.alertService.success('¡Gracias!', `Valoraste este episodio con ${score} estrella${score > 1 ? 's' : ''}`);
+      },
+      error: (err) => {
+        this.isSubmittingRating = false;
+        let errorMessage = 'No se pudo guardar tu valoración';
+        if (err?.error) {
+          errorMessage = typeof err.error === 'string' ? err.error : errorMessage;
+        }
+        this.alertService.error('Error', errorMessage);
+      }
+    });
   }
 
   canComment(): boolean {

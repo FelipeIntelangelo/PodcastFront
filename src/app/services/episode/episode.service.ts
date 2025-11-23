@@ -63,4 +63,10 @@ export class EpisodeService {
     );
   }
 
+  rateEpisode(episodeId: number, score: number): Observable<string> {
+    return this.http.post(`/api/users/${episodeId}/rate`, { score }, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
 }
