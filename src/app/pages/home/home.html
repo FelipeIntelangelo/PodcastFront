@@ -54,70 +54,223 @@
                 <!-- Contenedor de cards con scroll -->
                 <div class="carouselWrapper" #novedadesWrapper (scroll)="handleScroll('novedades', novedadesWrapper)">
                     <div class="carouselContent">
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 1</h3>
-                            <h4>Podcast 1</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 2</h3>
-                            <h4>Podcast 2</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 3</h3>
-                            <h4>Podcast 3</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 4</h3>
-                            <h4>Podcast 4</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 5</h3>
-                            <h4>Podcast 5</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 6</h3>
-                            <h4>Podcast 6</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 7</h3>
-                            <h4>Podcast 7</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 8</h3>
-                            <h4>Podcast 8</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 9</h3>
-                            <h4>Podcast 9</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 10</h3>
-                            <h4>Podcast 10</h4>
-
-                        </div>
+                        @if (isLoading.novedades) {
+                            <div style="color: white; padding: 2rem;">Cargando podcasts...</div>
+                        } @else {
+                            @for (podcast of novedadesPodcasts; track podcast.id) {
+                                <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
+                                    @if (podcast.imageUrl) {
+                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
+                                    } @else {
+                                        <div class="ejampleImg"></div>
+                                    }
+                                    <h3>{{ podcast.title }}</h3>
+                                    @if (podcast.description) {
+                                        <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
+                                    }
+                                </div>
+                            } @empty {
+                                <div style="color: white; padding: 2rem;">No hay podcasts disponibles</div>
+                            }
+                        }
                     </div>
                 </div>
             </div>
         </div>
+
+        <!-- MÁS ESCUCHADOS -->
+        <div class="carouselSection">
+            <div class="carousel-header">
+                <h2>Más Escuchados</h2>
+                <div class="carousel-navigation">
+                    @if (carousels['masEscuchados'].hasBeenClicked) {
+                        <button 
+                            class="arrowButton arrowBack"
+                            (click)="goBack('masEscuchados')"
+                            [disabled]="carousels['masEscuchados'].atStart">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    }
+
+                    @if (!carousels['masEscuchados'].hasBeenClicked) {
+                        <button 
+                            class="arrowButton arrowNext arrowInitial"
+                            (click)="onArrowClick('masEscuchados')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    }
+
+                    @if (carousels['masEscuchados'].hasBeenClicked && !carousels['masEscuchados'].atEnd) {
+                        <button 
+                            class="arrowButton arrowNext"
+                            (click)="goNext('masEscuchados')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    }
+
+                    @if (carousels['masEscuchados'].hasBeenClicked && carousels['masEscuchados'].atEnd) {
+                        <button class="verTodosButton">
+                            Ver todos
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="carouselContainer">
+                <div class="carouselWrapper" #masEscuchadosWrapper (scroll)="handleScroll('masEscuchados', masEscuchadosWrapper)">
+                    <div class="carouselContent">
+                        @if (isLoading.masEscuchados) {
+                            <div style="color: white; padding: 2rem;">Cargando podcasts...</div>
+                        } @else {
+                            @for (podcast of masEscuchadosPodcasts; track podcast.id) {
+                                <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
+                                    @if (podcast.imageUrl) {
+                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
+                                    } @else {
+                                        <div class="ejampleImg"></div>
+                                    }
+                                    <h3>{{ podcast.title }}</h3>
+                                    @if (podcast.description) {
+                                        <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
+                                    }
+                                </div>
+                            } @empty {
+                                <div style="color: white; padding: 2rem;">No hay podcasts disponibles</div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MEJORES VALORADOS -->
+        <div class="carouselSection">
+            <div class="carousel-header">
+                <h2>Mejores Valorados</h2>
+                <div class="carousel-navigation">
+                    @if (carousels['mejoresValorados'].hasBeenClicked) {
+                        <button 
+                            class="arrowButton arrowBack"
+                            (click)="goBack('mejoresValorados')"
+                            [disabled]="carousels['mejoresValorados'].atStart">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                    }
+
+                    @if (!carousels['mejoresValorados'].hasBeenClicked) {
+                        <button 
+                            class="arrowButton arrowNext arrowInitial"
+                            (click)="onArrowClick('mejoresValorados')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    }
+
+                    @if (carousels['mejoresValorados'].hasBeenClicked && !carousels['mejoresValorados'].atEnd) {
+                        <button 
+                            class="arrowButton arrowNext"
+                            (click)="goNext('mejoresValorados')">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    }
+
+                    @if (carousels['mejoresValorados'].hasBeenClicked && carousels['mejoresValorados'].atEnd) {
+                        <button class="verTodosButton">
+                            Ver todos
+                        </button>
+                    }
+                </div>
+            </div>
+            <div class="carouselContainer">
+                <div class="carouselWrapper" #mejoresValoradosWrapper (scroll)="handleScroll('mejoresValorados', mejoresValoradosWrapper)">
+                    <div class="carouselContent">
+                        @if (isLoading.mejoresValorados) {
+                            <div style="color: white; padding: 2rem;">Cargando podcasts...</div>
+                        } @else {
+                            @for (podcast of mejoresValoradosPodcasts; track podcast.id) {
+                                <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
+                                    @if (podcast.imageUrl) {
+                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
+                                    } @else {
+                                        <div class="ejampleImg"></div>
+                                    }
+                                    <h3>{{ podcast.title }}</h3>
+                                    @if (podcast.description) {
+                                        <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
+                                    }
+                                </div>
+                            } @empty {
+                                <div style="color: white; padding: 2rem;">No hay podcasts disponibles</div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAVORITOS (solo si está logueado) -->
+        @if (isLoggedIn) {
+            <div class="carouselSection">
+                <div class="carousel-header">
+                    <h2>Favoritos</h2>
+                    <div class="carousel-navigation">
+                        @if (carousels['favoritos'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowBack"
+                                (click)="goBack('favoritos')"
+                                [disabled]="carousels['favoritos'].atStart">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        }
+
+                        @if (!carousels['favoritos'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowNext arrowInitial"
+                                (click)="onArrowClick('favoritos')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        @if (carousels['favoritos'].hasBeenClicked && !carousels['favoritos'].atEnd) {
+                            <button 
+                                class="arrowButton arrowNext"
+                                (click)="goNext('favoritos')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        @if (carousels['favoritos'].hasBeenClicked && carousels['favoritos'].atEnd) {
+                            <button class="verTodosButton">
+                                Ver todos
+                            </button>
+                        }
+                    </div>
+                </div>
+                <div class="carouselContainer">
+                    <div class="carouselWrapper" #favoritosWrapper (scroll)="handleScroll('favoritos', favoritosWrapper)">
+                        <div class="carouselContent">
+                            @if (isLoading.favoritos) {
+                                <div style="color: white; padding: 2rem;">Cargando favoritos...</div>
+                            } @else {
+                                @for (podcast of favoritosPodcasts; track podcast.id) {
+                                    <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
+                                        @if (podcast.imageUrl) {
+                                            <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
+                                        } @else {
+                                            <div class="ejampleImg"></div>
+                                        }
+                                        <h3>{{ podcast.title }}</h3>
+                                        @if (podcast.description) {
+                                            <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
+                                        }
+                                    </div>
+                                } @empty {
+                                    <div style="color: white; padding: 2rem;">No tienes favoritos aún</div>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     </main>
 </body>
 
