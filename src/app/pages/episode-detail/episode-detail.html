@@ -13,7 +13,7 @@
           </div>
           
           <!-- Rating de estrellas -->
-          @if (isUserLoggedIn) {
+          @if (isUserLoggedIn && canComment()) {
             <div class="rating-container">
               <h3 class="rating-title">Valorar el episodio</h3>
               <div class="rating">
