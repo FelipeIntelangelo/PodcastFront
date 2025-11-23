@@ -1,6 +1,6 @@
 <header>
     <div class="header-left">
-        <button class="menu-toggle" aria-label="Toggle menu">
+        <button class="menu-toggle" aria-label="Toggle menu" (click)="toggleSidebar()">
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
             <span class="hamburger-line"></span>
@@ -8,55 +8,174 @@
         <div id="divLogo"><a routerLink="/" (click)="showDropdown = false; showProfileMenu = false"><img src="assets/isotipo-light.png" alt="Wavelly Logo" id="logoNav"></a></div>
     </div>
     <div id="headersButton">
-        <div class="search-wrapper">
-            <div class="search-container">
-                <input type="search" class="search-input" placeholder="Search Podcasts or Users" aria-label="Search podcasts"
+        <!-- Desktop Search -->
+        <div class="search-wrapper desktop-search">
+            <div class="container-input">
+                <input type="search" class="input search-input" placeholder="Search" aria-label="Search podcasts"
                     (focus)="onSearchFocus()"
                     (input)="onSearchInput($event)"
                     (blur)="onSearchBlur()"
                     (keydown.enter)="onSearchButton()">
-                <button class="search-button" (click)="onSearchButton()" aria-label="Search">
-                    <span class="search-icon"></span>
-                </button>
-            </div>
-            <div class="search-dropdown" [class.show]="showDropdown && (searchResults.length > 0 || podcastResults.length > 0)">
-                <div class="search-results">
-                    <!-- Resultados de Podcasts -->
-                    @for (podcast of podcastResults; track podcast.id) {
-                        <div
-                            class="search-result-item podcast-result"
-                            (click)="selectPodcast(podcast)">
-                            <span class="result-type">🎙️</span>
-                            <div class="result-content">
-                                <div class="result-title">{{ podcast.title }}</div>
-                                @if (podcast.description && podcast.description.length > 0) {
-                                    <div class="result-subtitle">
-                                        {{ podcast.description.length > 20 ? (podcast.description.slice(0, 20) + '…') : podcast.description }}
-                                    </div>
-                                }
+                <i class="fas fa-search" (click)="onSearchIconClick()"></i>
+                <div class="search-dropdown" [class.show]="showDropdown && (searchResults.length > 0 || podcastResults.length > 0)">
+                    <div class="search-results">
+                        <!-- Resultados de Podcasts -->
+                        @for (podcast of podcastResults; track podcast.id) {
+                            <div
+                                class="search-result-item podcast-result"
+                                (click)="selectPodcast(podcast)">
+                                <span class="result-type">🎙️</span>
+                                <div class="result-content">
+                                    <div class="result-title">{{ podcast.title }}</div>
+                                    @if (podcast.description && podcast.description.length > 0) {
+                                        <div class="result-subtitle">
+                                            {{ podcast.description.length > 20 ? (podcast.description.slice(0, 20) + '…') : podcast.description }}
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
-                    
-                    <!-- Resultados de Usuarios -->
-                    @for (result of searchResults; track result.id) {
-                        <div
-                            class="search-result-item user-result"
-                            (click)="selectResult(result)">
-                            <span class="result-type">👤</span>
-                            <div class="result-content">
-                                <div class="result-title">{{ result.nickname }}</div>
-                                @if (result.bio && result.bio.length > 0) {
-                                    <div class="result-subtitle">
-                                        {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
-                                    </div>
-                                }
+                        }
+                        
+                        <!-- Resultados de Usuarios -->
+                        @for (result of searchResults; track result.id) {
+                            <div
+                                class="search-result-item user-result"
+                                (click)="selectResult(result)">
+                                <span class="result-type">👤</span>
+                                <div class="result-content">
+                                    <div class="result-title">{{ result.nickname }}</div>
+                                    @if (result.bio && result.bio.length > 0) {
+                                        <div class="result-subtitle">
+                                            {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
+                                        </div>
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             </div>
+            <!-- Mobile Search Popdown -->
+            @if (showMobileSearchPopdown) {
+                <div class="mobile-search-popdown-overlay" (click)="closeMobileSearchPopdown()"></div>
+                <div class="mobile-search-popdown">
+                    <div class="mobile-search-popdown-wrapper">
+                        <input type="search" 
+                               class="mobile-search-popdown-input" 
+                               placeholder="Search" 
+                               aria-label="Search podcasts"
+                               [(ngModel)]="searchQuery"
+                               (focus)="onSearchFocus()"
+                               (input)="onSearchInput($event)"
+                               (blur)="onSearchBlur()"
+                               (keydown.enter)="onSearchButton()">
+                        <button class="mobile-search-popdown-close" (click)="closeMobileSearchPopdown()" aria-label="Close search">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="search-dropdown mobile-search-popdown-dropdown" [class.show]="showDropdown && (searchResults.length > 0 || podcastResults.length > 0)">
+                        <div class="search-results">
+                            <!-- Resultados de Podcasts -->
+                            @for (podcast of podcastResults; track podcast.id) {
+                                <div
+                                    class="search-result-item podcast-result"
+                                    (click)="selectPodcast(podcast); closeMobileSearchPopdown()">
+                                    <span class="result-type">🎙️</span>
+                                    <div class="result-content">
+                                        <div class="result-title">{{ podcast.title }}</div>
+                                        @if (podcast.description && podcast.description.length > 0) {
+                                            <div class="result-subtitle">
+                                                {{ podcast.description.length > 20 ? (podcast.description.slice(0, 20) + '…') : podcast.description }}
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                            
+                            <!-- Resultados de Usuarios -->
+                            @for (result of searchResults; track result.id) {
+                                <div
+                                    class="search-result-item user-result"
+                                    (click)="selectResult(result); closeMobileSearchPopdown()">
+                                    <span class="result-type">👤</span>
+                                    <div class="result-content">
+                                        <div class="result-title">{{ result.nickname }}</div>
+                                        @if (result.bio && result.bio.length > 0) {
+                                            <div class="result-subtitle">
+                                                {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
         </div>
+
+        <!-- Mobile Search Icon -->
+        <button class="mobile-search-icon" (click)="toggleMobileSearch()" aria-label="Open search">
+            <i class="fas fa-search"></i>
+        </button>
+
+        <!-- Mobile Search Expanded -->
+        @if (showMobileSearch) {
+            <div class="mobile-search-overlay" (click)="closeMobileSearch()"></div>
+            <div class="mobile-search-container">
+                <div class="mobile-search-wrapper">
+                    <input type="search" 
+                           class="mobile-search-input" 
+                           placeholder="Search Podcasts or Users" 
+                           aria-label="Search podcasts"
+                           [(ngModel)]="searchQuery"
+                           (focus)="onSearchFocus()"
+                           (input)="onSearchInput($event)"
+                           (blur)="onMobileSearchBlur()"
+                           (keydown.enter)="onSearchButton()">
+                    <button class="mobile-search-close" (click)="closeMobileSearch()" aria-label="Close search">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="search-dropdown mobile-search-dropdown" [class.show]="showDropdown && (searchResults.length > 0 || podcastResults.length > 0)">
+                    <div class="search-results">
+                        <!-- Resultados de Podcasts -->
+                        @for (podcast of podcastResults; track podcast.id) {
+                            <div
+                                class="search-result-item podcast-result"
+                                (click)="selectPodcast(podcast)">
+                                <span class="result-type">🎙️</span>
+                                <div class="result-content">
+                                    <div class="result-title">{{ podcast.title }}</div>
+                                    @if (podcast.description && podcast.description.length > 0) {
+                                        <div class="result-subtitle">
+                                            {{ podcast.description.length > 20 ? (podcast.description.slice(0, 20) + '…') : podcast.description }}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                        
+                        <!-- Resultados de Usuarios -->
+                        @for (result of searchResults; track result.id) {
+                            <div
+                                class="search-result-item user-result"
+                                (click)="selectResult(result)">
+                                <span class="result-type">👤</span>
+                                <div class="result-content">
+                                    <div class="result-title">{{ result.nickname }}</div>
+                                    @if (result.bio && result.bio.length > 0) {
+                                        <div class="result-subtitle">
+                                            {{ result.bio.length > 20 ? (result.bio.slice(0, 20) + '…') : result.bio }}
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
         @if (isLoggedIn && user) {
             <button class="create-button" routerLink="/create-podcast" title="Crear Podcast">
                 <span class="create-icon"><i class="fas fa-plus"></i></span>
@@ -76,7 +195,12 @@
             </div>
         }
         @if (!isLoggedIn) {
-            <button id="headerSignIn" routerLink="auth/login">Sign In</button>
+            <button id="headerSignIn" routerLink="auth/login">
+                Sign In
+                <span class="arrow-wrapper">
+                    <span class="arrow"></span>
+                </span>
+            </button>
         }
     </div>
 </header>
