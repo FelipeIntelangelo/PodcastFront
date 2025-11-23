@@ -15,7 +15,7 @@ aside {
     height: calc(100vh - var(--header-height));
     overflow-y: auto;
     z-index: 1000;
-    transition: width 0.3s ease, padding 0.3s ease;
+    transition: width 0.15s ease, padding 0.15s ease;
 }
 
 /* Desktop - Sidebar reducido a iconos cuando está cerrado */
