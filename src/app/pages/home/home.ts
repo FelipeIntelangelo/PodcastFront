@@ -26,9 +26,12 @@ interface PodcastForDisplay {
   imageUrl?: string;
 }
 
+import { SidebarComponent } from '../../components/shared/sidebar/sidebar';
+
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, RouterLink],
+  standalone: true,
+  imports: [CommonModule, RouterLink, SidebarComponent],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })

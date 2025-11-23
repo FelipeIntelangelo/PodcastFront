@@ -1,0 +1,78 @@
+aside {
+    background-color: #050307;
+    color: white;
+    padding: 3rem 0rem;
+    padding-right: 1rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    position: fixed;
+    left: 0;
+    top: 84px;
+    width: 14%;
+    height: calc(100vh - 84px);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+aside ul li{
+    list-style: none;
+    margin: 0.5rem 0rem;
+    padding: 0.8rem 0rem;
+}
+
+aside ul li a {
+    display: flex;
+    gap: 1rem;
+    color: #ffffff;
+    text-decoration: none;
+    padding-left: 1.7rem;
+    position: relative;
+    transition: color 0.3s ease;
+    font-size: 1.2rem;
+}
+
+aside ul li a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background-color: #b88dd9;
+    transform: translateX(-200%);
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+aside ul li a i {
+    color: #9D65D7;
+    transition: color 0.3s ease;
+}
+
+aside ul li a:hover {
+    color: #E0C7FF;
+}
+
+aside ul li a:hover::before {
+    transform: translateX(0);
+}
+
+aside ul li a:hover i {
+    color: #E0C7FF;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+/* Active link styles */
+aside ul li a.active {
+    color: #E0C7FF;
+}
+
+aside ul li a.active::before {
+    transform: translateX(0);
+}
+
+aside ul li a.active i {
+    color: #E0C7FF;
+}
