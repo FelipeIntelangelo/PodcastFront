@@ -1,14 +1,13 @@
 <aside role="navigation" aria-label="Main navigation">
     <ul>
         @for (item of navItems; track item.route + item.label; let isFirst = $first) {
-            <li [id]="isFirst ? 'liFirst' : ''">
-                <a 
-                    [routerLink]="item.route" 
-                    routerLinkActive="active"
-                    [routerLinkActiveOptions]="{ exact: item.route === '/' }">
-                    <i [class]="item.icon"></i> {{ item.label }}
-                </a>
-            </li>
-        }
+                        <li [id]="isFirst ? 'liFirst' : ''"
+                            routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: item.route === '/' }">
+                            <a
+                                [routerLink]="item.route">
+                                <i [class]="item.icon"></i> {{ item.label }}
+                            </a>
+                        </li>        }
     </ul>
 </aside>

@@ -1,8 +1,10 @@
 aside {
     background-color: #050307;
     color: white;
-    padding: 3rem 0rem;
-    padding-right: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
     border-right: 1px solid rgba(255, 255, 255, 0.2);
     position: fixed;
     left: 0;
@@ -30,34 +32,23 @@ aside ul li a {
     font-size: 1.2rem;
 }
 
-aside ul li a::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    height: 100%;
-    width: 3px;
-    background-color: #b88dd9;
-    transform: translateX(-200%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
+
 
 aside ul li a i {
     color: #9D65D7;
     transition: color 0.3s ease;
 }
 
-aside ul li a:hover {
-    color: #E0C7FF;
+aside ul li:hover {
+    background-color: #333333; /* Darker Gray color */
+    border-radius: 8px; /* Rounded borders */
 }
 
-aside ul li a:hover::before {
-    transform: translateX(0);
-}
 
-aside ul li a:hover i {
-    color: #E0C7FF;
-}
+
+
+
+
 
 a{
     text-decoration: none;
@@ -65,14 +56,7 @@ a{
 }
 
 /* Active link styles */
-aside ul li a.active {
-    color: #E0C7FF;
-}
-
-aside ul li a.active::before {
-    transform: translateX(0);
-}
-
-aside ul li a.active i {
-    color: #E0C7FF;
+aside ul li.active {
+    background-color: #1a1a1a; /* Even Darker Gray color */
+    border-radius: 8px; /* Rounded borders */
 }
