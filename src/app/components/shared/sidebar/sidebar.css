@@ -1,0 +1,62 @@
+aside {
+    background-color: #050307;
+    color: white;
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+    position: fixed;
+    left: 0;
+    top: 84px;
+    width: 14%;
+    height: calc(100vh - 84px);
+    overflow-y: auto;
+    z-index: 1000;
+}
+
+aside ul li{
+    list-style: none;
+    margin: 0.5rem 0rem;
+    padding: 0.8rem 0rem;
+}
+
+aside ul li a {
+    display: flex;
+    gap: 1rem;
+    color: #ffffff;
+    text-decoration: none;
+    padding-left: 1.7rem;
+    position: relative;
+    transition: color 0.3s ease;
+    font-size: 1.2rem;
+}
+
+
+
+aside ul li a i {
+    color: #9D65D7;
+    transition: color 0.3s ease;
+}
+
+aside ul li:hover {
+    background-color: #333333; /* Darker Gray color */
+    border-radius: 8px; /* Rounded borders */
+}
+
+
+
+
+
+
+
+a{
+    text-decoration: none;
+    color: white;
+}
+
+/* Active link styles */
+aside ul li.active {
+    background-color: #1a1a1a; /* Even Darker Gray color */
+    border-radius: 8px; /* Rounded borders */
+}

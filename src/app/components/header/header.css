@@ -2,35 +2,55 @@ header{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 1.2rem 4rem;
+    padding: 1.2rem 4rem 1.2rem 1.5rem;
     background-color: #050307;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-
-    /* CODIGO FIJAR ARRIBA */
+    position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     z-index: 1001;
 }
 
-ul{
+.menu-toggle {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem; /* Adjusted padding */
     display: flex;
-    margin-left: 2rem;
+    flex-direction: column;
+    gap: 3px;
+    justify-content: center;
+    align-items: center;
+    width: 36px; /* Increased width */
+    height: 36px; /* Increased height */
+    margin-right: 1rem;
+    margin-left: 0.2rem;
+    transition: transform 0.3s ease;
 }
 
-ul li{
-    margin: 0rem 3rem;
-    list-style: none;
-    color: white;
+.hamburger-line {
+    width: 20px; /* Adjusted width */
+    height: 2px; /* Adjusted height */
+    background-color: white;
+    border-radius: 1px; /* Adjusted border-radius */
+    transition: all 0.3s ease;
 }
 
-a{
-    text-decoration: none;
-    color: black;
+.menu-toggle:hover {
+    background-color: #333333; /* Dark gray circular background */
+    border-radius: 50%; /* Circular shape */
 }
 
-#divLogo a {
+
+
+.header-left {
     display: flex;
     align-items: center;
+    gap: 0.5rem;
 }
+
+
 
 #headersButton{
     display: flex;
@@ -43,10 +63,9 @@ a{
   background-color: #333;
   border: 1px solid #333;
   color: white;
-  padding: 0rem 1rem;
+  padding: 0.6rem 1.2rem;
   border-radius: 2rem;
   font-size: 16px;
-  height: 3.5rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.3s ease, transform 0.3s ease;
@@ -94,7 +113,7 @@ a{
 #headersButton button{
     padding: 0.6rem 1.2rem;
     font-size: 16px;
-    font-weight: bold;
+    font-weight: 500;
 }
 
 #logoNav{
@@ -192,7 +211,7 @@ a{
 
 #headerSignIn{
     background-color: white;
-    border-radius: 0.5rem;
+    border-radius: 2rem;
     border: 1px solid white;
 }
 
@@ -314,7 +333,6 @@ a{
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-left: 2rem;
   }
   
   .profile-picture-container {
@@ -322,11 +340,10 @@ a{
   }
   
   .profile-picture {
-    width: 45px;
-    height: 45px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
-    margin-top: 5px;
   }
   
   .profile-menu {

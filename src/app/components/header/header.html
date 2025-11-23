@@ -1,11 +1,11 @@
 <header>
-    <div id="divLogo"><a routerLink="/" (click)="showDropdown = false; showProfileMenu = false"><img src="assets/isotipo-light.png" alt="Wavelly Logo" id="logoNav"></a></div>
-    <div>
-        <ul>
-            <a routerLink="/"><li>Podcasts</li></a>
-            <a routerLink="/"><li>About Us</li></a>
-            <a routerLink="/"><li>Contact</li></a> 
-        </ul>
+    <div class="header-left">
+        <button class="menu-toggle" aria-label="Toggle menu">
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+            <span class="hamburger-line"></span>
+        </button>
+        <div id="divLogo"><a routerLink="/" (click)="showDropdown = false; showProfileMenu = false"><img src="assets/isotipo-light.png" alt="Wavelly Logo" id="logoNav"></a></div>
     </div>
     <div id="headersButton">
         <div class="search-wrapper">
