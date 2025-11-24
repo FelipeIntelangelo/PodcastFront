@@ -153,28 +153,56 @@
                   }
                 </div>
               } @else if (isCloudinaryAudio(episode.audioPath)) {
-                <div class="audio-controls">
-                  <button class="play-global-btn" (click)="playInFloatingPlayer()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    Abrir reproductor flotante
-                  </button>
-                  <audio controls [src]="episode.audioPath">
-                    Tu navegador no soporta el elemento de audio.
-                  </audio>
+                <div class="inline-player-container">
+                  @if (!showAudio) {
+                    <div class="play-preview audio">
+                      <button class="big-play-btn small" (click)="startInlineAudio()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <span>Reproducir</span>
+                      </button>
+                      <p class="preview-text">Haz clic para reproducir el episodio</p>
+                    </div>
+                  } @else {
+                    <div class="audio-controls">
+                      <button class="open-floating-btn" (click)="playInFloatingPlayer()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Abrir reproductor flotante
+                      </button>
+                      <audio #inlineAudio controls [src]="episode.audioPath" (play)="onInlineAudioPlay()">
+                        Tu navegador no soporta el elemento de audio.
+                      </audio>
+                    </div>
+                  }
                 </div>
               } @else {
-                <div class="audio-controls">
-                  <button class="play-global-btn" (click)="playInFloatingPlayer()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M8 5v14l11-7z"/>
-                    </svg>
-                    Abrir reproductor flotante
-                  </button>
-                  <audio controls [src]="episode.audioPath">
-                    Tu navegador no soporta el elemento de audio.
-                  </audio>
+                <div class="inline-player-container">
+                  @if (!showAudio) {
+                    <div class="play-preview audio">
+                      <button class="big-play-btn small" (click)="startInlineAudio()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        <span>Reproducir</span>
+                      </button>
+                      <p class="preview-text">Haz clic para reproducir el episodio</p>
+                    </div>
+                  } @else {
+                    <div class="audio-controls">
+                      <button class="open-floating-btn" (click)="playInFloatingPlayer()">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                          <path d="M8 5v14l11-7z"/>
+                        </svg>
+                        Abrir reproductor flotante
+                      </button>
+                      <audio #inlineAudio controls [src]="episode.audioPath" (play)="onInlineAudioPlay()">
+                        Tu navegador no soporta el elemento de audio.
+                      </audio>
+                    </div>
+                  }
                 </div>
               }
             } @else {

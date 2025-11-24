@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { EpisodeService } from '../../services/episode/episode.service';
 import { CommentaryService } from '../../services/commentary/commentary.service';
@@ -29,6 +29,8 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   cachedEpisodeId: number | null = null;
   hideInlinePlayer = false;
   showIframe = false;
+  showAudio = false;
+  @ViewChild('inlineAudio') inlineAudio?: ElementRef<HTMLAudioElement>;
   
   // Contador de tiempo manual
   playbackStartTime: number | null = null;
@@ -141,6 +143,7 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         this.cachedYouTubeUrl = null;
         this.cachedEpisodeId = null;
         this.estimatedPlaybackTime = 0;
+        this.showAudio = false;
       },
       error: (error) => {
         console.error('Error loading episode:', error);
@@ -215,7 +218,14 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   }
 
   isCloudinaryVideo(url: string): boolean {
-    return url.includes('cloudinary.com') && (url.includes('/video/') || url.includes('.mp4') || url.includes('.webm'));
+    if (!url) return false;
+    const lower = url.toLowerCase();
+    if (!lower.includes('cloudinary.com')) return false;
+    // If the URL clearly points to an audio file, treat it as audio even if path contains '/video/'
+    if (lower.includes('.mp3') || lower.includes('.wav') || lower.includes('.m4a') || lower.includes('.ogg')) {
+      return false;
+    }
+    return lower.includes('/video/') || lower.includes('.mp4') || lower.includes('.webm');
   }
 
   isCloudinaryAudio(url: string): boolean {
@@ -249,6 +259,38 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   startInlinePlayback(): void {
     this.showIframe = true;
     // Iniciar contador de views solo si el usuario está logeado
+    if (this.isUserLoggedIn) {
+      this.startViewTimer();
+    }
+  }
+
+  startInlineAudio(): void {
+    this.showAudio = true;
+    // Reproducir programáticamente el audio tras mostrar el elemento (user gesture)
+    setTimeout(() => {
+      try {
+        const el = this.inlineAudio?.nativeElement;
+        if (el) {
+          const p = el.play();
+          if (p && typeof p.then === 'function') {
+            p.then(() => {
+              // reproducción iniciada correctamente; el evento (play) disparará los contadores
+            }).catch(() => {
+              // reproducción bloqueada por política del navegador; no iniciar timers aquí
+            });
+          }
+        }
+      } catch (e) {
+        // ignore
+      }
+    }, 50);
+  }
+
+  onInlineAudioPlay(): void {
+    // Se dispara cuando el audio realmente comienza a reproducirse
+    if (!this.timerInterval) {
+      this.startTimer();
+    }
     if (this.isUserLoggedIn) {
       this.startViewTimer();
     }
@@ -313,6 +355,13 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       // Detener el timer de tiempo
       this.stopTimer();
       this.hideInlinePlayer = true;
+      // ocultar cualquier player inline
+      this.showIframe = false;
+      this.showAudio = false;
+      // pausar audio inline si está sonando
+      try {
+        this.inlineAudio?.nativeElement.pause();
+      } catch {}
       
       // Abrir el reproductor flotante
       // Pasar el estado de viewCounted para evitar contar dos veces

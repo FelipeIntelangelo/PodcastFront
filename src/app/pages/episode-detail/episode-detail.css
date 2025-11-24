@@ -385,6 +385,11 @@
   gap: 0.5rem; /* un poco menos de separación con el player */
 }
 
+/* Asegurar que el preview se pueda superponer sobre el frame del player */
+.inline-player-container {
+  position: relative;
+}
+
 .play-preview {
   display: flex;
   flex-direction: column;
@@ -395,6 +400,23 @@
   background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.1), rgba(0, 0, 0, 0.3));
   border-radius: var(--radius-md);
   min-height: 400px;
+}
+
+/* Variante compacta del preview para audios */
+.play-preview.audio {
+  padding: 1.25rem 1rem;
+  min-height: 120px;
+  gap: 0.5rem;
+  position: static;
+  margin: 1rem 0 0 0;
+  align-self: flex-start;
+  width: 100%;
+  max-width: 640px;
+}
+
+.big-play-btn.small {
+  padding: 0.8rem 1.25rem;
+  font-size: 1rem;
 }
 
 .big-play-btn {
