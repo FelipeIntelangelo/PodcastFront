@@ -134,13 +134,19 @@ h2{
     padding: 0.8rem 2rem;
     font-size: 1rem;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
     white-space: nowrap;
     flex-shrink: 0;
 }
 
-.verTodosButton:hover {
+.verTodosButton:hover:not(:disabled) {
     background-color: #b88dd9;
+}
+
+.verTodosButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .ejampleImg {
