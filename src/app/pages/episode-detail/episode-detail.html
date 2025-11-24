@@ -156,23 +156,23 @@
                 <div class="inline-player-container">
                   @if (!showAudio) {
                     <div class="play-preview audio">
-                      <button class="big-play-btn small" (click)="startInlineAudio()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                        <span>Reproducir</span>
-                      </button>
-                      <p class="preview-text">Haz clic para reproducir el episodio</p>
+                      <div class="uiverse-container">
+                        <label>
+                          <input class="u-play-btn" type="checkbox" (change)="startInlineAudio($event)">
+                          <div class="u-play-icon"></div>
+                          <div class="u-pause-icon"></div>
+                        </label>
+                      </div>
                     </div>
                   } @else {
-                    <div class="audio-controls">
+                    <div class="audio-controls" [class.playing]="showAudio">
                       <button class="open-floating-btn" (click)="playInFloatingPlayer()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                         Abrir reproductor flotante
                       </button>
-                      <audio #inlineAudio controls [src]="episode.audioPath" (play)="onInlineAudioPlay()">
+                      <audio #inlineAudio controls [src]="episode.audioPath" (playing)="onInlineAudioPlay()">
                         Tu navegador no soporta el elemento de audio.
                       </audio>
                     </div>
@@ -182,23 +182,24 @@
                 <div class="inline-player-container">
                   @if (!showAudio) {
                     <div class="play-preview audio">
-                      <button class="big-play-btn small" (click)="startInlineAudio()">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                          <path d="M8 5v14l11-7z"/>
-                        </svg>
-                        <span>Reproducir</span>
-                      </button>
+                      <div class="uiverse-container">
+                        <label>
+                          <input class="u-play-btn" type="checkbox" (change)="startInlineAudio($event)">
+                          <div class="u-play-icon"></div>
+                          <div class="u-pause-icon"></div>
+                        </label>
+                      </div>
                       <p class="preview-text">Haz clic para reproducir el episodio</p>
                     </div>
                   } @else {
-                    <div class="audio-controls">
+                    <div class="audio-controls" [class.playing]="showAudio">
                       <button class="open-floating-btn" (click)="playInFloatingPlayer()">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                           <path d="M8 5v14l11-7z"/>
                         </svg>
                         Abrir reproductor flotante
                       </button>
-                      <audio #inlineAudio controls [src]="episode.audioPath" (play)="onInlineAudioPlay()">
+                      <audio #inlineAudio controls [src]="episode.audioPath" (playing)="onInlineAudioPlay()">
                         Tu navegador no soporta el elemento de audio.
                       </audio>
                     </div>

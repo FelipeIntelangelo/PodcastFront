@@ -264,26 +264,34 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     }
   }
 
-  startInlineAudio(): void {
-    this.showAudio = true;
-    // Reproducir programáticamente el audio tras mostrar el elemento (user gesture)
+  startInlineAudio(event?: Event): void {
+    // Duración de la animación del botón (ms). Mantener preview visible mientras anima.
+    const ANIMATION_MS = 700;
+
+    // Intentamos respetar el gesto del usuario: el input fue clickeado.
+    // Retrasamos la inserción del <audio> para que la animación del botón tenga tiempo de reproducirse.
     setTimeout(() => {
-      try {
-        const el = this.inlineAudio?.nativeElement;
-        if (el) {
-          const p = el.play();
-          if (p && typeof p.then === 'function') {
-            p.then(() => {
-              // reproducción iniciada correctamente; el evento (play) disparará los contadores
-            }).catch(() => {
-              // reproducción bloqueada por política del navegador; no iniciar timers aquí
-            });
+      this.showAudio = true;
+
+      // Permitir que Angular renderice el elemento <audio> antes de intentar play()
+      setTimeout(() => {
+        try {
+          const el = this.inlineAudio?.nativeElement;
+          if (el) {
+            const p = el.play();
+            if (p && typeof p.then === 'function') {
+              p.then(() => {
+                // reproducción iniciada correctamente; el evento (playing) disparará los contadores
+              }).catch(() => {
+                // reproducción bloqueada por política del navegador; no iniciar timers aquí
+              });
+            }
           }
+        } catch (e) {
+          // ignore
         }
-      } catch (e) {
-        // ignore
-      }
-    }, 50);
+      }, 80);
+    }, ANIMATION_MS);
   }
 
   onInlineAudioPlay(): void {
