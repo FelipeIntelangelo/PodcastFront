@@ -4,13 +4,15 @@ import { UserService } from '../../services/client/user-service';
 import { UserSearchDTO } from '../../models/user/userSearchDTO';
 import { User } from '../../models/user/user';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth/auth.service';
 import { PodcastService } from '../../services/podcast/podcast-service';
 import { PodcastSearchDTO } from '../../models/podcast/podcast-search-dto';
+import { LayoutService } from '../../services/layout/layout.service';
 
 @Component({
   selector: 'app-header',
-  imports: [RouterLink, CommonModule],
+  imports: [RouterLink, CommonModule, FormsModule],
   templateUrl: './header.html',
   styleUrl: './header.css'
 })
@@ -23,13 +25,16 @@ export class Header implements OnInit{
   isLoggedIn: boolean = false;
   user: User | null = null;
   showProfileMenu: boolean = false;
+  showMobileSearch: boolean = false;
+  showMobileSearchPopdown: boolean = false;
 
   constructor(
     private userService: UserService,
     private podcastService: PodcastService,
     private router: Router,
     private authService: AuthService,
-    private elementRef: ElementRef
+    private elementRef: ElementRef,
+    private layoutService: LayoutService
   ) {}
 
   ngOnInit(): void {
@@ -69,7 +74,37 @@ export class Header implements OnInit{
   }
 
   onSearchFocus() {
-    this.showDropdown = true;
+    // En mobile, abrir pop-down en lugar de solo mostrar dropdown
+    if (window.innerWidth <= 767) {
+      this.showMobileSearchPopdown = true;
+      setTimeout(() => {
+        const mobileInput = document.querySelector('.mobile-search-popdown-input') as HTMLInputElement;
+        if (mobileInput) {
+          mobileInput.focus();
+        }
+      }, 100);
+    } else {
+      this.showDropdown = true;
+    }
+  }
+
+  onSearchIconClick(): void {
+    // En mobile, abrir pop-down al hacer click en la lupa
+    if (window.innerWidth <= 767) {
+      this.showMobileSearchPopdown = true;
+      setTimeout(() => {
+        const mobileInput = document.querySelector('.mobile-search-popdown-input') as HTMLInputElement;
+        if (mobileInput) {
+          mobileInput.focus();
+        }
+      }, 100);
+    }
+  }
+
+  closeMobileSearchPopdown(): void {
+    this.showMobileSearchPopdown = false;
+    this.showDropdown = false;
+    this.searchQuery = '';
   }
 
   onSearchInput(event: Event) {
@@ -113,8 +148,52 @@ export class Header implements OnInit{
   }
 
   onSearchBlur() {
+    // En mobile, no cerrar el dropdown si el popdown está abierto
+    if (window.innerWidth <= 767 && this.showMobileSearchPopdown) {
+      return;
+    }
     setTimeout(() => {
-      this.showDropdown = false
+      this.showDropdown = false;
+    }, 300);
+  }
+
+  onSearchButton(){
+    const term = this.searchQuery.trim();
+    if (term) {
+      this.showDropdown = false;
+      this.showMobileSearch = false;
+      this.router.navigate(['/search', term]);
+    }
+  }
+
+  toggleMobileSearch(): void {
+    this.showMobileSearch = !this.showMobileSearch;
+    if (this.showMobileSearch) {
+      // Focus en el input móvil después de que se muestre
+      setTimeout(() => {
+        const mobileInput = document.querySelector('.mobile-search-input') as HTMLInputElement;
+        if (mobileInput) {
+          mobileInput.focus();
+        }
+      }, 100);
+    } else {
+      this.showDropdown = false;
+      this.searchQuery = '';
+    }
+  }
+
+  closeMobileSearch(): void {
+    this.showMobileSearch = false;
+    this.showDropdown = false;
+    this.searchQuery = '';
+  }
+
+  onMobileSearchBlur(): void {
+    // Cerrar después de un pequeño delay para permitir clicks en resultados
+    setTimeout(() => {
+      if (!this.showDropdown) {
+        this.closeMobileSearch();
+      }
     }, 300);
   }
 
@@ -124,6 +203,8 @@ export class Header implements OnInit{
       this.router.navigate(['/profile', result.id]);
     }
     this.showDropdown = false;
+    this.closeMobileSearch();
+    this.closeMobileSearchPopdown();
   }
 
   selectPodcast(podcast: PodcastSearchDTO) {
@@ -132,14 +213,12 @@ export class Header implements OnInit{
       this.router.navigate(['/podcast', podcast.id]); // Asumiendo que tienes una ruta para podcasts
     }
     this.showDropdown = false;
+    this.closeMobileSearch();
+    this.closeMobileSearchPopdown();
   }
 
-  onSearchButton(){
-    const term = this.searchQuery.trim();
-    if (term) {
-      this.showDropdown = false;
-      this.router.navigate(['/search', term]);
-    }
+  toggleSidebar(): void {
+    this.layoutService.toggleSidebar();
   }
 }
 

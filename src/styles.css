@@ -9,9 +9,43 @@
     padding: 0;
 }
 
-main {
-    min-height: 100vh;
+:root {
+    --header-height: 84px;
+    --sidebar-width: 250px;
+    
+    /* Colors */
+    --primary-color: #9D65D7;
+    --primary-color-rgb: 157, 101, 215;
+    --secondary-color: #7c3aed;
+    --background-dark: #050307;
+    
+    /* Gradients */
+    --primary-gradient: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
 }
+
+/* Utility Classes */
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.75rem;
+    border-radius: 0.6rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.3);
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #8B4FC5, #6a2dc9);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(var(--primary-color-rgb), 0.5);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
 
 html, body {
     background-color: #131313;
