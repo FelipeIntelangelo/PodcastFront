@@ -13,8 +13,13 @@
                     </fieldset>
                     <fieldset>
                         <label for="passwordIn">Password:</label>
-                        <input type="password" id="passwordIn" placeholder="password" formControlName="password"
-                        [class.error-input]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                        <div class="password-input-wrapper">
+                            <input [type]="showPassword ? 'text' : 'password'" id="passwordIn" placeholder="password" formControlName="password"
+                            [class.error-input]="registerForm.get('password')?.invalid && registerForm.get('password')?.touched">
+                            <button type="button" class="password-toggle" (click)="togglePasswordVisibility()" tabindex="-1">
+                                <i [class]="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
+                            </button>
+                        </div>
                         <app-form-error controlName="password" [customMessages]="customErrors['password']" />
                     </fieldset>
                     <fieldset>
