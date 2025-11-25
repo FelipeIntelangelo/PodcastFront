@@ -6,6 +6,7 @@ import { PodcastSearchDTO } from '../../models/podcast/podcast-search-dto';
 import { Podcast } from '../../models/podcast/podcast';
 import { PodcastTotalDTO } from '../../models/podcast/podcast-total-dto';
 import { PodcastCreateDTO } from '../../models/podcast/podcast-create-dto';
+import { PodcastUpdateDTO } from '../../models/podcast/podcast-update-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class PodcastService {
     );
   }
 
-  getAllFiltered(title?: string, userId?: number, category?: string, orderByViews: boolean = false): Observable<PodcastSearchDTO[]> {
+  getAllFiltered(title?: string, userId?: number, category?: string, orderByViews: boolean = false): Observable<any[]> {
     const params = new URLSearchParams();
     
     if (title) params.append('title', title);
@@ -37,7 +38,7 @@ export class PodcastService {
     const queryString = params.toString();
     const url = queryString ? `${this.API_URL}?${queryString}` : this.API_URL;
     
-    return this.http.get<PodcastSearchDTO[]>(url).pipe(
+    return this.http.get<any[]>(url).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
@@ -62,6 +63,12 @@ export class PodcastService {
 
   deletePodcast(podcastId: number): Observable<string> {
     return this.http.delete(`${this.API_URL}/${podcastId}`, { responseType: 'text' }).pipe(
+      catchError(this.errorHandler.handleError.bind(this.errorHandler))
+    );
+  }
+
+  updatePodcast(podcastId: number, updates: PodcastUpdateDTO): Observable<PodcastUpdateDTO> {
+    return this.http.patch<PodcastUpdateDTO>(`${this.API_URL}/${podcastId}`, updates).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }

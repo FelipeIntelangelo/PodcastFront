@@ -44,6 +44,12 @@ export class PodcastDetail implements OnInit{
     });
   }
 
+  editPodcast(): void {
+    if (this.podcastId) {
+      this.router.navigate(['/podcast', this.podcastId, 'edit']);
+    }
+  }
+
   loadCurrentUser(): void {
     this.userService.getCurrentUserProfile().subscribe({
       next: (user) => {
@@ -176,11 +182,6 @@ export class PodcastDetail implements OnInit{
 
   viewEpisode(episodeId: number): void {
     this.router.navigate(['/episode', episodeId]);
-  }
-
-  editPodcast(): void {
-    // TODO: Navegar a página de edición
-    console.log('Edit podcast:', this.podcastId);
   }
 
   async deletePodcast(): Promise<void> {
