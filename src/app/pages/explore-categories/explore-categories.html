@@ -1,0 +1,14 @@
+<div class="explore-categories-container">
+  <header class="page-header">
+    <h1>Explorar por categoría</h1>
+    <p>Seleccioná una categoría para ver los podcasts disponibles.</p>
+  </header>
+
+  <div class="categories-grid">
+    @for (cat of categories; track $index) {
+      <button type="button" class="category-card" (click)="goToCategory(cat)">
+        <span class="category-name">{{ cat }}</span>
+      </button>
+    }
+  </div>
+</div>

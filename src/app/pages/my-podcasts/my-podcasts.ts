@@ -57,8 +57,7 @@ export class MyPodcasts implements OnInit {
   }
 
   editPodcast(id: number): void {
-    // TODO: Navegar a página de edición o abrir modal
-    console.log('Edit podcast:', id);
+    this.router.navigate(['/podcast', id, 'edit']);
   }
 
   async deletePodcast(id: number): Promise<void> {

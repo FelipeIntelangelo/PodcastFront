@@ -1,0 +1,29 @@
+.category-podcasts-container {
+  padding: 24px;
+}
+
+.podcasts-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 16px;
+}
+
+.podcast-card {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.02);
+  cursor: pointer;
+}
+
+.podcast-image img {
+  width: 96px;
+  height: 96px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.podcast-content .podcast-title { font-weight: 700; margin: 0 0 6px 0; }
+.podcast-description { margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; }

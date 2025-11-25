@@ -7,6 +7,9 @@ import { Search } from './pages/search/search';
 import { EditProfileComponent } from './pages/edit-profile/edit-profile';
 import { PodcastDetail } from './pages/podcast-detail/podcast-detail';
 import { CreatePodcastComponent } from './pages/create-podcast/create-podcast'; // Import the new component
+import { EditPodcastComponent } from './pages/edit-podcast/edit-podcast';
+import { ExploreCategories } from './pages/explore-categories/explore-categories';
+import { CategoryPodcasts } from './pages/category-podcasts/category-podcasts';
 import { MyPodcasts } from './pages/my-podcasts/my-podcasts';
 import { EpisodeDetail } from './pages/episode-detail/episode-detail';
 import { AddEpisodePage } from './pages/add-episode/add-episode';
@@ -28,6 +31,9 @@ export const routes: Routes = [
     {path: "episode/:id/edit", component:EditEpisodePage},
     {path: "podcast/:id/add-episode", component: AddEpisodePage},
     {path: "create-podcast", component: CreatePodcastComponent},
+    {path: "podcast/:id/edit", component: EditPodcastComponent},
+    {path: "explore", component: ExploreCategories},
+    {path: "explore/:category", component: CategoryPodcasts},
     {path: "myPodcasts", component: MyPodcasts},
     {path: "favorites", component: FavoritesComponent},
     {path: "history", component: HistoryComponent}
