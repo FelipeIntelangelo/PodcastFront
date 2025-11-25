@@ -28,7 +28,8 @@ export class HistoryComponent implements OnInit {
     this.isLoading = true;
     this.userService.getMyHistory().subscribe({
       next: (history) => {
-        this.history = history;
+        // Ordenar por listenedAt descendente (más reciente primero)
+        this.history = history.sort((a, b) => new Date(b.listenedAt).getTime() - new Date(a.listenedAt).getTime());
         this.isLoading = false;
       },
       error: (error) => {
