@@ -24,6 +24,7 @@ export class PodcastDetail implements OnInit{
   isAdmin = false;
   episodes: EpisodeDTO[] = [];
   isLoadingEpisodes = false;
+  showCategoriesPopup = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -247,5 +248,19 @@ export class PodcastDetail implements OnInit{
     if (placeholder) {
       placeholder.style.display = 'flex';
     }
+  }
+
+  goToCategory(category: string, event: Event): void {
+    event.stopPropagation();
+    this.router.navigate(['/explore', category]);
+  }
+
+  toggleCategoriesPopup(event: Event): void {
+    event.stopPropagation();
+    this.showCategoriesPopup = !this.showCategoriesPopup;
+  }
+
+  closeCategoriesPopup(): void {
+    this.showCategoriesPopup = false;
   }
 }
