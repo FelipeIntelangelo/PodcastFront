@@ -18,6 +18,7 @@ export class Register implements OnInit {
   currentStep = 1;
   isSubmitting = false;
   errorMessage: string | null = null;
+  showPassword = false;
 
   // custom error messages for form-error component
   customErrors: { [controlName: string]: { [key: string]: string } } = {
@@ -106,6 +107,10 @@ export class Register implements OnInit {
   get name() { return this.registerForm.get('name'); }
   get lastName() { return this.registerForm.get('lastName'); }
   get nickname() { return this.registerForm.get('nickname'); }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
 
   nextStep() {
     if (this.currentStep === 1 && this.registerForm.get('username')!.valid

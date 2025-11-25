@@ -18,6 +18,7 @@ export class Login implements OnInit {
   loginForm!: FormGroup;
   errorMessage: string | null = null;
   errorCheck: string | null = null;
+  showPassword = false;
 
   customErrors: { [controlName: string]: { [key: string]: string } } = {
     username: {
@@ -39,6 +40,10 @@ export class Login implements OnInit {
       username: new FormControl('', Validators.required),
       password: new FormControl('', Validators.required)
     });
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 
   onSubmit(): void {

@@ -36,7 +36,8 @@
                     <!-- Botón Ver todos (reemplaza la flecha derecha al final) -->
                     @if (carousels['novedades'].hasBeenClicked && carousels['novedades'].atEnd) {
                         <button 
-                            class="verTodosButton">
+                            class="verTodosButton"
+                            [disabled]="!carousels['novedades'].verTodosEnabled">
                             Ver todos
                         </button>
                     }
@@ -101,7 +102,9 @@
                     }
 
                     @if (carousels['masEscuchados'].hasBeenClicked && carousels['masEscuchados'].atEnd) {
-                        <button class="verTodosButton">
+                        <button 
+                            class="verTodosButton"
+                            [disabled]="!carousels['masEscuchados'].verTodosEnabled">
                             Ver todos
                         </button>
                     }
@@ -165,7 +168,9 @@
                     }
 
                     @if (carousels['mejoresValorados'].hasBeenClicked && carousels['mejoresValorados'].atEnd) {
-                        <button class="verTodosButton">
+                        <button 
+                            class="verTodosButton"
+                            [disabled]="!carousels['mejoresValorados'].verTodosEnabled">
                             Ver todos
                         </button>
                     }
@@ -230,7 +235,9 @@
                         }
 
                         @if (carousels['favoritos'].hasBeenClicked && carousels['favoritos'].atEnd) {
-                            <button class="verTodosButton">
+                            <button 
+                                class="verTodosButton"
+                                [disabled]="!carousels['favoritos'].verTodosEnabled">
                                 Ver todos
                             </button>
                         }
