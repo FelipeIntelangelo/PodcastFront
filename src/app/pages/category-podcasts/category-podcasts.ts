@@ -94,4 +94,13 @@ export class CategoryPodcasts implements OnInit {
   viewPodcast(id: number): void {
     this.router.navigate(['/podcast', id]);
   }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const placeholder = img.parentElement?.querySelector('.image-placeholder') as HTMLElement;
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  }
 }

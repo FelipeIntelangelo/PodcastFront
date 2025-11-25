@@ -9,7 +9,13 @@
 
   @if (user) {
     <div class="profile-header">
-      <img [src]="user.profilePicture || 'assets/default-pfp.png'" alt="Profile Picture" class="profile-picture">
+      <div class="profile-picture-wrapper">
+        @if (user.profilePicture) {
+          <img [src]="user.profilePicture" alt="Profile Picture" class="profile-picture" (error)="onProfileImageError($event)">
+        } @else {
+          <div class="user-image-placeholder profile-picture-placeholder"></div>
+        }
+      </div>
       <div class="profile-name-section">
         @if (isFullUser(user)) {
           <h1 class="profile-username">{{ user.nickname }}</h1>
@@ -65,24 +71,26 @@
             @if (podcastsData && podcastsData.length > 0) {
               <div class="podcasts-list">
                 @for (podcast of podcastsData; track podcast.id) {
-                  <div class="podcast-card-horizontal" (click)="navigateToPodcast(podcast.id)">
-                    <div class="podcast-image-horizontal">
+                  <article class="podcast-card" (click)="navigateToPodcast(podcast.id)">
+                    <div class="podcast-image">
                       @if (podcast.imageUrl) {
                         <img [src]="podcast.imageUrl" [alt]="podcast.title" 
                              (error)="onImageError($event)">
                       } @else {
-                        <div class="podcast-image-placeholder">
+                        <div class="image-placeholder">
                           <i class="fas fa-podcast"></i>
                         </div>
                       }
                     </div>
-                    <div class="podcast-info-horizontal">
-                      <h3 class="podcast-title-horizontal">{{ podcast.title }}</h3>
-                      @if (podcast.description) {
-                        <p class="podcast-description-horizontal">{{ podcast.description }}</p>
-                      }
+                    <div class="podcast-content">
+                      <div class="podcast-info">
+                        <h3 class="podcast-title">{{ podcast.title }}</h3>
+                        @if (podcast.description) {
+                          <p class="podcast-description">{{ podcast.description }}</p>
+                        }
+                      </div>
                     </div>
-                  </div>
+                  </article>
                 }
               </div>
             } @else {
@@ -96,27 +104,26 @@
             @if (favoritesData && favoritesData.length > 0) {
               <div class="podcasts-list">
                 @for (podcast of favoritesData; track podcast.id) {
-                  <div class="podcast-card-horizontal" (click)="navigateToPodcast(podcast.id)">
-                    <div class="podcast-image-horizontal">
+                  <article class="podcast-card" (click)="navigateToPodcast(podcast.id)">
+                    <div class="podcast-image">
                       @if (podcast.imageUrl) {
                         <img [src]="podcast.imageUrl" [alt]="podcast.title" 
                              (error)="onImageError($event)">
-                        <div class="podcast-image-placeholder" style="display: none;">
-                          <i class="fas fa-podcast"></i>
-                        </div>
                       } @else {
-                        <div class="podcast-image-placeholder">
+                        <div class="image-placeholder">
                           <i class="fas fa-podcast"></i>
                         </div>
                       }
                     </div>
-                    <div class="podcast-info-horizontal">
-                      <h3 class="podcast-title-horizontal">{{ podcast.title }}</h3>
-                      @if (podcast.description) {
-                        <p class="podcast-description-horizontal">{{ podcast.description }}</p>
-                      }
+                    <div class="podcast-content">
+                      <div class="podcast-info">
+                        <h3 class="podcast-title">{{ podcast.title }}</h3>
+                        @if (podcast.description) {
+                          <p class="podcast-description">{{ podcast.description }}</p>
+                        }
+                      </div>
                     </div>
-                  </div>
+                  </article>
                 }
               </div>
             } @else {

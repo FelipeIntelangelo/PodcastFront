@@ -2,48 +2,48 @@
     <main>
         <!-- NOVEDADES -->
         <div class="carouselSection">
-            <div class="carousel-header">
-                <h2>Novedades</h2>
-                <div class="carousel-navigation">
-                    <!-- Flecha izquierda (visible solo después del primer clic) -->
-                    @if (carousels['novedades'].hasBeenClicked) {
-                        <button 
-                            class="arrowButton arrowBack"
-                            (click)="goBack('novedades')"
-                            [disabled]="carousels['novedades'].atStart">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    }
-
-                    <!-- Flecha inicial (solo visible al principio, en posición derecha) -->
-                    @if (!carousels['novedades'].hasBeenClicked) {
-                        <button 
-                            class="arrowButton arrowNext arrowInitial"
-                            (click)="onArrowClick('novedades')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    }
-
-                    <!-- Flecha siguiente (visible después del primer clic, mientras no esté al final) -->
-                    @if (carousels['novedades'].hasBeenClicked && !carousels['novedades'].atEnd) {
-                        <button 
-                            class="arrowButton arrowNext"
-                            (click)="goNext('novedades')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    }
-
-                    <!-- Botón Ver todos (reemplaza la flecha derecha al final) -->
-                    @if (carousels['novedades'].hasBeenClicked && carousels['novedades'].atEnd) {
-                        <button 
-                            class="verTodosButton"
-                            [disabled]="!carousels['novedades'].verTodosEnabled">
-                            Ver todos
-                        </button>
-                    }
-                </div>
-            </div>
             <div class="carouselContainer">
+                <div class="carousel-header">
+                    <h2>Novedades</h2>
+                    <div class="carousel-navigation">
+                        <!-- Flecha izquierda (visible solo después del primer clic) -->
+                        @if (carousels['novedades'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowBack"
+                                (click)="goBack('novedades')"
+                                [disabled]="carousels['novedades'].atStart">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        }
+
+                        <!-- Flecha inicial (solo visible al principio, en posición derecha) -->
+                        @if (!carousels['novedades'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowNext arrowInitial"
+                                (click)="onArrowClick('novedades')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        <!-- Flecha siguiente (visible después del primer clic, mientras no esté al final) -->
+                        @if (carousels['novedades'].hasBeenClicked && !carousels['novedades'].atEnd) {
+                            <button 
+                                class="arrowButton arrowNext"
+                                (click)="goNext('novedades')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        <!-- Botón Ver todos (reemplaza la flecha derecha al final) -->
+                        @if (carousels['novedades'].hasBeenClicked && carousels['novedades'].atEnd) {
+                            <button 
+                                class="verTodosButton"
+                                [disabled]="!carousels['novedades'].verTodosEnabled">
+                                Ver todos
+                            </button>
+                        }
+                    </div>
+                </div>
                 <!-- Contenedor de cards con scroll -->
                 <div class="carouselWrapper" #novedadesWrapper (scroll)="handleScroll('novedades', novedadesWrapper)">
                     <div class="carouselContent">
@@ -52,11 +52,8 @@
                         } @else {
                             @for (podcast of novedadesPodcasts; track podcast.id) {
                                 <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
-                                    @if (podcast.imageUrl) {
-                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
-                                    } @else {
-                                        <div class="ejampleImg"></div>
-                                    }
+                                    <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
+                                    <div class="image-placeholder-home" style="display: none;"></div>
                                     <h3>{{ podcast.title }}</h3>
                                     @if (podcast.description) {
                                         <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
@@ -73,44 +70,44 @@
 
         <!-- MÁS ESCUCHADOS -->
         <div class="carouselSection">
-            <div class="carousel-header">
-                <h2>Más Escuchados</h2>
-                <div class="carousel-navigation">
-                    @if (carousels['masEscuchados'].hasBeenClicked) {
-                        <button 
-                            class="arrowButton arrowBack"
-                            (click)="goBack('masEscuchados')"
-                            [disabled]="carousels['masEscuchados'].atStart">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    }
-
-                    @if (!carousels['masEscuchados'].hasBeenClicked) {
-                        <button 
-                            class="arrowButton arrowNext arrowInitial"
-                            (click)="onArrowClick('masEscuchados')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    }
-
-                    @if (carousels['masEscuchados'].hasBeenClicked && !carousels['masEscuchados'].atEnd) {
-                        <button 
-                            class="arrowButton arrowNext"
-                            (click)="goNext('masEscuchados')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    }
-
-                    @if (carousels['masEscuchados'].hasBeenClicked && carousels['masEscuchados'].atEnd) {
-                        <button 
-                            class="verTodosButton"
-                            [disabled]="!carousels['masEscuchados'].verTodosEnabled">
-                            Ver todos
-                        </button>
-                    }
-                </div>
-            </div>
             <div class="carouselContainer">
+                <div class="carousel-header">
+                    <h2>Más Escuchados</h2>
+                    <div class="carousel-navigation">
+                        @if (carousels['masEscuchados'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowBack"
+                                (click)="goBack('masEscuchados')"
+                                [disabled]="carousels['masEscuchados'].atStart">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        }
+
+                        @if (!carousels['masEscuchados'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowNext arrowInitial"
+                                (click)="onArrowClick('masEscuchados')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        @if (carousels['masEscuchados'].hasBeenClicked && !carousels['masEscuchados'].atEnd) {
+                            <button 
+                                class="arrowButton arrowNext"
+                                (click)="goNext('masEscuchados')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        @if (carousels['masEscuchados'].hasBeenClicked && carousels['masEscuchados'].atEnd) {
+                            <button 
+                                class="verTodosButton"
+                                [disabled]="!carousels['masEscuchados'].verTodosEnabled">
+                                Ver todos
+                            </button>
+                        }
+                    </div>
+                </div>
                 <div class="carouselWrapper" #masEscuchadosWrapper (scroll)="handleScroll('masEscuchados', masEscuchadosWrapper)">
                     <div class="carouselContent">
                         @if (isLoading.masEscuchados) {
@@ -118,11 +115,8 @@
                         } @else {
                             @for (podcast of masEscuchadosPodcasts; track podcast.id) {
                                 <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
-                                    @if (podcast.imageUrl) {
-                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
-                                    } @else {
-                                        <div class="ejampleImg"></div>
-                                    }
+                                    <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
+                                    <div class="image-placeholder-home" style="display: none;"></div>
                                     <h3>{{ podcast.title }}</h3>
                                     @if (podcast.description) {
                                         <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
@@ -139,44 +133,44 @@
 
         <!-- MEJORES VALORADOS -->
         <div class="carouselSection">
-            <div class="carousel-header">
-                <h2>Mejores Valorados</h2>
-                <div class="carousel-navigation">
-                    @if (carousels['mejoresValorados'].hasBeenClicked) {
-                        <button 
-                            class="arrowButton arrowBack"
-                            (click)="goBack('mejoresValorados')"
-                            [disabled]="carousels['mejoresValorados'].atStart">
-                            <i class="fas fa-chevron-left"></i>
-                        </button>
-                    }
-
-                    @if (!carousels['mejoresValorados'].hasBeenClicked) {
-                        <button 
-                            class="arrowButton arrowNext arrowInitial"
-                            (click)="onArrowClick('mejoresValorados')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    }
-
-                    @if (carousels['mejoresValorados'].hasBeenClicked && !carousels['mejoresValorados'].atEnd) {
-                        <button 
-                            class="arrowButton arrowNext"
-                            (click)="goNext('mejoresValorados')">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    }
-
-                    @if (carousels['mejoresValorados'].hasBeenClicked && carousels['mejoresValorados'].atEnd) {
-                        <button 
-                            class="verTodosButton"
-                            [disabled]="!carousels['mejoresValorados'].verTodosEnabled">
-                            Ver todos
-                        </button>
-                    }
-                </div>
-            </div>
             <div class="carouselContainer">
+                <div class="carousel-header">
+                    <h2>Mejores Valorados</h2>
+                    <div class="carousel-navigation">
+                        @if (carousels['mejoresValorados'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowBack"
+                                (click)="goBack('mejoresValorados')"
+                                [disabled]="carousels['mejoresValorados'].atStart">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                        }
+
+                        @if (!carousels['mejoresValorados'].hasBeenClicked) {
+                            <button 
+                                class="arrowButton arrowNext arrowInitial"
+                                (click)="onArrowClick('mejoresValorados')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        @if (carousels['mejoresValorados'].hasBeenClicked && !carousels['mejoresValorados'].atEnd) {
+                            <button 
+                                class="arrowButton arrowNext"
+                                (click)="goNext('mejoresValorados')">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                        }
+
+                        @if (carousels['mejoresValorados'].hasBeenClicked && carousels['mejoresValorados'].atEnd) {
+                            <button 
+                                class="verTodosButton"
+                                [disabled]="!carousels['mejoresValorados'].verTodosEnabled">
+                                Ver todos
+                            </button>
+                        }
+                    </div>
+                </div>
                 <div class="carouselWrapper" #mejoresValoradosWrapper (scroll)="handleScroll('mejoresValorados', mejoresValoradosWrapper)">
                     <div class="carouselContent">
                         @if (isLoading.mejoresValorados) {
@@ -184,11 +178,8 @@
                         } @else {
                             @for (podcast of mejoresValoradosPodcasts; track podcast.id) {
                                 <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
-                                    @if (podcast.imageUrl) {
-                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
-                                    } @else {
-                                        <div class="ejampleImg"></div>
-                                    }
+                                    <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
+                                    <div class="image-placeholder-home" style="display: none;"></div>
                                     <h3>{{ podcast.title }}</h3>
                                     @if (podcast.description) {
                                         <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
@@ -206,44 +197,44 @@
         <!-- FAVORITOS (solo si está logueado) -->
         @if (isLoggedIn) {
             <div class="carouselSection">
-                <div class="carousel-header">
-                    <h2>Favoritos</h2>
-                    <div class="carousel-navigation">
-                        @if (carousels['favoritos'].hasBeenClicked) {
-                            <button 
-                                class="arrowButton arrowBack"
-                                (click)="goBack('favoritos')"
-                                [disabled]="carousels['favoritos'].atStart">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                        }
-
-                        @if (!carousels['favoritos'].hasBeenClicked) {
-                            <button 
-                                class="arrowButton arrowNext arrowInitial"
-                                (click)="onArrowClick('favoritos')">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        }
-
-                        @if (carousels['favoritos'].hasBeenClicked && !carousels['favoritos'].atEnd) {
-                            <button 
-                                class="arrowButton arrowNext"
-                                (click)="goNext('favoritos')">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
-                        }
-
-                        @if (carousels['favoritos'].hasBeenClicked && carousels['favoritos'].atEnd) {
-                            <button 
-                                class="verTodosButton"
-                                [disabled]="!carousels['favoritos'].verTodosEnabled">
-                                Ver todos
-                            </button>
-                        }
-                    </div>
-                </div>
                 <div class="carouselContainer">
+                    <div class="carousel-header">
+                        <h2>Favoritos</h2>
+                        <div class="carousel-navigation">
+                            @if (carousels['favoritos'].hasBeenClicked) {
+                                <button 
+                                    class="arrowButton arrowBack"
+                                    (click)="goBack('favoritos')"
+                                    [disabled]="carousels['favoritos'].atStart">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                            }
+
+                            @if (!carousels['favoritos'].hasBeenClicked) {
+                                <button 
+                                    class="arrowButton arrowNext arrowInitial"
+                                    (click)="onArrowClick('favoritos')">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            }
+
+                            @if (carousels['favoritos'].hasBeenClicked && !carousels['favoritos'].atEnd) {
+                                <button 
+                                    class="arrowButton arrowNext"
+                                    (click)="goNext('favoritos')">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            }
+
+                            @if (carousels['favoritos'].hasBeenClicked && carousels['favoritos'].atEnd) {
+                                <button 
+                                    class="verTodosButton"
+                                    [disabled]="!carousels['favoritos'].verTodosEnabled">
+                                    Ver todos
+                                </button>
+                            }
+                        </div>
+                    </div>
                     <div class="carouselWrapper" #favoritosWrapper (scroll)="handleScroll('favoritos', favoritosWrapper)">
                         <div class="carouselContent">
                             @if (isLoading.favoritos) {
@@ -251,11 +242,8 @@
                             } @else {
                                 @for (podcast of favoritosPodcasts; track podcast.id) {
                                     <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
-                                        @if (podcast.imageUrl) {
-                                            <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" />
-                                        } @else {
-                                            <div class="ejampleImg"></div>
-                                        }
+                                        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
+                                        <div class="image-placeholder-home" style="display: none;"></div>
                                         <h3>{{ podcast.title }}</h3>
                                         @if (podcast.description) {
                                             <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>

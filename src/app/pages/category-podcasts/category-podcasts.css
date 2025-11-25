@@ -1,29 +1,29 @@
 .category-podcasts-container {
-  padding: 24px;
+  padding: 2rem;
+  min-height: calc(100vh - var(--header-height) - var(--footer-height));
+  background: radial-gradient(circle at top, #1d1d1d 0%, #0d0d0d 100%);
 }
 
-.podcasts-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 18px;
-  margin-top: 16px;
+.page-header {
+  margin-bottom: 2rem;
 }
 
-.podcast-card {
+.page-header h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: white;
+}
+
+.loading-container,
+.empty-state {
   display: flex;
-  gap: 12px;
-  padding: 12px;
-  border-radius: 10px;
-  background: rgba(255,255,255,0.02);
-  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
 }
 
-.podcast-image img {
-  width: 96px;
-  height: 96px;
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-.podcast-content .podcast-title { font-weight: 700; margin: 0 0 6px 0; }
-.podcast-description { margin: 0; color: rgba(255,255,255,0.7); font-size: 14px; }
+/* Los estilos de .podcasts-list, .podcast-card, .podcast-image, etc. 
+   ya están definidos globalmente en styles.css */

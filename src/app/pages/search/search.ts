@@ -125,4 +125,24 @@ export class Search implements OnInit, OnDestroy {
       this.loadPodcasts();
     }
   }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const placeholder = img.parentElement?.querySelector('.image-placeholder') as HTMLElement;
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  }
+
+  onUserImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    const container = img.parentElement;
+    if (container) {
+      img.remove();
+      const placeholder = document.createElement('div');
+      placeholder.className = 'user-image-placeholder';
+      container.appendChild(placeholder);
+    }
+  }
 }

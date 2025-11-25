@@ -88,7 +88,12 @@ export class Header implements OnInit{
     }
   }
 
-  onSearchIconClick(): void {
+  onSearchIconClick(event?: MouseEvent): void {
+    // Prevenir el comportamiento por defecto para que no quite el foco del input
+    if (event) {
+      event.preventDefault();
+    }
+    
     // En mobile, abrir pop-down al hacer click en la lupa
     if (window.innerWidth <= 767) {
       this.showMobileSearchPopdown = true;
@@ -98,6 +103,9 @@ export class Header implements OnInit{
           mobileInput.focus();
         }
       }, 100);
+    } else {
+      // En desktop, ejecutar la búsqueda como el Enter
+      this.onSearchButton();
     }
   }
 
@@ -163,6 +171,7 @@ export class Header implements OnInit{
       this.showDropdown = false;
       this.showMobileSearch = false;
       this.router.navigate(['/search', term]);
+      this.searchQuery = ''; // Limpiar el input después de la búsqueda
     }
   }
 
@@ -219,6 +228,17 @@ export class Header implements OnInit{
 
   toggleSidebar(): void {
     this.layoutService.toggleSidebar();
+  }
+
+  onProfileImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    const container = img.parentElement;
+    if (container) {
+      img.remove();
+      const placeholder = document.createElement('div');
+      placeholder.className = 'user-image-placeholder profile-placeholder';
+      container.appendChild(placeholder);
+    }
   }
 }
 

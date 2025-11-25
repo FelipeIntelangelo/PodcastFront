@@ -17,13 +17,8 @@
       @for (podcast of favorites; track podcast.id) {
         <article class="podcast-card" (click)="viewPodcast(podcast.id)">
           <div class="podcast-image">
-            @if (podcast.imageUrl) {
-              <img [src]="podcast.imageUrl" [alt]="podcast.title">
-            } @else {
-              <div class="image-placeholder">
-                <i class="fas fa-podcast"></i>
-              </div>
-            }
+            <img [src]="podcast.imageUrl" [alt]="podcast.title" (error)="onImageError($event)">
+            <div class="image-placeholder" style="display: none;"></div>
           </div>
           
           <div class="podcast-content">
@@ -39,9 +34,8 @@
                   <span>{{ formatViews(podcast.averageViews || 0) }}</span>
                 </div>
               </div>
+              <p class="podcast-description">{{ podcast.description }}</p>
             </div>
-            
-            <p class="podcast-description">{{ podcast.description }}</p>
             
             @if (podcast.category && podcast.category.length) {
               <div class="podcast-categories">

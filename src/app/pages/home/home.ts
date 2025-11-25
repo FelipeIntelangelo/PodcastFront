@@ -308,4 +308,13 @@ export class Home implements OnInit, AfterViewInit {
     const wrapper = wrapperMap[key];
     return wrapper ? wrapper.nativeElement : null;
   }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const placeholder = img.nextElementSibling as HTMLElement;
+    if (placeholder && placeholder.classList.contains('image-placeholder-home')) {
+      placeholder.style.display = 'flex';
+    }
+  }
 }

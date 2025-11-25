@@ -5,9 +5,10 @@
   </header>
 
   <div class="categories-grid">
-    @for (cat of categories; track $index) {
-      <button type="button" class="category-card" (click)="goToCategory(cat)">
-        <span class="category-name">{{ cat }}</span>
+    @for (cat of categoriesWithColors; track $index) {
+      <button type="button" class="category-card" [class]="cat.pattern" (click)="goToCategory(cat.name)">
+        <div class="category-overlay" [style.background]="cat.color"></div>
+        <span class="category-name">{{ cat.name }}</span>
       </button>
     }
   </div>

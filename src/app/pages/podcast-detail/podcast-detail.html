@@ -4,89 +4,76 @@
   </div>
 } @else if (podcast) {
   <div class="podcast-detail">
-    <section class="hero">
-      <div class="podcast-header">
-      <!-- Imagen del podcast -->
-      <div class="podcast-image">
-        <img [src]="podcast.imageUrl || 'assets/default-podcast.png'" [alt]="podcast.title">
+    <!-- Header similar a Profile -->
+    <div class="podcast-header-main">
+      <div class="podcast-image-wrapper">
+        <img [src]="podcast.imageUrl || 'assets/default-podcast.png'" [alt]="podcast.title" class="podcast-main-image">
       </div>
-
-      <!-- Información principal -->
-  <div class="podcast-info">
-        <!-- Título y Valoración -->
-        <div class="title-rating">
-          <h1>{{ podcast.title }}</h1>
-          <div class="rating" title="Valoración promedio">
-            <span class="icon-star"></span>
-            <span class="rating-value">{{ podcast.averageRating || 0 }}</span>
+      <div class="podcast-info-section">
+        <h1 class="podcast-main-title">{{ podcast.title }}</h1>
+        <a [routerLink]="['/profile', podcast.user.id]" class="creator-link-main">
+          <div class="creator-avatar-small">
+            @if (podcast.user.profilePicture) {
+              <img [src]="podcast.user.profilePicture" [alt]="podcast.user.nickname">
+            } @else {
+              <div class="avatar-fallback-small">{{ getUserInitial() }}</div>
+            }
           </div>
-          <button type="button" class="favorite-btn" [class.is-favorited]="isFavorited" (click)="toggleFavorite()" [attr.aria-pressed]="isFavorited" [attr.aria-label]="isFavorited ? 'Quitar de favoritos' : 'Agregar a favoritos'">
-          </button>
+          <span class="creator-name">{{ podcast.user.nickname }}</span>
+        </a>
+        <div class="podcast-stats-main">
+          <div class="stat-item-main">
+            <span class="icon-star"></span>
+            <span>{{ podcast.averageRating || 0 }}</span>
+          </div>
+          <div class="stat-item-main">
+            <span class="icon-eye"></span>
+            <span>{{ formatViews(getTotalViews()) }}</span>
+          </div>
+          <div class="stat-item-main">
+            <span class="label-main">Episodios:</span>
+            <span>{{ getTotalEpisodes() }}</span>
+          </div>
+          <div class="stat-item-main">
+            <span class="label-main">Temporadas:</span>
+            <span>{{ getTotalSeasons() }}</span>
+          </div>
+        </div>
+        <div class="podcast-actions-main">
+          <input type="checkbox" id="toggle-heart" [checked]="isFavorited" (change)="toggleFavorite()" style="display: none;">
+          <label for="toggle-heart" [attr.aria-label]="isFavorited ? 'Quitar de favoritos' : 'Agregar a favoritos'">❤</label>
           @if (canDeletePodcast()) {
-            <div class="action-buttons-detail">
-              <button type="button" class="action-btn-detail edit-btn-detail" (click)="editPodcast()" title="Editar podcast">
-                <span class="icon-edit-detail"></span>
-              </button>
-                    <button type="button" class="action-btn-detail delete-btn-detail"
-                      (click)="deletePodcast()"
-                      [disabled]="episodes.length > 0"
-                      [attr.title]="episodes.length > 0 ? 'Primero eliminá los episodios' : 'Eliminar podcast'"
-                      [attr.data-tooltip]="episodes.length > 0 ? 'Primero eliminá los episodios' : null">
-                <span class="icon-delete-detail"></span>
-              </button>
-            </div>
+            <button type="button" class="action-btn-main edit-btn-main" (click)="editPodcast()" title="Editar podcast">
+              <span class="icon-edit-detail"></span>
+            </button>
+            <button type="button" class="action-btn-main delete-btn-main"
+              (click)="deletePodcast()"
+              [disabled]="episodes.length > 0"
+              [attr.title]="episodes.length > 0 ? 'Primero eliminá los episodios' : 'Eliminar podcast'">
+              <span class="icon-delete-detail"></span>
+            </button>
           }
         </div>
+      </div>
+    </div>
 
-        <!-- Creador y Visualizaciones -->
-        <div class="creator-views">
-          <div class="creator">
-            <a [routerLink]="['/profile', podcast.user.id]" class="creator-link">
-              <div class="avatar">
-                @if (podcast.user.profilePicture) {
-                  <img [src]="podcast.user.profilePicture" [alt]="podcast.user.nickname">
-                } @else {
-                  <div class="avatar-fallback">{{ getUserInitial() }}</div>
-                }
-              </div>
-              <span class="label">Creador:</span>
-              <span class="value">{{ podcast.user.nickname }}</span>
-            </a>
-          </div>
-          <div class="views">
-            <span class="label">Visualizaciones:</span>
-            <span class="icon-eye"></span>
-            <span class="value">{{ formatViews(getTotalViews()) }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">Episodios:</span>
-            <span class="value">{{ getTotalEpisodes() }}</span>
-          </div>
-          <div class="stat-item">
-            <span class="label">Temporadas:</span>
-            <span class="value">{{ getTotalSeasons() }}</span>
-          </div>
-        </div>
-
-        @if (podcast.categories.length) {
-          <div class="categories">
-            @for (cat of podcast.categories.slice(0, 4); track $index) {
-              <span class="chip">{{ cat }}</span>
-            }
-            @if (podcast.categories.length > 4) {
-              <span class="chip chip-more">+{{ podcast.categories.length - 4 }}</span>
-            }
-          </div>
+    <!-- Categorías -->
+    @if (podcast.categories.length) {
+      <div class="categories-section">
+        @for (cat of podcast.categories.slice(0, 4); track $index) {
+          <span class="chip">{{ cat }}</span>
         }
+        @if (podcast.categories.length > 4) {
+          <span class="chip chip-more">+{{ podcast.categories.length - 4 }}</span>
+        }
+      </div>
+    }
 
-        <!-- Descripción -->
-        <div class="description">
-          <h3>Descripción</h3>
-          <p>{{ podcast.description }}</p>
-        </div>
-      </div>
-      </div>
-    </section>
+    <!-- Descripción -->
+    <div class="description-section">
+      <h3>Descripción</h3>
+      <p>{{ podcast.description }}</p>
+    </div>
 
     <!-- Sección de Episodios -->
     <section class="episodes-section">
@@ -112,22 +99,25 @@
           @for (episode of episodes; track episode.id) {
             <article class="episode-card" (click)="viewEpisode(episode.id)">
               <div class="episode-image">
-                <img [src]="episode.imageUrl || podcast.imageUrl || 'assets/default-episode.png'" [alt]="episode.title">
+                <img [src]="episode.imageUrl || podcast.imageUrl || 'assets/default-episode.png'" [alt]="episode.title" (error)="onImageError($event)">
+                <div class="image-placeholder" style="display: none;"></div>
               </div>
-              <div class="episode-info">
-                @if (canDeleteEpisode(episode)) {
-                  <div class="episode-actions">
-                    <button type="button" class="episode-edit-btn" (click)="editEpisode(episode, $event)" title="Editar episodio" aria-label="Editar episodio">
-                      <span class="icon-edit-episode"></span>
-                    </button>
-                    <button type="button" class="episode-delete-btn" (click)="deleteEpisode(episode, $event)" title="Eliminar episodio" aria-label="Eliminar episodio">
-                      <span class="icon-delete-episode"></span>
-                    </button>
-                  </div>
-                }
+              <div class="episode-content">
                 <div class="episode-header">
-                  <h3 class="episode-title">{{ episode.title }}</h3>
-                  <span class="episode-meta">S{{ episode.season }} · E{{ episode.chapter }}</span>
+                  <div class="episode-info">
+                    <h3 class="episode-title">{{ episode.title }}</h3>
+                    <span class="episode-meta">S{{ episode.season }} · E{{ episode.chapter }}</span>
+                  </div>
+                  @if (canDeleteEpisode(episode)) {
+                    <div class="episode-actions">
+                      <button type="button" class="episode-edit-btn" (click)="editEpisode(episode, $event)" title="Editar episodio" aria-label="Editar episodio">
+                        <span class="icon-edit-episode"></span>
+                      </button>
+                      <button type="button" class="episode-delete-btn" (click)="deleteEpisode(episode, $event)" title="Eliminar episodio" aria-label="Eliminar episodio">
+                        <span class="icon-delete-episode"></span>
+                      </button>
+                    </div>
+                  }
                 </div>
                 <p class="episode-description">{{ episode.description }}</p>
                 <div class="episode-footer">

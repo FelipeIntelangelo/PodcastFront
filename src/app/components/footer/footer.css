@@ -150,7 +150,7 @@ p{
 
 /* button:nth-child(4) was YouTube, now it's GitHub */
 .button:nth-child(4) {
-  background: #000000; /* GitHub Black */
+  background: #4C1D95; /* GitHub Dark Violet */
 }
 
 /* button:nth-child(5) was GitHub (no explicit rule), now it's the 5th button, which does not exist*/
