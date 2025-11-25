@@ -71,10 +71,19 @@
         @if (podcast.categories.length) {
           <div class="categories">
             @for (cat of podcast.categories.slice(0, 4); track $index) {
-              <span class="chip">{{ cat }}</span>
+              <button type="button" class="chip chip-btn" (click)="goToCategory(cat, $event)" [attr.title]="'Ver podcast de ' + cat">{{ cat }}</button>
             }
             @if (podcast.categories.length > 4) {
-              <span class="chip chip-more">+{{ podcast.categories.length - 4 }}</span>
+              <div class="categories-popup-container">
+                <button type="button" class="chip chip-more" (click)="toggleCategoriesPopup($event)" title="Ver todas las categorías">+{{ podcast.categories.length - 4 }}</button>
+                @if (showCategoriesPopup) {
+                  <div class="categories-popup" (click)="$event.stopPropagation()">
+                    @for (cat of podcast.categories.slice(4); track $index) {
+                      <button type="button" class="popup-category" (click)="goToCategory(cat, $event)" [attr.title]="'Ver podcast de ' + cat">{{ cat }}</button>
+                    }
+                  </div>
+                }
+              </div>
             }
           </div>
         }
