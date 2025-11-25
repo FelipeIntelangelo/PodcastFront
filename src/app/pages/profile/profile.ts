@@ -7,6 +7,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { AlertService } from '../../services/ui/alert.service';
+import { PodcastService } from '../../services/podcast/podcast-service';
+import { PodcastTotalDTO } from '../../models/podcast/podcast-total-dto';
+import { PodcastDTO } from '../../models/podcast/podcast-dto';
 
 @Component({
   selector: 'app-profile',
@@ -20,6 +23,11 @@ export class Profile implements OnInit, OnDestroy {
   isLoading: boolean = true;
   error: string | null = null;
   isAdmin: boolean = false;
+  isOwnProfile: boolean = false;
+  currentUserId: number | null = null;
+  activeTab: 'podcasts' | 'favorites' = 'podcasts';
+  podcastsData: PodcastTotalDTO[] = [];
+  favoritesData: PodcastDTO[] = [];
   private sub = new Subscription();
 
   constructor(
@@ -27,11 +35,11 @@ export class Profile implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private authService: AuthService,
     private router: Router,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private podcastService: PodcastService
   ) {}
 
   ngOnInit(): void {
-    this.checkAdminRole();
     this.sub.add(
       this.route.paramMap.subscribe((params) => {
         this.isLoading = true;
@@ -40,13 +48,27 @@ export class Profile implements OnInit, OnDestroy {
         const id = idParam ? Number(idParam) : null;
 
         if (id !== null && !isNaN(id)) { // Check if id is a valid number
-          this.userService.getUserById(id).subscribe({
-            next: (data) => this.handleLoadSuccess(data, true),
-            error: (err) => this.handleLoadError('Failed to load user by id.', err)
+          // Cargar usuario actual primero para comparar
+          this.loadCurrentUser(() => {
+            this.userService.getUserById(id).subscribe({
+              next: (data) => {
+                this.checkIfOwnProfile(data.id);
+                this.handleLoadSuccess(data, true);
+              },
+              error: (err) => this.handleLoadError('Failed to load user by id.', err)
+            });
           });
         } else {
+          // Sin ID = perfil propio
           this.userService.getCurrentUserProfile().subscribe({
-            next: (data) => this.handleLoadSuccess(data, false),
+            next: (data) => {
+              this.currentUserId = data.id;
+              this.isOwnProfile = true;
+              if (this.isFullUser(data) && data.credential.roles.includes('ADMIN')) {
+                this.isAdmin = true;
+              }
+              this.handleLoadSuccess(data, false);
+            },
             error: (err) => this.handleLoadError('Failed to load user profile.', err)
           });
         }
@@ -54,18 +76,27 @@ export class Profile implements OnInit, OnDestroy {
     );
   }
 
-  checkAdminRole(): void {
+  private loadCurrentUser(callback?: () => void): void {
     this.userService.getCurrentUserProfile().subscribe({
       next: (user) => {
-        if (this.isFullUser(user) && user.credential.roles.includes('ADMIN')) {
+        this.currentUserId = user.id;
+        if (user.credential.roles.includes('ADMIN')) {
           this.isAdmin = true;
         }
+        if (callback) callback();
       },
       error: () => {
+        this.currentUserId = null;
         this.isAdmin = false;
+        if (callback) callback();
       }
     });
   }
+
+  private checkIfOwnProfile(profileUserId: number): void {
+    this.isOwnProfile = this.currentUserId !== null && this.currentUserId === profileUserId;
+  }
+
 
   async deleteAccount(event: Event): Promise<void> {
     event.preventDefault();
@@ -107,6 +138,7 @@ export class Profile implements OnInit, OnDestroy {
     }
   }
 
+
   ngOnDestroy(): void {
     this.sub.unsubscribe();
   }
@@ -115,12 +147,97 @@ export class Profile implements OnInit, OnDestroy {
     return !!value && 'credential' in value;
   }
 
+  setActiveTab(tab: 'podcasts' | 'favorites'): void {
+    this.activeTab = tab;
+  }
+
+  navigateToPodcast(podcastId: number): void {
+    this.router.navigate(['/podcast', podcastId]);
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const placeholder = img.parentElement?.querySelector('.podcast-image-placeholder') as HTMLElement;
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  }
+
   private handleLoadSuccess(data: User | UserSearchDTO, shouldScroll: boolean): void {
     this.user = data;
+    
+    // Cargar podcasts y favoritos completos
+    if (this.isFullUser(data)) {
+      // Si es el perfil propio, usar getMyPodcasts
+      if (this.isOwnProfile) {
+        this.loadMyPodcasts();
+        this.loadMyFavorites();
+      } else {
+        // Si es otro usuario, buscar podcasts por userId
+        this.loadUserPodcasts(data.id);
+      }
+    }
+    
     this.isLoading = false;
+    
     if (shouldScroll) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
+  }
+
+  private loadMyPodcasts(): void {
+    this.podcastService.getMyPodcasts().subscribe({
+      next: (podcasts) => {
+        this.podcastsData = podcasts;
+        if (podcasts.length > 0) {
+          this.activeTab = 'podcasts';
+        }
+      },
+      error: (err) => {
+        console.error('Error loading my podcasts:', err);
+        this.podcastsData = [];
+      }
+    });
+  }
+
+  private loadMyFavorites(): void {
+    this.userService.getMyFavorites().subscribe({
+      next: (favorites) => {
+        this.favoritesData = favorites;
+        if (favorites.length > 0 && this.podcastsData.length === 0) {
+          this.activeTab = 'favorites';
+        }
+      },
+      error: (err) => {
+        console.error('Error loading favorites:', err);
+        this.favoritesData = [];
+      }
+    });
+  }
+
+  private loadUserPodcasts(userId: number): void {
+    this.podcastService.getAllFiltered(undefined, userId).subscribe({
+      next: (podcasts) => {
+        // Convertir PodcastSearchDTO[] a formato compatible
+        this.podcastsData = podcasts.map(p => ({
+          id: p.id,
+          title: p.title,
+          description: p.description || '',
+          imageUrl: p.imageUrl,
+          categories: [],
+          averageViews: p.averageViews,
+          averageRating: 0
+        }));
+        if (this.podcastsData.length > 0) {
+          this.activeTab = 'podcasts';
+        }
+      },
+      error: (err) => {
+        console.error('Error loading user podcasts:', err);
+        this.podcastsData = [];
+      }
+    });
   }
 
   private handleLoadError(message: string, err: unknown): void {

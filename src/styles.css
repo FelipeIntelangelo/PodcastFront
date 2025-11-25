@@ -11,6 +11,7 @@
 
 :root {
     --header-height: 84px;
+    --footer-height: 176px; /* Aproximadamente: padding (3rem*2) + logo (80px) */
     --sidebar-width: 250px;
     
     /* Colors */
@@ -51,4 +52,309 @@ html, body {
     background-color: #131313;
     color: #fff;
     min-height: 100%;
+}
+
+/* ============================================
+   MEDIA CARD HORIZONTAL - Estilos Compartidos
+   Cards genéricas para Podcasts y Episodios
+   ============================================ */
+
+/* Lista contenedora - funciona para podcasts y episodios */
+.podcasts-list,
+.history-list,
+.episodes-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Card genérica - funciona para podcasts y episodios */
+.podcast-card,
+.episode-card,
+.media-card {
+  background: rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 0;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  width: 100%;
+  padding: 0 1rem 0 0;
+  gap: 1.25rem;
+  height: 140px;
+}
+
+/* Imagen genérica - funciona para podcasts y episodios */
+.podcast-image,
+.episode-image,
+.media-image {
+  width: 140px;
+  height: 140px;
+  min-width: 140px;
+  max-width: 140px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 0;
+  flex-shrink: 0;
+}
+
+.podcast-image img,
+.episode-image img,
+.media-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: opacity 0.3s ease;
+  display: block;
+}
+
+.podcast-card:hover .podcast-image img,
+.episode-card:hover .episode-image img,
+.media-card:hover .media-image img {
+  opacity: 0.7;
+}
+
+/* Placeholder genérico */
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(157, 101, 215, 0.2);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.image-placeholder i {
+  font-size: 3rem;
+}
+
+.image-placeholder .icon-episode-placeholder {
+  width: 40px;
+  height: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239D65D7' stroke-width='1.5'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.4;
+}
+
+/* Contenido genérico */
+.podcast-content,
+.episode-content,
+.media-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-width: 0;
+  padding: 1rem 1rem 1rem 0;
+}
+
+/* Header genérico */
+.podcast-header,
+.episode-header,
+.media-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+}
+
+/* Info genérica */
+.podcast-info,
+.episode-info,
+.media-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+/* Título genérico */
+.podcast-title,
+.episode-title,
+.media-title {
+  color: white;
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 0.5rem 0;
+  line-height: 1.3;
+}
+
+/* Stats genéricos */
+.podcast-stats {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.icon-star-small,
+.icon-eye-small {
+  width: 14px;
+  height: 14px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.icon-star-small {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239D65D7'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
+}
+
+.icon-eye-small {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239D65D7'%3E%3Cpath d='M12 5c-7.633 0-10 7-10 7s2.367 7 10 7 10-7 10-7-2.367-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
+}
+
+/* Descripción genérica */
+.podcast-description,
+.episode-description,
+.media-description {
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.95rem;
+  margin: 0.5rem 0 0 0;
+  line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* Categorías (solo para podcasts) */
+.podcast-categories {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.chip {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(157, 101, 215, 0.18);
+  border: 1px solid rgba(157, 101, 215, 0.25);
+  border-radius: 999px;
+  padding: 0.25rem 0.6rem;
+}
+
+.chip-more {
+  font-weight: 600;
+  background: rgba(157, 101, 215, 0.25);
+  border-color: rgba(157, 101, 215, 0.35);
+}
+
+/* Meta información para episodios */
+.episode-meta,
+.media-meta {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.9rem;
+}
+
+.season-chapter {
+  font-weight: 500;
+  color: #9D65D7;
+}
+
+.separator {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.duration {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* Tablet - Mantener layout horizontal */
+/* Los estilos por defecto se aplican automáticamente */
+
+/* Mobile - Layout vertical con imagen arriba */
+@media (max-width: 767px) {
+  .podcasts-list,
+  .history-list,
+  .episodes-list {
+    gap: 1.5rem;
+  }
+
+  .podcast-card,
+  .episode-card,
+  .media-card {
+    flex-direction: column;
+    padding: 0;
+    gap: 0;
+    height: auto;
+  }
+
+  .podcast-image,
+  .episode-image,
+  .media-image {
+    width: 100%;
+    height: auto;
+    min-width: 100%;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
+  }
+
+  .podcast-content,
+  .episode-content,
+  .media-content {
+    padding: 0.75rem;
+  }
+
+  .podcast-header,
+  .episode-header,
+  .media-header {
+    display: contents;
+  }
+
+  .podcast-info,
+  .episode-info,
+  .media-info {
+    order: 0;
+  }
+
+  .podcast-header .action-buttons,
+  .episode-header .action-buttons,
+  .media-header .action-buttons {
+    order: 2;
+    display: flex !important;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .podcast-title,
+  .episode-title,
+  .media-title {
+    font-size: 1.1rem;
+  }
+  
+  .podcast-description,
+  .episode-description,
+  .media-description {
+    font-size: 0.875rem;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    order: 1;
+  }
+  
+  .podcast-categories {
+    order: 3;
+  }
 }

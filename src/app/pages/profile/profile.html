@@ -8,52 +8,131 @@
   }
 
   @if (user) {
-    <div class="user-profile">
-      <div class="profile-header">
-        <img [src]="user.profilePicture || 'assets/default-pfp.png'" alt="Profile Picture" class="profile-picture">
+    <div class="profile-header">
+      <img [src]="user.profilePicture || 'assets/default-pfp.png'" alt="Profile Picture" class="profile-picture">
+      <div class="profile-name-section">
         @if (isFullUser(user)) {
-          <h2>{{ user.name }} {{ user.lastName }} ({{ user.nickname }})</h2>
+          <h1 class="profile-username">{{ user.nickname }}</h1>
+          <h2 class="profile-fullname">{{ user.name }} {{ user.lastName }}</h2>
         } @else {
-          <h2>{{ user.nickname }}</h2>
+          <h1 class="profile-username">{{ user.nickname }}</h1>
         }
-      </div>
-
-      <div class="profile-details">
-        @if (isFullUser(user)) {
-          <p><strong>Username:</strong> {{ user.credential.username }}</p>
-          <p><strong>Email:</strong> {{ user.credential.email }}</p>
-          <p><strong>Bio:</strong> {{ user.bio }}</p>
-          @if (isAdmin) {
-            <p><strong>Member Since:</strong> {{ user.credential.createdAt | date:'mediumDate' }}</p>
-            <p><strong>Roles:</strong> {{ user.credential.roles.join(', ') }}</p>
-          }
-        } @else {
-          @if (user.bio) {
-            <p><strong>Bio:</strong> {{ user.bio }}</p>
-          }
-        }
-
-        <!-- Optional: Display counts for lists if they exist (only for full User) -->
-        @if (isFullUser(user)) {
-          @if (user.podcasts?.length) {
-            <p class="podcasts-link">
-              <a routerLink="/myPodcasts"><strong>Podcasts:</strong> {{ user.podcasts?.length }}</a>
-            </p>
-          }
-          @if (user.favorites?.length) {
-            <p><strong>Favorites:</strong> {{ user.favorites?.length }}</p>
-          }
-          @if (user.ratings?.length) {
-            <p><strong>Ratings:</strong> {{ user.ratings?.length }}</p>
-          }
-        }
-      </div>
-      <div class="profile-actions">
-          @if (isFullUser(user)) {
+        @if (isOwnProfile && isFullUser(user)) {
+          <div class="profile-actions-header">
             <a routerLink="/profile/edit" class="action-button edit-button">Edit Profile</a>
-            <a (click)="deleteAccount($event)" class="delete-account-link">Delete Account</a>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Sección Pública - Visible para todos -->
+    @if (user.bio) {
+      <div class="profile-section">
+        <p>{{ user.bio }}</p>
+      </div>
+    }
+
+
+    <!-- Pestañas de Podcasts y Favorites -->
+    <div class="profile-tabs-container">
+      <div class="profile-tabs">
+        <button 
+          class="tab-button" 
+          [class.active]="activeTab === 'podcasts'"
+          (click)="setActiveTab('podcasts')"
+          type="button">
+          Podcasts
+          @if (isFullUser(user) && user.podcasts && user.podcasts.length > 0) {
+            <span class="tab-count">({{ user.podcasts.length }})</span>
+          }
+        </button>
+        @if (isOwnProfile && isFullUser(user)) {
+          <button 
+            class="tab-button" 
+            [class.active]="activeTab === 'favorites'"
+            (click)="setActiveTab('favorites')"
+            type="button">
+            Favorites
+            @if (favoritesData && favoritesData.length > 0) {
+              <span class="tab-count">({{ favoritesData.length }})</span>
+            }
+          </button>
+        }
+      </div>
+
+      <div class="tab-content">
+          @if (activeTab === 'podcasts') {
+            @if (podcastsData && podcastsData.length > 0) {
+              <div class="podcasts-list">
+                @for (podcast of podcastsData; track podcast.id) {
+                  <div class="podcast-card-horizontal" (click)="navigateToPodcast(podcast.id)">
+                    <div class="podcast-image-horizontal">
+                      @if (podcast.imageUrl) {
+                        <img [src]="podcast.imageUrl" [alt]="podcast.title" 
+                             (error)="onImageError($event)">
+                      } @else {
+                        <div class="podcast-image-placeholder">
+                          <i class="fas fa-podcast"></i>
+                        </div>
+                      }
+                    </div>
+                    <div class="podcast-info-horizontal">
+                      <h3 class="podcast-title-horizontal">{{ podcast.title }}</h3>
+                      @if (podcast.description) {
+                        <p class="podcast-description-horizontal">{{ podcast.description }}</p>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <p>No hay podcasts disponibles</p>
+              </div>
+            }
+          }
+
+          @if (activeTab === 'favorites') {
+            @if (favoritesData && favoritesData.length > 0) {
+              <div class="podcasts-list">
+                @for (podcast of favoritesData; track podcast.id) {
+                  <div class="podcast-card-horizontal" (click)="navigateToPodcast(podcast.id)">
+                    <div class="podcast-image-horizontal">
+                      @if (podcast.imageUrl) {
+                        <img [src]="podcast.imageUrl" [alt]="podcast.title" 
+                             (error)="onImageError($event)">
+                        <div class="podcast-image-placeholder" style="display: none;">
+                          <i class="fas fa-podcast"></i>
+                        </div>
+                      } @else {
+                        <div class="podcast-image-placeholder">
+                          <i class="fas fa-podcast"></i>
+                        </div>
+                      }
+                    </div>
+                    <div class="podcast-info-horizontal">
+                      <h3 class="podcast-title-horizontal">{{ podcast.title }}</h3>
+                      @if (podcast.description) {
+                        <p class="podcast-description-horizontal">{{ podcast.description }}</p>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="empty-state">
+                <p>No hay favoritos disponibles</p>
+              </div>
+            }
           }
       </div>
     </div>
+
+    <!-- Desactivar cuenta -->
+    @if (isOwnProfile && isFullUser(user)) {
+      <div class="deactivate-account-section">
+        <a (click)="deleteAccount($event)" class="deactivate-account-link">Desactivar tu cuenta de Wavely</a>
+      </div>
+    }
   }
 </div>

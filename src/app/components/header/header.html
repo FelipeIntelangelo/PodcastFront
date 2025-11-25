@@ -187,8 +187,8 @@
                 </div>
                 @if (showProfileMenu) {
                     <div class="profile-menu">
-                        <a routerLink="/profile" class="menu-item">My Profile</a>
-                        <a routerLink="/myPodcasts" class="menu-item">My Podcasts</a>
+                        <a routerLink="/profile" class="menu-item" (click)="showProfileMenu = false">My Profile</a>
+                        <a routerLink="/history" class="menu-item" (click)="showProfileMenu = false">History</a>
                         <div (click)="logout()" class="menu-item logout-item">Logout</div>
                     </div>
                 }

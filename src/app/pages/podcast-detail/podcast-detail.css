@@ -447,31 +447,9 @@
   gap: 1rem;
 }
 
-.episode-card {
-  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
-              var(--bg-surface);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  padding: 1rem;
-  display: grid;
-  grid-template-columns: 120px 1fr;
-  gap: 1rem;
-  transition: transform .2s, box-shadow .2s, border-color .2s;
-  cursor: pointer;
-}
+/* Los estilos base de .episode-card están en styles.css */
 
-.episode-card:hover {
-  transform: translateX(4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  border-color: rgba(var(--accent-rgb), 0.3);
-}
-
-.episode-image {
-  width: 120px;
-  height: 120px;
-  border-radius: 8px;
-  overflow: hidden;
-}
+/* Los estilos de .episode-image están en styles.css */
 
 .episode-image img {
   width: 100%;

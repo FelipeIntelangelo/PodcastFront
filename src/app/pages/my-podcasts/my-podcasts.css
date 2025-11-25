@@ -9,7 +9,7 @@
   --radius-md: 10px;
   --radius-pill: 999px;
 
-  background-color: var(--bg-root);
+  background: radial-gradient(circle at top, #1d1d1d 0%, #0d0d0d 100%);
   display: block;
   min-height: 100vh;
 }
@@ -62,105 +62,15 @@
   max-width: 400px;
 }
 
-.podcasts-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.podcast-card {
-  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.08) 0%, rgba(255, 255, 255, 0.02) 100%),
-              var(--bg-surface);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-  transition: transform .2s, box-shadow .2s, border-color .2s;
-  cursor: pointer;
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 1.5rem;
-  align-items: start;
-}
-
-.podcast-card:hover {
-  transform: translateX(4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
-  border-color: rgba(var(--accent-rgb), 0.3);
-}
-
-.podcast-image {
-  width: 140px;
-  height: 140px;
-  border-radius: 8px;
-  overflow: hidden;
-  flex-shrink: 0;
-  background: rgba(var(--accent-rgb), 0.1);
-  border: 1px solid rgba(var(--accent-rgb), 0.2);
-}
-
-.podcast-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.image-placeholder {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.15), rgba(var(--accent-rgb), 0.05));
-}
-
-.icon-podcast-placeholder {
-  width: 50px;
-  height: 50px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239D65D7' stroke-width='1.5'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='M12 6v6l4 2'/%3E%3C/svg%3E");
-  background-size: contain;
-  background-repeat: no-repeat;
-  opacity: 0.4;
-}
-
-.podcast-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-  min-width: 0;
-}
-
-.podcast-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-}
-
-.podcast-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.podcast-title {
-  margin: 0;
-  font-size: 1.3rem;
-  color: var(--text-primary);
-}
-
-.podcast-stats {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-}
+/* Los estilos de .podcasts-list, .podcast-card, .podcast-image, etc. 
+   están ahora en styles.css como estilos compartidos */
 
 .action-buttons {
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  flex-shrink: 0;
+  margin-left: auto;
 }
 
 .action-btn {
@@ -186,10 +96,6 @@
   transform: scale(0.95);
 }
 
-.edit-btn:hover {
-  background: rgba(157, 101, 215, 0.25);
-}
-
 .delete-btn:hover {
   background: rgba(220, 38, 38, 0.25);
   border-color: rgba(220, 38, 38, 0.5);
@@ -211,92 +117,33 @@
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23dc2626' stroke-width='2'%3E%3Cpolyline points='3 6 5 6 21 6'/%3E%3Cpath d='M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2'/%3E%3Cline x1='10' y1='11' x2='10' y2='17'/%3E%3Cline x1='14' y1='11' x2='14' y2='17'/%3E%3C/svg%3E");
 }
 
-.stat {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
+/* Los estilos de .stat, .icon-star-small, .icon-eye-small, .podcast-description, 
+   .podcast-categories, .chip están ahora en styles.css como estilos compartidos */
+
+/* Tablet - Mantener layout horizontal */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .my-podcasts-container {
+    padding: 1.5rem;
+  }
 }
 
-.icon-star-small,
-.icon-eye-small {
-  width: 14px;
-  height: 14px;
-  background-size: contain;
-  background-repeat: no-repeat;
-}
+/* Mobile - Layout vertical con imagen arriba */
+@media (max-width: 767px) {
+  .my-podcasts-container {
+    padding: 1rem;
+  }
 
-.icon-star-small {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239D65D7'%3E%3Cpath d='M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z'/%3E%3C/svg%3E");
-}
-
-.icon-eye-small {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%239D65D7'%3E%3Cpath d='M12 5c-7.633 0-10 7-10 7s2.367 7 10 7 10-7 10-7-2.367-7-10-7zm0 12a5 5 0 1 1 0-10 5 5 0 0 1 0 10z'/%3E%3C/svg%3E");
-}
-
-.podcast-description {
-  margin: 0;
-  color: var(--text-secondary);
-  line-height: 1.5;
-  font-size: 0.95rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  line-clamp: 2;
-  -webkit-box-orient: vertical;
-}
-
-.podcast-categories {
-  display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-
-.chip {
-  font-size: 0.65rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  color: var(--text-secondary);
-  background: rgba(var(--accent-rgb), 0.18);
-  border: 1px solid rgba(var(--accent-rgb), 0.25);
-  border-radius: var(--radius-pill);
-  padding: 0.25rem 0.6rem;
-}
-
-.chip-more {
-  font-weight: 600;
-  background: rgba(var(--accent-rgb), 0.25);
-  border-color: rgba(var(--accent-rgb), 0.35);
-}
-
-@media (max-width: 768px) {
   .page-header h1 {
     font-size: 1.6rem;
   }
 
-  .podcast-card {
-    grid-template-columns: 100px 1fr;
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .podcast-image {
-    width: 100px;
-    height: 100px;
-  }
-
-  .podcast-header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .podcast-title {
-    font-size: 1.1rem;
-  }
-  
-  .action-buttons {
-    margin-top: 0.5rem;
+  /* Los estilos de .podcasts-list, .podcast-card, .podcast-image, etc. 
+     están en styles.css, pero necesitamos ajustes específicos para los botones */
+  .podcast-header .action-buttons {
+    order: 2;
+    display: flex !important;
+    margin-top: 1rem;
+    width: 100%;
+    justify-content: flex-start;
   }
 }
