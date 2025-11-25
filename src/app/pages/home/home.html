@@ -25,21 +25,13 @@
                             </button>
                         }
 
-                        <!-- Flecha siguiente (visible después del primer clic, mientras no esté al final) -->
-                        @if (carousels['novedades'].hasBeenClicked && !carousels['novedades'].atEnd) {
+                        <!-- Flecha siguiente (visible después del primer clic) -->
+                        @if (carousels['novedades'].hasBeenClicked) {
                             <button 
                                 class="arrowButton arrowNext"
-                                (click)="goNext('novedades')">
+                                (click)="goNext('novedades')"
+                                [disabled]="carousels['novedades'].atEnd">
                                 <i class="fas fa-chevron-right"></i>
-                            </button>
-                        }
-
-                        <!-- Botón Ver todos (reemplaza la flecha derecha al final) -->
-                        @if (carousels['novedades'].hasBeenClicked && carousels['novedades'].atEnd) {
-                            <button 
-                                class="verTodosButton"
-                                [disabled]="!carousels['novedades'].verTodosEnabled">
-                                Ver todos
                             </button>
                         }
                     </div>
@@ -53,7 +45,7 @@
                             @for (podcast of novedadesPodcasts; track podcast.id) {
                                 <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
                                     <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
-                                    <div class="image-placeholder-home" style="display: none;"></div>
+                                    <div class="image-placeholder-home"></div>
                                     <h3>{{ podcast.title }}</h3>
                                     @if (podcast.description) {
                                         <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
@@ -91,19 +83,12 @@
                             </button>
                         }
 
-                        @if (carousels['masEscuchados'].hasBeenClicked && !carousels['masEscuchados'].atEnd) {
+                        @if (carousels['masEscuchados'].hasBeenClicked) {
                             <button 
                                 class="arrowButton arrowNext"
-                                (click)="goNext('masEscuchados')">
+                                (click)="goNext('masEscuchados')"
+                                [disabled]="carousels['masEscuchados'].atEnd">
                                 <i class="fas fa-chevron-right"></i>
-                            </button>
-                        }
-
-                        @if (carousels['masEscuchados'].hasBeenClicked && carousels['masEscuchados'].atEnd) {
-                            <button 
-                                class="verTodosButton"
-                                [disabled]="!carousels['masEscuchados'].verTodosEnabled">
-                                Ver todos
                             </button>
                         }
                     </div>
@@ -116,7 +101,7 @@
                             @for (podcast of masEscuchadosPodcasts; track podcast.id) {
                                 <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
                                     <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
-                                    <div class="image-placeholder-home" style="display: none;"></div>
+                                    <div class="image-placeholder-home"></div>
                                     <h3>{{ podcast.title }}</h3>
                                     @if (podcast.description) {
                                         <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
@@ -154,19 +139,12 @@
                             </button>
                         }
 
-                        @if (carousels['mejoresValorados'].hasBeenClicked && !carousels['mejoresValorados'].atEnd) {
+                        @if (carousels['mejoresValorados'].hasBeenClicked) {
                             <button 
                                 class="arrowButton arrowNext"
-                                (click)="goNext('mejoresValorados')">
+                                (click)="goNext('mejoresValorados')"
+                                [disabled]="carousels['mejoresValorados'].atEnd">
                                 <i class="fas fa-chevron-right"></i>
-                            </button>
-                        }
-
-                        @if (carousels['mejoresValorados'].hasBeenClicked && carousels['mejoresValorados'].atEnd) {
-                            <button 
-                                class="verTodosButton"
-                                [disabled]="!carousels['mejoresValorados'].verTodosEnabled">
-                                Ver todos
                             </button>
                         }
                     </div>
@@ -179,7 +157,7 @@
                             @for (podcast of mejoresValoradosPodcasts; track podcast.id) {
                                 <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
                                     <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
-                                    <div class="image-placeholder-home" style="display: none;"></div>
+                                    <div class="image-placeholder-home"></div>
                                     <h3>{{ podcast.title }}</h3>
                                     @if (podcast.description) {
                                         <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>
@@ -218,19 +196,12 @@
                                 </button>
                             }
 
-                            @if (carousels['favoritos'].hasBeenClicked && !carousels['favoritos'].atEnd) {
+                            @if (carousels['favoritos'].hasBeenClicked) {
                                 <button 
                                     class="arrowButton arrowNext"
-                                    (click)="goNext('favoritos')">
+                                    (click)="goNext('favoritos')"
+                                    [disabled]="carousels['favoritos'].atEnd">
                                     <i class="fas fa-chevron-right"></i>
-                                </button>
-                            }
-
-                            @if (carousels['favoritos'].hasBeenClicked && carousels['favoritos'].atEnd) {
-                                <button 
-                                    class="verTodosButton"
-                                    [disabled]="!carousels['favoritos'].verTodosEnabled">
-                                    Ver todos
                                 </button>
                             }
                         </div>
@@ -243,7 +214,7 @@
                                 @for (podcast of favoritosPodcasts; track podcast.id) {
                                     <div class="cardHome" [routerLink]="['/podcast', podcast.id]">
                                         <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcastImage" (error)="onImageError($event)" />
-                                        <div class="image-placeholder-home" style="display: none;"></div>
+                                        <div class="image-placeholder-home"></div>
                                         <h3>{{ podcast.title }}</h3>
                                         @if (podcast.description) {
                                             <h4>{{ podcast.description.length > 50 ? (podcast.description.substring(0, 50) + '...') : podcast.description }}</h4>

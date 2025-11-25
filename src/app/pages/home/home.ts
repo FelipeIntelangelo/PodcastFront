@@ -12,7 +12,6 @@ interface CarouselState {
   hasBeenClicked: boolean;
   atStart: boolean;
   atEnd: boolean;
-  verTodosEnabled: boolean;
 }
 
 interface PodcastWithDate extends PodcastSearchDTO {
@@ -43,13 +42,11 @@ export class Home implements OnInit, AfterViewInit {
   @ViewChild('favoritosWrapper') favoritosWrapper!: ElementRef<HTMLElement>;
 
   carousels: { [key: string]: CarouselState } = {
-    novedades: { hasBeenClicked: false, atStart: true, atEnd: false, verTodosEnabled: false },
-    masEscuchados: { hasBeenClicked: false, atStart: true, atEnd: false, verTodosEnabled: false },
-    mejoresValorados: { hasBeenClicked: false, atStart: true, atEnd: false, verTodosEnabled: false },
-    favoritos: { hasBeenClicked: false, atStart: true, atEnd: false, verTodosEnabled: false },
+    novedades: { hasBeenClicked: false, atStart: true, atEnd: false },
+    masEscuchados: { hasBeenClicked: false, atStart: true, atEnd: false },
+    mejoresValorados: { hasBeenClicked: false, atStart: true, atEnd: false },
+    favoritos: { hasBeenClicked: false, atStart: true, atEnd: false },
   };
-
-  private verTodosTimeouts: { [key: string]: any } = {};
 
   novedadesPodcasts: PodcastForDisplay[] = [];
   masEscuchadosPodcasts: PodcastForDisplay[] = [];
@@ -251,29 +248,8 @@ export class Home implements OnInit, AfterViewInit {
     if (!carousel) return;
 
     const tolerance = 5;
-    const wasAtEnd = carousel.atEnd;
     carousel.atStart = element.scrollLeft <= tolerance;
     carousel.atEnd = element.scrollLeft + element.clientWidth >= element.scrollWidth - tolerance;
-
-    // Si acaba de llegar al final, iniciar el delay de 1 segundo
-    if (carousel.atEnd && !wasAtEnd) {
-      carousel.verTodosEnabled = false;
-      // Limpiar timeout anterior si existe
-      if (this.verTodosTimeouts[carouselKey]) {
-        clearTimeout(this.verTodosTimeouts[carouselKey]);
-      }
-      // Habilitar después de 1 segundo
-      this.verTodosTimeouts[carouselKey] = setTimeout(() => {
-        carousel.verTodosEnabled = true;
-      }, 1000);
-    } else if (!carousel.atEnd) {
-      // Si ya no está al final, deshabilitar y limpiar timeout
-      carousel.verTodosEnabled = false;
-      if (this.verTodosTimeouts[carouselKey]) {
-        clearTimeout(this.verTodosTimeouts[carouselKey]);
-        delete this.verTodosTimeouts[carouselKey];
-      }
-    }
   }
 
   onArrowClick(carouselKey: string): void {
