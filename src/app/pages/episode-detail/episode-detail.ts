@@ -30,7 +30,11 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   hideInlinePlayer = false;
   showIframe = false;
   showAudio = false;
+  showVideo = false;
+  audioPlayBlocked = false;
+  videoPlayBlocked = false;
   @ViewChild('inlineAudio') inlineAudio?: ElementRef<HTMLAudioElement>;
+  @ViewChild('inlineVideo') inlineVideo?: ElementRef<HTMLVideoElement>;
   
   // Contador de tiempo manual
   playbackStartTime: number | null = null;
@@ -144,6 +148,7 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         this.cachedEpisodeId = null;
         this.estimatedPlaybackTime = 0;
         this.showAudio = false;
+        this.showVideo = false;
       },
       error: (error) => {
         console.error('Error loading episode:', error);
@@ -266,7 +271,7 @@ export class EpisodeDetail implements OnInit, OnDestroy {
 
   startInlineAudio(event?: Event): void {
     // Duración de la animación del botón (ms). Mantener preview visible mientras anima.
-    const ANIMATION_MS = 700;
+    const ANIMATION_MS = 1400;
 
     // Intentamos respetar el gesto del usuario: el input fue clickeado.
     // Retrasamos la inserción del <audio> para que la animación del botón tenga tiempo de reproducirse.
@@ -283,7 +288,10 @@ export class EpisodeDetail implements OnInit, OnDestroy {
               p.then(() => {
                 // reproducción iniciada correctamente; el evento (playing) disparará los contadores
               }).catch(() => {
-                // reproducción bloqueada por política del navegador; no iniciar timers aquí
+                // reproducción bloqueada por política del navegador; mostrar fallback para que el usuario vuelva a clicar
+                this.audioPlayBlocked = true;
+                this.showAudio = false;
+                try { if (event) (event.target as HTMLInputElement).checked = false; } catch {}
               });
             }
           }
@@ -292,6 +300,75 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         }
       }, 80);
     }, ANIMATION_MS);
+  }
+
+  startInlineVideo(event?: Event): void {
+    // Wait for the CSS play-button animation (1200ms) plus an extra 500ms
+    const ANIMATION_MS = 1400;
+    setTimeout(() => {
+      this.showVideo = true;
+      // Dejar que Angular renderice
+      setTimeout(() => {
+        try {
+          const el = this.inlineVideo?.nativeElement;
+          if (el) {
+            const p = el.play();
+            if (p && typeof p.then === 'function') {
+              p.then(() => {
+                // reproducción iniciada; onInlineVideoPlay manejará contadores
+              }).catch(() => {
+                // reproducción bloqueada por política del navegador; mostrar fallback
+                this.videoPlayBlocked = true;
+                this.showVideo = false;
+                try { if (event) (event.target as HTMLInputElement).checked = false; } catch {}
+              });
+            }
+          }
+        } catch (e) {}
+      }, 80);
+    }, ANIMATION_MS);
+  }
+
+  onInlineVideoPlay(): void {
+    if (!this.timerInterval) {
+      this.startTimer();
+    }
+    if (this.isUserLoggedIn) {
+      this.startViewTimer();
+    }
+  }
+
+  // Fallback: el usuario hizo un gesto explícito para iniciar la reproducción
+  playNowAudio(): void {
+    this.audioPlayBlocked = false;
+    this.showAudio = true;
+    setTimeout(() => {
+      try {
+        const el = this.inlineAudio?.nativeElement;
+        if (el) {
+          const p = el.play();
+          if (p && typeof p.then === 'function') {
+            p.then(() => { this.audioPlayBlocked = false; }).catch(() => { this.audioPlayBlocked = true; });
+          }
+        }
+      } catch (e) {}
+    }, 80);
+  }
+
+  playNowVideo(): void {
+    this.videoPlayBlocked = false;
+    this.showVideo = true;
+    setTimeout(() => {
+      try {
+        const el = this.inlineVideo?.nativeElement;
+        if (el) {
+          const p = el.play();
+          if (p && typeof p.then === 'function') {
+            p.then(() => { this.videoPlayBlocked = false; }).catch(() => { this.videoPlayBlocked = true; });
+          }
+        }
+      } catch (e) {}
+    }, 80);
   }
 
   onInlineAudioPlay(): void {
@@ -366,9 +443,11 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       // ocultar cualquier player inline
       this.showIframe = false;
       this.showAudio = false;
+      this.showVideo = false;
       // pausar audio inline si está sonando
       try {
         this.inlineAudio?.nativeElement.pause();
+        this.inlineVideo?.nativeElement.pause();
       } catch {}
       
       // Abrir el reproductor flotante

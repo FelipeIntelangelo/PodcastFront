@@ -416,10 +416,15 @@
 
 /* Uiverse play button adapted (violet accent) */
 .uiverse-container {
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
   position: relative;
   border-radius: 50%;
+}
+
+.uiverse-container.uiverse-video {
+  width: 260px;
+  height: 260px;
 }
 
 .u-play-btn {
@@ -431,6 +436,13 @@
   background: conic-gradient(var(--accent), var(--accent));
   cursor: pointer;
   outline: none;
+}
+
+.uiverse-container > label {
+  display: block;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 
 .u-play-btn::before {
@@ -446,7 +458,7 @@
 }
 
 .u-play-btn:checked {
-  animation: u-borderAnimate 700ms ease-in-out 1;
+  animation: u-borderAnimate 1200ms ease-in-out 1;
   animation-fill-mode: forwards;
 }
 
@@ -468,12 +480,12 @@
 
 .u-play-icon {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  left: 60%;
+  width: 48px;
+  height: 48px;
+  left: 50%;
   top: 50%;
   background-color: var(--accent);
-  transform: translate(-60%, -50%) rotate(90deg);
+  transform: translate(-50%, -50%) rotate(90deg);
   clip-path: polygon(50% 15%, 0% 100%, 100% 100%);
   transition: all 400ms ease-in-out;
   cursor: pointer;
@@ -485,8 +497,8 @@
 
 .u-pause-icon {
   position: absolute;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -512,12 +524,12 @@
 }
 
 .u-play-btn:checked ~ .u-pause-icon::before {
-  animation: u-reveal 300ms ease-in-out 350ms 1;
+  animation: u-reveal 300ms ease-in-out 600ms 1;
   animation-fill-mode: forwards;
 }
 
 .u-play-btn:checked ~ .u-pause-icon::after {
-  animation: u-reveal 300ms ease-in-out 600ms 1;
+  animation: u-reveal 300ms ease-in-out 1030ms 1;
   animation-fill-mode: forwards;
 }
 
@@ -530,6 +542,33 @@
     width: 35%;
   }
 }
+
+/* Fallback UI when autoplay is blocked */
+.play-fallback {
+  margin-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.play-fallback p {
+  margin: 0;
+  color: var(--text-tertiary);
+  font-size: 0.95rem;
+}
+
+.play-fallback-btn {
+  padding: 0.5rem 0.9rem;
+  background: linear-gradient(135deg, var(--accent), #7c3aed);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.play-fallback-btn:hover { transform: translateY(-2px); }
 
 .big-play-btn.small {
   padding: 0.8rem 1.25rem;

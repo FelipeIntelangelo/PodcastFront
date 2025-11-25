@@ -102,21 +102,42 @@
             @if (!hideInlinePlayer) {
               @if (isCloudinaryVideo(episode.audioPath)) {
                 <div class="inline-player-container">
-                  <button class="open-floating-btn" (click)="playInFloatingPlayer()">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-                      <path d="M19 7h-8v6h8V7zm2-4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 1.81 2 1.81h18c1.1 0 2-.81 2-1.81V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
-                    </svg>
-                    Abrir en reproductor flotante
-                  </button>
-                  <video 
-                    #cloudinaryVideo
-                    controls
-                    [src]="episode.audioPath"
-                    width="100%" 
-                    height="400"
-                    class="cloudinary-player">
-                    Tu navegador no soporta el elemento de video.
-                  </video>
+                  @if (!showVideo) {
+                    <div class="play-preview">
+                      <div class="uiverse-container uiverse-video">
+                        <label>
+                          <input class="u-play-btn" type="checkbox" (change)="startInlineVideo($event)">
+                          <div class="u-play-icon"></div>
+                          <div class="u-pause-icon"></div>
+                        </label>
+                      </div>
+                      @if (videoPlayBlocked) {
+                        <div class="play-fallback">
+                          <p>No se pudo iniciar la reproducción automáticamente.</p>
+                          <button class="play-fallback-btn" (click)="playNowVideo()">Reproducir ahora</button>
+                        </div>
+
+                      }
+                      <p class="preview-text">Haz clic para reproducir el episodio</p>
+                    </div>
+                  } @else {
+                    <button class="open-floating-btn" (click)="playInFloatingPlayer()">
+                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M19 7h-8v6h8V7zm2-4H3c-1.1 0-2 .9-2 2v14c0 1.1.9 1.81 2 1.81h18c1.1 0 2-.81 2-1.81V5c0-1.1-.9-2-2-2zm0 16H3V5h18v14z"/>
+                      </svg>
+                      Abrir en reproductor flotante
+                    </button>
+                    <video
+                      #inlineVideo
+                      controls
+                      [src]="episode.audioPath"
+                      width="100%"
+                      height="400"
+                      (playing)="onInlineVideoPlay()"
+                      class="cloudinary-player">
+                      Tu navegador no soporta el elemento de video.
+                    </video>
+                  }
                 </div>
               } @else if (isYouTubeUrl(episode.audioPath)) {
                 <div class="inline-player-container">
@@ -163,6 +184,13 @@
                           <div class="u-pause-icon"></div>
                         </label>
                       </div>
+                      @if (audioPlayBlocked) {
+
+                        <div class="play-fallback">
+                          <p>No se pudo iniciar la reproducción automáticamente.</p>
+                          <button class="play-fallback-btn" (click)="playNowAudio()">Reproducir ahora</button>
+                        </div>
+                      }
                     </div>
                   } @else {
                     <div class="audio-controls" [class.playing]="showAudio">
@@ -189,6 +217,12 @@
                           <div class="u-pause-icon"></div>
                         </label>
                       </div>
+                      @if (audioPlayBlocked) {
+                        <div class="play-fallback">
+                          <p>No se pudo iniciar la reproducción automáticamente.</p>
+                          <button class="play-fallback-btn" (click)="playNowAudio()">Reproducir ahora</button>
+                        </div>
+                      }
                       <p class="preview-text">Haz clic para reproducir el episodio</p>
                     </div>
                   } @else {
@@ -304,9 +338,8 @@
       <!-- Lista de comentarios -->
       @if (isLoadingCommentaries) {
         <div class="loading-commentaries"><p>Cargando comentarios...</p></div>
-      } @else if (commentariesError) {
-        <div class="error-commentaries"><p>{{ commentariesError }}</p></div>
-      } @else if (commentaries.length === 0) {
+      }
+       @else if (commentaries.length === 0) {
         <div class="no-commentaries"><p>Este episodio no tiene comentarios aún. ¡Sé el primero en comentar!</p></div>
       } @else {
         <div class="commentaries-list">
