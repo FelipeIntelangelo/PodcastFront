@@ -896,6 +896,11 @@
   font-weight: 600;
 }
 
+.char-counter.realWarning {
+  color: #fb6824;
+  font-weight: 800;
+}
+
 .action-buttons {
   display: flex;
   gap: 0.75rem;
