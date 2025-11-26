@@ -3,6 +3,7 @@ import { PodcastService } from '../../services/podcast/podcast-service';
 import { PodcastTotalDTO } from '../../models/podcast/podcast-total-dto';
 import { AlertService } from '../../services/ui/alert.service';
 import { Router } from '@angular/router';
+import { EpisodeService } from '../../services/episode/episode.service';
 
 @Component({
   selector: 'app-my-podcasts',
@@ -13,11 +14,13 @@ import { Router } from '@angular/router';
 export class MyPodcasts implements OnInit {
   myPodcasts: PodcastTotalDTO[] = [];
   isLoading = true;
+  episodesCount: Map<number, number> = new Map(); // Mapa para almacenar cantidad de episodios por podcast
 
   constructor(
     private podcastService: PodcastService,
     private alertService: AlertService,
-    private router: Router
+    private router: Router,
+    private episodeService: EpisodeService
   ) {}
 
   ngOnInit(): void {
@@ -29,6 +32,7 @@ export class MyPodcasts implements OnInit {
     this.podcastService.getMyPodcasts().subscribe({
       next: (podcasts) => {
         this.myPodcasts = podcasts;
+        this.loadEpisodesForAllPodcasts();
         this.isLoading = false;
         console.log(podcasts)
       },
@@ -37,6 +41,26 @@ export class MyPodcasts implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  loadEpisodesForAllPodcasts(): void {
+    // Cargar episodios para cada podcast
+    this.myPodcasts.forEach(podcast => {
+      this.episodeService.getAll(undefined, podcast.id).subscribe({
+        next: (episodes) => {
+          this.episodesCount.set(podcast.id, episodes.length);
+        },
+        error: (error) => {
+          console.error(`Error loading episodes for podcast ${podcast.id}:`, error);
+          this.episodesCount.set(podcast.id, 0);
+        }
+      });
+    });
+  }
+
+  hasEpisodes(podcastId: number): boolean {
+    const count = this.episodesCount.get(podcastId) || 0;
+    return count > 0;
   }
 
   formatViews(value: number): string {
