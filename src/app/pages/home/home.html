@@ -172,8 +172,8 @@
             </div>
         </div>
 
-        <!-- FAVORITOS (solo si está logueado) -->
-        @if (isLoggedIn) {
+        <!-- FAVORITOS (solo si está logueado y tiene favoritos) -->
+        @if (isLoggedIn && (favoritosPodcasts.length > 0 || isLoading.favoritos)) {
             <div class="carouselSection">
                 <div class="carouselContainer">
                     <div class="carousel-header">

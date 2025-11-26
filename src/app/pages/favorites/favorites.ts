@@ -3,6 +3,7 @@ import { UserService } from '../../services/client/user-service';
 import { PodcastDTO } from '../../models/podcast/podcast-dto';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { AlertService } from '../../services/ui/alert.service';
 
 @Component({
   selector: 'app-favorites',
@@ -17,7 +18,8 @@ export class FavoritesComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private alertService: AlertService
   ) {}
 
   ngOnInit(): void {
@@ -53,6 +55,19 @@ export class FavoritesComponent implements OnInit {
 
   viewPodcast(id: number): void {
     this.router.navigate(['/podcast', id]);
+  }
+
+  toggleFavorite(podcastId: number): void {
+    this.userService.removePodcastFromFavorites(podcastId).subscribe({
+      next: () => {
+        this.alertService.success('¡Listo!', 'Podcast eliminado de favoritos');
+        // Remover el podcast de la lista local
+        this.favorites = this.favorites.filter(p => p.id !== podcastId);
+      },
+      error: (err) => {
+        this.alertService.error('Error', err.message || 'No se pudo quitar de favoritos');
+      }
+    });
   }
 
   onImageError(event: Event): void {

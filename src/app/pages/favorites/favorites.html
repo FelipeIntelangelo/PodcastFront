@@ -22,20 +22,30 @@
           </div>
           
           <div class="podcast-content">
-            <div class="podcast-info">
-              <h3 class="podcast-title">{{ podcast.title }}</h3>
-              <div class="podcast-stats">
-                <div class="stat">
-                  <span class="icon-star-small"></span>
-                  <span>{{ podcast.averageRating || 0 }}</span>
-                </div>
-                <div class="stat">
-                  <span class="icon-eye-small"></span>
-                  <span>{{ formatViews(podcast.averageViews || 0) }}</span>
+            <div class="podcast-header">
+              <div class="podcast-info">
+                <h3 class="podcast-title">{{ podcast.title }}</h3>
+                <div class="podcast-stats">
+                  <div class="stat">
+                    <span class="icon-star-small"></span>
+                    <span>{{ podcast.averageRating || 0 }}</span>
+                  </div>
+                  <div class="stat">
+                    <span class="icon-eye-small"></span>
+                    <span>{{ formatViews(podcast.averageViews || 0) }}</span>
+                  </div>
                 </div>
               </div>
-              <p class="podcast-description">{{ podcast.description }}</p>
+              <div class="podcast-actions-main" (click)="$event.stopPropagation()">
+                <input type="checkbox" [id]="'toggle-heart-fav-' + podcast.id" 
+                       [checked]="true" 
+                       (change)="toggleFavorite(podcast.id)" 
+                       style="display: none;">
+                <label [for]="'toggle-heart-fav-' + podcast.id" 
+                       [attr.aria-label]="'Quitar de favoritos'">❤</label>
+              </div>
             </div>
+            <p class="podcast-description">{{ podcast.description }}</p>
             
             @if (podcast.category && podcast.category.length) {
               <div class="podcast-categories">

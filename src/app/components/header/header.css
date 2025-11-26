@@ -565,16 +565,20 @@ header{
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
-    right: 0;
+    width: 252px;
+    min-width: 252px;
+    max-width: 252px;
     background-color: rgb(30, 30, 30);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0;
     max-height: 220px;
     overflow-y: auto;
+    overflow-x: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     display: none;
     overscroll-behavior: contain;
+    box-sizing: border-box;
 }
 
 .container-input .search-dropdown.show {
@@ -752,16 +756,20 @@ header{
     position: absolute;
     top: calc(100% + 0.5rem);
     left: 0;
-    right: 0;
+    width: 252px;
+    min-width: 252px;
+    max-width: 252px;
     background-color: rgb(30, 30, 30);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 0;
     max-height: 220px; /* capped height so it becomes scrollable */
     overflow-y: auto;
+    overflow-x: hidden;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     display: none;
     overscroll-behavior: contain; /* avoid scroll chaining */
+    box-sizing: border-box;
 }
 
 .search-dropdown.show{
@@ -783,6 +791,9 @@ header{
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     background: rgba(0, 0, 0, 0.3);
     transform: translateX(0);
+    box-sizing: border-box;
+    overflow: hidden;
+    width: 100%;
 }
 
 .search-result-item:last-child{
@@ -821,16 +832,29 @@ header{
 .result-content {
     flex: 1;
     min-width: 0; /* Para permitir text truncation */
+    overflow: hidden;
 }
 
 .search-result-item .result-title{
     font-weight: 600;
     margin-bottom: 0.25rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    max-width: 100%;
+    display: block;
 }
 
 .search-result-item .result-subtitle{
     font-size: 0.85rem;
     color: rgba(255, 255, 255, 0.7);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    max-width: 100%;
+    display: block;
 }
 
 /* Diferenciación por tipo */

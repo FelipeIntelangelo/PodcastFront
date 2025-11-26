@@ -74,7 +74,6 @@
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   transition: color 0.2s ease;
-  margin-bottom: 0.75rem;
 }
 
 .creator-link-main:hover {
@@ -119,7 +118,6 @@
   flex-wrap: wrap;
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
-  margin-bottom: 0.75rem;
 }
 
 .stat-item-main {
