@@ -35,6 +35,7 @@ export class EpisodeDetail implements OnInit, OnDestroy {
   videoPlayBlocked = false;
   @ViewChild('inlineAudio') inlineAudio?: ElementRef<HTMLAudioElement>;
   @ViewChild('inlineVideo') inlineVideo?: ElementRef<HTMLVideoElement>;
+  @ViewChild('videoPlayer') videoPlayer?: ElementRef<HTMLVideoElement>;
   
   // Contador de tiempo manual
   playbackStartTime: number | null = null;
@@ -347,6 +348,17 @@ export class EpisodeDetail implements OnInit, OnDestroy {
       this.startTimer();
     }
     if (this.isUserLoggedIn) {
+      this.startViewTimer();
+    }
+  }
+
+  onVideoPlayerPlay(): void {
+    // Cuando se reproduce el video MP4, iniciar el countdown de visualización
+    // Sin abrir el player flotante, solo iniciar el timer de visualización
+    if (!this.timerInterval) {
+      this.startTimer();
+    }
+    if (this.isUserLoggedIn && !this.viewCounted) {
       this.startViewTimer();
     }
   }

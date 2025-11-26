@@ -117,6 +117,7 @@
             [src]="episode.audioPath" 
             [poster]="episode.imageUrl || episode.podcast.imageUrl || 'assets/default-episode.png'"
             controls
+            (play)="onVideoPlayerPlay()"
             class="episode-video-player">
             Tu navegador no soporta el elemento de video.
           </video>
