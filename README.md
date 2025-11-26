@@ -114,9 +114,9 @@ npm --version
 El proyecto utiliza variables de entorno para la configuración de Cloudinary. Estas se configuran en el script de inicio:
 
 ```json
-VITE_CLOUDINARY_CLOUD_NAME=dusesgecs
-VITE_CLOUDINARY_UPLOAD_PRESET=podcast_uploads
-VITE_CLOUDINARY_API_KEY=311679635294676
+VITE_CLOUDINARY_CLOUD_NAME=yourCloudName
+VITE_CLOUDINARY_UPLOAD_PRESET=yourPreset
+VITE_CLOUDINARY_API_KEY=YourAPIKEY
 ```
 
 ### Proxy Configuration
