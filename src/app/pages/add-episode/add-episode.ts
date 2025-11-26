@@ -145,6 +145,11 @@ export class AddEpisodePage implements OnInit {
       return;
     }
 
+    if(season < maxExistingSeason) {
+      this.validationErrors['season'] = 'No puedes crear episodios en una temporada vieja, temporada cerrada.';
+      return;
+    }
+
     // Validar episodios consecutivos dentro de la temporada
     const lastChapterInSeason = this.episodesBySeasons[season] || 0;
     

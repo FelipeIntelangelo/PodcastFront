@@ -28,7 +28,7 @@
 
     <fieldset>
       <label>Descripción</label>
-      <textarea formControlName="description"></textarea>
+      <textarea formControlName="description" style="resize: none;"></textarea>
       @if (form.get('description')?.invalid && form.get('description')?.touched) {
         <div class="field-error">
           @if (form.get('description')?.errors?.['required']) {

@@ -11,7 +11,7 @@
 
     <fieldset>
       <label for="description">Description</label>
-      <textarea id="description" formControlName="description" placeholder="A podcast about..."
+      <textarea id="description" formControlName="description" placeholder="A podcast about..." style="resize: none;"
                 [class.error-input]="podcastForm.get('description')?.invalid && podcastForm.get('description')?.touched"></textarea>
       <app-form-error controlName="description" [customMessages]="customErrors['description']"></app-form-error>
     </fieldset>

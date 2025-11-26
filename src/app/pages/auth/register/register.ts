@@ -23,37 +23,37 @@ export class Register implements OnInit {
   // custom error messages for form-error component
   customErrors: { [controlName: string]: { [key: string]: string } } = {
     username: {
-      required: 'El nombre de usuario es obligatorio',
-      minlength: 'El usuario debe tener al menos {requiredLength} caracteres',
-      maxlength: 'El usuario no puede superar {requiredLength} caracteres',
-      pattern: 'Solo letras, números y guiones bajos están permitidos'
+      required: 'El usuario es obligatorio',
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
+      pattern: 'Solo letras, números y guion bajo'
     },
     password: {
       required: 'La contraseña es obligatoria',
-      minlength: 'La contraseña debe tener al menos {requiredLength} caracteres',
-      maxlength: 'La contraseña no puede superar {requiredLength} caracteres',
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
     },
     name: {
       required: 'El nombre es obligatorio',
-      minlength: 'El nombre debe tener al menos {requiredLength} caracteres',
-      maxlength: 'El nombre no puede superar {requiredLength} caracteres',
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
     },
     lastName: {
       required: 'El apellido es obligatorio',
-      minlength: 'El apellido debe tener al menos {requiredLength} caracteres',
-      maxlength: 'El apellido no puede superar {requiredLength} caracteres',
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
     },
     nickname: {
       required: 'El nickname es obligatorio',
-      minlength: 'El nickname debe tener al menos {requiredLength} caracteres',
-      maxlength: 'El nickname no puede superar {requiredLength} caracteres',
-      pattern: 'El nickname solo puede contener letras, números y guion bajo',
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
+      pattern: 'Solo letras, números y guion bajo',
     },
     email: {
-      required: 'El email es obligatorio.',
-      email: 'Debe ser un email valido.',
-      maxlength: 'El email no debe superar los {requiredLength} caracteres.',
-      pattern: 'El email contiene caracteres invalidos.',
+      required: 'El email es obligatorio',
+      email: 'Debe ser un email válido',
+      maxlength: 'Máximo {requiredLength} caracteres',
+      pattern: 'El email tiene caracteres inválidos',
     }
   };
 
