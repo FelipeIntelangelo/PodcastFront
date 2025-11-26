@@ -83,6 +83,46 @@
   resize: vertical;
   font-family: inherit;
 }
+
+.password-input-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password-input-wrapper input {
+  padding-right: 3rem;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 0.8rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: rgba(157, 101, 215, 0.6);
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: auto;
+  margin: 0;
+  transition: color 0.3s ease;
+}
+
+.password-toggle:hover {
+  color: #9D65D7;
+}
+
+.password-toggle:focus {
+  outline: none;
+  color: #9D65D7;
+}
+
+.password-toggle i {
+  font-size: 1rem;
+}
   
 .form-actions {
   margin-top: 2rem;
