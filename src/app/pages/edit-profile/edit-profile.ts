@@ -5,11 +5,13 @@ import { UserService } from '../../services/client/user-service';
 import { User } from '../../models/user/user';
 import { CommonModule } from '@angular/common';
 import { CloudinaryUploadComponent } from '../../components/shared/cloudinary-upload/cloudinary-upload';
+import { FormError } from '../../components/shared/form-error/form-error';
+import { UserUpdateDTO } from '../../models/user/user-update-dto';
 
 @Component({
   selector: 'app-edit-profile',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CloudinaryUploadComponent],
+  imports: [CommonModule, ReactiveFormsModule, CloudinaryUploadComponent, FormError],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css'
 })
@@ -19,6 +21,36 @@ export class EditProfileComponent implements OnInit {
   isLoading: boolean = true;
   error: string | null = null;
   @ViewChild('profilePictureUpload') profilePictureUpload?: CloudinaryUploadComponent;
+
+  showPassword = false;
+  showConfirmPassword = false;
+
+  // custom error messages for form-error component
+  customErrors: { [controlName: string]: { [key: string]: string } } = {
+    nickname: {
+      required: 'El nickname es obligatorio',
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
+      pattern: 'Solo letras, números y guion bajo',
+    },
+    email: {
+      required: 'El email es obligatorio',
+      email: 'Debe ser un email válido',
+      maxlength: 'Máximo {requiredLength} caracteres',
+      pattern: 'El email tiene caracteres inválidos',
+    },
+    bio: {
+      maxlength: 'Máximo {requiredLength} caracteres',
+    },
+    password: {
+      minlength: 'Mínimo {requiredLength} caracteres',
+      maxlength: 'Máximo {requiredLength} caracteres',
+    },
+    confirmPassword: {
+      required: 'Debes confirmar la contraseña',
+      passwordMismatch: 'Las contraseñas no coinciden',
+    }
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -44,15 +76,72 @@ export class EditProfileComponent implements OnInit {
   initForm(): void {
     if (this.currentUser) {
       this.editProfileForm = this.fb.group({
-        name: [this.currentUser.name, Validators.required],
-        lastName: [this.currentUser.lastName, Validators.required],
-        nickname: [this.currentUser.nickname, Validators.required],
+        nickname: [this.currentUser.nickname, [
+          Validators.required,
+          Validators.minLength(3),
+          Validators.maxLength(20),
+          Validators.pattern('^[a-zA-Z0-9_]+$')
+        ]],
         profilePicture: [this.currentUser.profilePicture],
-        bio: [this.currentUser.bio],
-        email: [this.currentUser.credential.email, [Validators.required, Validators.email]],
-        username: [this.currentUser.credential.username, Validators.required]
+        bio: [this.currentUser.bio || '', [
+          Validators.maxLength(500)
+        ]],
+        email: [this.currentUser.credential.email, [
+          Validators.required,
+          Validators.email,
+          Validators.maxLength(50),
+          Validators.pattern('^(?![.])[a-zA-Z0-9._%+-]+(?<![.])@[a-zA-Z0-9-]+(\\.[a-zA-Z0-9-]+)*\\.[a-zA-Z]{2,}$')
+        ]],
+        password: ['', [
+          Validators.minLength(8),
+          Validators.maxLength(30)
+        ]],
+        confirmPassword: ['']
+      }, { validators: this.passwordMatchValidator });
+
+      // Revalidar cuando cambien los campos de contraseña
+      this.editProfileForm.get('password')?.valueChanges.subscribe(() => {
+        this.editProfileForm.get('confirmPassword')?.updateValueAndValidity();
+      });
+      this.editProfileForm.get('confirmPassword')?.valueChanges.subscribe(() => {
+        this.editProfileForm.get('password')?.updateValueAndValidity();
       });
     }
+  }
+
+  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
+    const password = group.get('password');
+    const confirmPassword = group.get('confirmPassword');
+    
+    if (!password || !confirmPassword) return null;
+    
+    // Si no hay contraseña, no validar
+    if (!password.value) {
+      confirmPassword.setErrors(null);
+      return null;
+    }
+    
+    // Si hay contraseña, debe haber confirmación y deben coincidir
+    if (password.value && !confirmPassword.value) {
+      confirmPassword.setErrors({ required: true });
+      return { passwordMismatch: true };
+    }
+    
+    if (password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    }
+    
+    confirmPassword.setErrors(null);
+    return null;
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPasswordVisibility(): void {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onImageUploaded(url: string): void {
@@ -65,7 +154,12 @@ export class EditProfileComponent implements OnInit {
   }
 
   async onSave(): Promise<void> {
-    if (this.editProfileForm.valid && this.currentUser) {
+    if (this.editProfileForm.invalid) {
+      this.editProfileForm.markAllAsTouched();
+      return;
+    }
+
+    if (this.currentUser) {
       // Subida diferida de imagen si el usuario seleccionó un archivo
       try {
         if (this.profilePictureUpload && this.profilePictureUpload.hasFileSelected()) {
@@ -77,17 +171,29 @@ export class EditProfileComponent implements OnInit {
         return;
       }
 
-      const updatedData: Partial<User> = {
-        ...this.currentUser,
-        ...this.editProfileForm.value,
-        credential: {
-          ...this.currentUser.credential,
-          email: this.editProfileForm.value.email,
-          username: this.editProfileForm.value.username
-        }
+      const formValue = this.editProfileForm.value;
+      
+      // Construir el DTO con solo los campos que acepta la API
+      const updateDTO: UserUpdateDTO = {
+        nickname: formValue.nickname,
+        email: formValue.email
       };
 
-      this.userService.updateCurrentUserProfile(updatedData).subscribe({
+      // Incluir campos opcionales solo si tienen valor
+      if (formValue.profilePicture && formValue.profilePicture.trim() !== '') {
+        updateDTO.profilePicture = formValue.profilePicture;
+      }
+
+      if (formValue.bio && formValue.bio.trim() !== '') {
+        updateDTO.bio = formValue.bio;
+      }
+
+      // Solo incluir la contraseña si se proporcionó una nueva
+      if (formValue.password && formValue.password.trim() !== '') {
+        updateDTO.password = formValue.password;
+      }
+
+      this.userService.updateCurrentUserProfile(updateDTO).subscribe({
         next: (user) => {
           this.currentUser = user;
           this.router.navigate(['/profile']);

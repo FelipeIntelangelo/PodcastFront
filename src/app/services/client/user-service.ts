@@ -8,6 +8,7 @@ import { UserSearchDTO } from '../../models/user/userSearchDTO';
 import { EpisodeHistoryDTO } from '../../models/episode/episode-history-dto';
 import { ErrorHandlerService } from '../error/error-handler.service';
 import { PodcastDTO } from '../../models/podcast/podcast-dto';
+import { UserUpdateDTO } from '../../models/user/user-update-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -45,8 +46,8 @@ export class UserService {
     );
   }
 
-  updateCurrentUserProfile(user: Partial<User>): Observable<User> {
-    return this.http.patch<User>(`${this.API_URL}/myProfile`, user).pipe(
+  updateCurrentUserProfile(updates: UserUpdateDTO): Observable<User> {
+    return this.http.patch<User>(`${this.API_URL}/myProfile`, updates).pipe(
       catchError(this.errorHandler.handleError.bind(this.errorHandler))
     );
   }
