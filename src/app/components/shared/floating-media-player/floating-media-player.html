@@ -1,99 +1,147 @@
 @if (playerState().isOpen && playerState().episode) {
-  <div class="floating-player" [class.minimized]="playerState().isMinimized">
-    <!-- Header del player -->
-    <div class="player-header" (click)="toggleMinimize()">
-      <div class="episode-info-mini">
+  <div class="main-music-card" [class.minimized]="playerState().isMinimized">
+    <input 
+      type="checkbox" 
+      id="play-toggle" 
+      hidden=""
+      [checked]="isPlaying()"
+      (change)="togglePlayPause($event)">
+
+    <!-- Botón para cerrar -->
+    <button class="close-button" (click)="closePlayer()" title="Cerrar">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+        <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+      </svg>
+    </button>
+
+    <div class="track-info">
+      <div class="album-art">
         <img 
-          [src]="playerState().episode?.imageUrl || 'assets/default-episode.png'" 
+          [src]="playerState().episode?.imageUrl || playerState().episode?.podcast?.imageUrl || 'assets/default-episode.png'" 
           [alt]="playerState().episode?.title"
-          class="episode-thumbnail">
-        <div class="episode-text">
-          <!-- Al hacer click en el título se alterna minimizado (burbujea al header) -->
-          <div class="episode-title">{{ playerState().episode?.title }}</div>
-          <!-- En el nombre del podcast NO se minimiza/expande; navega al detalle -->
-          <div class="podcast-name" (click)="goToPodcast(); $event.stopPropagation()">{{ playerState().episode?.podcast?.title }}</div>
+          class="album-art-img">
+      </div>
+      <div class="track-details">
+        <div class="track-title">{{ playerState().episode?.title }}</div>
+        <div class="artist-name" (click)="goToPodcast(); $event.stopPropagation()">
+          {{ playerState().episode?.podcast?.title }}
         </div>
       </div>
-      
-      <div class="header-controls">
-        <button 
-          class="control-btn minimize-btn" 
-          (click)="toggleMinimize(); $event.stopPropagation()"
-          [attr.aria-label]="playerState().isMinimized ? 'Expandir' : 'Minimizar'">
-          @if (playerState().isMinimized) {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 14l5-5 5 5z"/>
-            </svg>
-          } @else {
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M7 10l5 5 5-5z"/>
-            </svg>
-          }
-        </button>
-        
-        <button 
-          class="control-btn close-btn" 
-          (click)="closePlayer(); $event.stopPropagation()"
-          aria-label="Cerrar">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-          </svg>
-        </button>
+    </div>
+
+    @if (!playerState().isMinimized) {
+      <div class="playback-controls">
+        <div class="time-info">
+          <span class="current-time">{{ formatTime(currentTime) }}</span>
+          <span class="remaining-time">{{ formatTime(duration - currentTime) }}</span>
+        </div>
+        <div class="progress-bar" (click)="seek($event)">
+          <div class="progress-fill" [style.width.%]="progressPercentage"></div>
+          <div class="progress-handle" [style.left.%]="progressPercentage"></div>
+        </div>
+        <div class="button-row">
+          <div class="main-control-btns">
+            <button class="control-button back" (click)="previousEpisode()" [disabled]="!hasPreviousEpisode()" title="Episodio anterior">
+              <svg
+                width="18"
+                height="18"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 32 32"
+                style="transform: scaleX(-1);"
+              >
+                <path d="M23,8h-5c-0.6,0-1,0.4-1,1v5L9.6,8.2C9.3,8,8.9,7.9,8.6,8.1C8.2,8.3,8,8.6,8,9v14c0,0.4,0.2,0.7,0.6,0.9C8.7,24,8.9,24,9,24 c0.2,0,0.4-0.1,0.6-0.2L17,18v5c0,0.6,0.4,1,1,1h5c0.6,0,1-0.4,1-1V9C24,8.4,23.6,8,23,8z"></path>
+              </svg>
+            </button>
+            <div class="play-pause-btns">
+              <label for="play-toggle" class="control-button play-pause-button">
+                <svg
+                  class="icon-play"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M11.596 8.697l-6.363 3.692c-.54.314-1.233-.065-1.233-.696V4.308c0-.63.693-1.01 1.233-.696l6.363 3.692a.802.802 0 0 1 0 1.393"
+                  ></path>
+                </svg>
+                <svg
+                  class="icon-pause"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  fill="currentColor"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M5.5 3.5A1.5 1.5 0 0 1 7 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5m5 0A1.5 1.5 0 0 1 12 5v6a1.5 1.5 0 0 1-3 0V5a1.5 1.5 0 0 1 1.5-1.5"
+                  ></path>
+                </svg>
+              </label>
+            </div>
+            <button class="control-button next" (click)="nextEpisode()" [disabled]="!hasNextEpisode()" title="Siguiente episodio">
+              <svg
+                width="18"
+                height="18"
+                fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 32 32"
+              >
+                <path d="M23,8h-5c-0.6,0-1,0.4-1,1v5L9.6,8.2C9.3,8,8.9,7.9,8.6,8.1C8.2,8.3,8,8.6,8,9v14c0,0.4,0.2,0.7,0.6,0.9C8.7,24,8.9,24,9,24 c0.2,0,0.4-0.1,0.6-0.2L17,18v5c0,0.6,0.4,1,1,1h5c0.6,0,1-0.4,1-1V9C24,8.4,23.6,8,23,8z"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <!-- Contenido del player (solo visible cuando está expandido) -->
-    <div class="player-content" [class.hidden]="playerState().isMinimized">
-        @if (isCloudinaryVideo(playerState().episode!.audioPath)) {
-          <video 
-            controls
-            [src]="playerState().episode!.audioPath"
-            [autoplay]="playerState().autoplay"
-            width="100%" 
-            height="100%"
-            class="media-video">
-            Tu navegador no soporta el elemento de video.
-          </video>
-        } @else if (isYouTubeUrl(playerState().episode!.audioPath)) {
-          <iframe 
-            [src]="getYouTubeEmbedUrl(playerState().episode!.audioPath)" 
-            width="100%" 
-            height="100%" 
-            frameborder="0" 
-            title="YouTube video player"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-            class="media-iframe">
-          </iframe>
-        } @else if (isCloudinaryAudio(playerState().episode!.audioPath)) {
-          <div class="audio-container">
-            <audio 
-              controls 
-              [src]="playerState().episode!.audioPath" 
-              [autoplay]="playerState().autoplay"
-              class="audio-player">
-              Tu navegador no soporta el elemento de audio.
-            </audio>
-          </div>
-        } @else {
-          <div class="audio-container">
-            <audio 
-              controls 
-              [src]="playerState().episode!.audioPath" 
-              [autoplay]="playerState().autoplay"
-              class="audio-player">
-              Tu navegador no soporta el elemento de audio.
-            </audio>
-          </div>
-        }
+      <!-- Media player (hidden, solo para control) -->
+      @if (isCloudinaryVideo(playerState().episode!.audioPath)) {
+        <video 
+          #mediaElement
+          [src]="playerState().episode!.audioPath"
+          [autoplay]="playerState().autoplay"
+          (loadedmetadata)="onMetadataLoaded()"
+          (timeupdate)="onTimeUpdate()"
+          (play)="onPlay()"
+          (ended)="onEnded()"
+          style="display: none;">
+          Tu navegador no soporta el elemento de video.
+        </video>
+      } @else if (isYouTubeUrl(playerState().episode!.audioPath)) {
+        <iframe 
+          #mediaElement
+          [src]="getYouTubeEmbedUrl(playerState().episode!.audioPath)" 
+          style="display: none;"
+          (load)="onIframeLoad(); onPlay()">
+        </iframe>
+      } @else {
+        <audio 
+          #mediaElement
+          [src]="playerState().episode!.audioPath" 
+          [autoplay]="playerState().autoplay"
+          (loadedmetadata)="onMetadataLoaded()"
+          (timeupdate)="onTimeUpdate()"
+          (play)="onPlay()"
+          (ended)="onEnded()"
+          style="display: none;">
+          Tu navegador no soporta el elemento de audio.
+        </audio>
+      }
+    }
 
-        <button class="go-to-episode-btn" (click)="goToEpisode()">
-          Volver al detalle
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9.29 6.71a.996.996 0 0 0 0 1.41L13.17 12l-3.88 3.88a.996.996 0 1 0 1.41 1.41l4.59-4.59a.996.996 0 0 0 0-1.41L10.7 6.7c-.38-.38-1.02-.38-1.41.01z"/>
-          </svg>
-        </button>
-    </div>
+    <!-- Botón para minimizar/expandir -->
+    <button class="minimize-btn" (click)="toggleMinimize()" [attr.aria-label]="playerState().isMinimized ? 'Expandir' : 'Minimizar'">
+      @if (playerState().isMinimized) {
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+          <path d="M7 14l5-5 5 5z"/>
+        </svg>
+      } @else {
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+          <path d="M7 10l5 5 5-5z"/>
+        </svg>
+      }
+    </button>
   </div>
 }

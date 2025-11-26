@@ -54,8 +54,13 @@ export class MediaPlayerService {
       autoplay
     }));
     
-    // Solo iniciar countdown si no se ha contado ya
-    if (!viewAlreadyCounted) {
+    // No iniciar el countdown automáticamente - se iniciará cuando se dé play
+  }
+  
+  startPlaybackCountdown() {
+    const currentState = this.playerState();
+    // Solo iniciar countdown si no se ha contado ya y hay un episodio
+    if (!currentState.viewCounted && currentState.episode) {
       this.startViewCountdown();
     }
   }

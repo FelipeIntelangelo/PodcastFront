@@ -233,6 +233,19 @@ export class EpisodeDetail implements OnInit, OnDestroy {
     return lower.includes('/video/') || lower.includes('.mp4') || lower.includes('.webm');
   }
 
+  isVideoMp4(): boolean {
+    if (!this.episode?.audioPath) return false;
+    const url = this.episode.audioPath.toLowerCase();
+    
+    // Si es un archivo de audio (MP3, WAV, M4A, OGG), NO mostrar reproductor de video
+    if (url.includes('.mp3') || url.includes('.wav') || url.includes('.m4a') || url.includes('.ogg')) {
+      return false;
+    }
+    
+    // Detectar si es un video MP4
+    return url.includes('.mp4') || (url.includes('cloudinary.com') && (url.includes('/video/') || url.includes('.mp4')));
+  }
+
   isCloudinaryAudio(url: string): boolean {
     return url.includes('cloudinary.com') && (url.includes('.mp3') || url.includes('.wav') || url.includes('.m4a'));
   }
@@ -556,5 +569,26 @@ export class EpisodeDetail implements OnInit, OnDestroy {
         this.alertService.error('Error', err.message || 'No se pudo publicar el comentario.');
       }
     });
+  }
+
+  onImageError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    img.style.display = 'none';
+    const placeholder = img.parentElement?.querySelector('.image-placeholder') as HTMLElement;
+    if (placeholder) {
+      placeholder.style.display = 'flex';
+    }
+  }
+
+  isPlayingInFloatingPlayer(): boolean {
+    if (!this.episode) return false;
+    const playerState = this.mediaPlayerService.playerState();
+    return playerState.isOpen && playerState.episode?.id === this.episode.id;
+  }
+
+  togglePlayFromImage(event: Event): void {
+    event.stopPropagation();
+    // Siempre reproducir cuando se hace clic en el botón
+    this.playInFloatingPlayer();
   }
 }
