@@ -20,7 +20,8 @@
                         @if (!carousels['novedades'].hasBeenClicked) {
                             <button 
                                 class="arrowButton arrowNext arrowInitial"
-                                (click)="onArrowClick('novedades')">
+                                (click)="onArrowClick('novedades')"
+                                [disabled]="carousels['novedades'].atEnd">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         }
@@ -78,7 +79,8 @@
                         @if (!carousels['masEscuchados'].hasBeenClicked) {
                             <button 
                                 class="arrowButton arrowNext arrowInitial"
-                                (click)="onArrowClick('masEscuchados')">
+                                (click)="onArrowClick('masEscuchados')"
+                                [disabled]="carousels['masEscuchados'].atEnd">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         }
@@ -134,7 +136,8 @@
                         @if (!carousels['mejoresValorados'].hasBeenClicked) {
                             <button 
                                 class="arrowButton arrowNext arrowInitial"
-                                (click)="onArrowClick('mejoresValorados')">
+                                    (click)="onArrowClick('mejoresValorados')"
+                                    [disabled]="carousels['mejoresValorados'].atEnd">
                                 <i class="fas fa-chevron-right"></i>
                             </button>
                         }
@@ -191,7 +194,8 @@
                             @if (!carousels['favoritos'].hasBeenClicked) {
                                 <button 
                                     class="arrowButton arrowNext arrowInitial"
-                                    (click)="onArrowClick('favoritos')">
+                                        (click)="onArrowClick('favoritos')"
+                                        [disabled]="carousels['favoritos'].atEnd">
                                     <i class="fas fa-chevron-right"></i>
                                 </button>
                             }
@@ -230,71 +234,3 @@
             </div>
         }
     </main>
-
-
-
-
-
-        <!-- EJEMPLO DE OTRO CARRUSEL -->
-
-        <!-- <div class="carouselSection">
-            <h2>Mis favoritos</h2>
-            <div class="carouselContainer">
-                <button 
-                    *ngIf="carousels['misFavoritos'].hasBeenClicked"
-                    class="arrowButton arrowBack"
-                    (click)="goBack('misFavoritos')"
-                    [disabled]="carousels['misFavoritos'].currentIndex === 0">
-                    <i class="fas fa-chevron-left"></i>
-                </button>
-
-                <div class="carouselWrapper">
-                    <div class="carouselContent" [ngStyle]="{'transform': getCarouselTranslate('misFavoritos')}">
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 1</h3>
-                            <h4>Podcast 1</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 2</h3>
-                            <h4>Podcast 2</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 3</h3>
-                            <h4>Podcast 3</h4>
-
-                        </div>
-                        <div class="cardHome">
-                            <div class="ejampleImg"></div>
-                            <h3>Nombre Creador 4</h3>
-                            <h4>Podcast 4</h4>
-
-                        </div>
-                    </div>
-                </div>
-
-                <button 
-                    *ngIf="!carousels['misFavoritos'].hasBeenClicked"
-                    class="arrowButton arrowNext arrowInitial"
-                    (click)="onArrowClick('misFavoritos')">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-
-                <button 
-                    *ngIf="carousels['misFavoritos'].hasBeenClicked && !isAtEnd('misFavoritos')"
-                    class="arrowButton arrowNext"
-                    (click)="goNext('misFavoritos')">
-                    <i class="fas fa-chevron-right"></i>
-                </button>
-
-                <button 
-                    *ngIf="carousels['misFavoritos'].hasBeenClicked && isAtEnd('misFavoritos')"
-                    class="verTodosButton">
-                    Ver todos
-                </button>
-            </div>
-        </div> -->
