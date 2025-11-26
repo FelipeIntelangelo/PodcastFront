@@ -48,7 +48,13 @@
   flex-direction: column;
   justify-content: flex-start;
   flex: 1;
-  gap: 0.75rem;
+}
+
+.title-actions-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .podcast-main-title {
@@ -57,6 +63,7 @@
   margin: 0;
   color: white;
   letter-spacing: 0.5px;
+  flex: 1;
 }
 
 .creator-link-main {
@@ -67,6 +74,7 @@
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.95rem;
   transition: color 0.2s ease;
+  margin-bottom: 0.75rem;
 }
 
 .creator-link-main:hover {
@@ -101,6 +109,7 @@
 
 .creator-name {
   font-weight: 500;
+  color: var(--primary-color);
 }
 
 .podcast-stats-main {
@@ -110,6 +119,7 @@
   flex-wrap: wrap;
   font-size: 0.9rem;
   color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.75rem;
 }
 
 .stat-item-main {
@@ -126,7 +136,23 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.description-section-main {
   margin-top: 0.5rem;
+}
+
+.description-section-main p {
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 [id='toggle-heart'] {
@@ -136,6 +162,7 @@
 [id='toggle-heart']:checked + label {
   color: #e2264d;
   filter: none;
+  background-color: rgba(226, 38, 77, 0.2);
   will-change: font-size;
   animation: heart 1s cubic-bezier(0.17, 0.89, 0.32, 1.49);
 }
@@ -162,11 +189,21 @@
 [for='toggle-heart'] {
   align-self: center;
   position: relative;
-  color: #888;
-  font-size: 2em;
-  filter: grayscale(1);
+  color: white;
+  font-size: 1.5em;
+  filter: grayscale(0);
   user-select: none;
   cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(40, 40, 40);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  transition-duration: 0.3s;
+  overflow: hidden;
 }
 
 [for='toggle-heart']:before, [for='toggle-heart']:after {
@@ -253,6 +290,133 @@
   }
 }
 
+/* Botón de editar animado */
+.edit-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(40, 40, 40);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none !important;
+}
+
+.edit-svgIcon {
+  width: 17px;
+  transition-duration: 0.3s;
+}
+
+.edit-svgIcon path {
+  fill: white;
+}
+
+.edit-button:hover {
+  width: 120px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(66, 153, 225);
+  align-items: center;
+}
+
+.edit-button:hover .edit-svgIcon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+}
+
+.edit-button::before {
+  display: none;
+  content: "Edit";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.edit-button:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
+}
+
+/* Botón de eliminar animado */
+.delete-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: rgb(40, 40, 40);
+  border: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.164);
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+}
+
+.delete-button .svgIcon {
+  width: 15px;
+  transition-duration: 0.3s;
+}
+
+.delete-button .svgIcon path {
+  fill: white;
+}
+
+.delete-button:hover:not(:disabled) {
+  width: 120px;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: rgb(255, 69, 69);
+  align-items: center;
+}
+
+.delete-button:hover:not(:disabled) .svgIcon {
+  width: 40px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+}
+
+.delete-button::before {
+  position: absolute;
+  top: -20px;
+  content: "Delete";
+  color: white;
+  transition-duration: 0.3s;
+  font-size: 2px;
+}
+
+.delete-button:hover:not(:disabled)::before {
+  font-size: 13px;
+  opacity: 1;
+  transform: translateY(30px);
+  transition-duration: 0.3s;
+}
+
+.delete-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background-color: rgb(50, 50, 50);
+}
+
 .action-btn-main {
   width: 40px;
   height: 40px;
@@ -275,10 +439,6 @@
   cursor: not-allowed;
 }
 
-.edit-btn-main:hover:not(:disabled) {
-  background: rgba(66, 153, 225, 0.2);
-}
-
 .delete-btn-main:hover:not(:disabled) {
   background: rgba(245, 101, 101, 0.2);
 }
@@ -295,7 +455,7 @@
   background: rgba(157, 101, 215, 0.15);
   color: var(--primary-color);
   padding: 0.4rem 0.8rem;
-  border-radius: 4px;
+  border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
   border: 1px solid rgba(157, 101, 215, 0.3);
@@ -438,6 +598,38 @@
   font-weight: 600;
   margin: 0;
   color: white;
+}
+
+/* Selector de temporadas */
+.season-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.5rem;
+}
+
+.season-tab {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  padding: 0.75rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+  position: relative;
+  bottom: -0.5rem;
+}
+
+.season-tab:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.season-tab.active {
+  color: var(--primary-color);
+  border-bottom-color: var(--primary-color);
 }
 
 .add-episode-btn {

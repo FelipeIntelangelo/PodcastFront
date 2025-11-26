@@ -25,6 +25,8 @@ export class PodcastDetail implements OnInit{
   episodes: EpisodeDTO[] = [];
   isLoadingEpisodes = false;
   showCategoriesPopup = false;
+  selectedSeason: number = 0; // 0 = todas las temporadas
+  availableSeasons: number[] = [];
 
   constructor(
     private route: ActivatedRoute,
@@ -98,6 +100,7 @@ export class PodcastDetail implements OnInit{
     this.episodeService.getAll(undefined, podcastId).subscribe({
       next: (episodes) => {
         this.episodes = episodes;
+        this.updateAvailableSeasons();
         this.isLoadingEpisodes = false;
       },
       error: (error) => {
@@ -105,6 +108,22 @@ export class PodcastDetail implements OnInit{
         this.isLoadingEpisodes = false;
       }
     });
+  }
+
+  updateAvailableSeasons(): void {
+    const seasons = new Set(this.episodes.map(ep => ep.season));
+    this.availableSeasons = Array.from(seasons).sort((a, b) => a - b);
+  }
+
+  setSelectedSeason(season: number): void {
+    this.selectedSeason = season;
+  }
+
+  get filteredEpisodes(): EpisodeDTO[] {
+    if (this.selectedSeason === 0) {
+      return this.episodes;
+    }
+    return this.episodes.filter(ep => ep.season === this.selectedSeason);
   }
 
   getTotalViews(): number {

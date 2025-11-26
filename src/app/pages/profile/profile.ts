@@ -175,16 +175,14 @@ export class Profile implements OnInit, OnDestroy {
   private handleLoadSuccess(data: User | UserSearchDTO, shouldScroll: boolean): void {
     this.user = data;
     
-    // Cargar podcasts y favoritos completos
-    if (this.isFullUser(data)) {
-      // Si es el perfil propio, usar getMyPodcasts
-      if (this.isOwnProfile) {
-        this.loadMyPodcasts();
-        this.loadMyFavorites();
-      } else {
-        // Si es otro usuario, buscar podcasts por userId
-        this.loadUserPodcasts(data.id);
-      }
+    // Cargar podcasts siempre
+    if (this.isOwnProfile) {
+      // Si es el perfil propio, usar getMyPodcasts y getMyFavorites
+      this.loadMyPodcasts();
+      this.loadMyFavorites();
+    } else {
+      // Si es otro usuario, buscar podcasts por userId
+      this.loadUserPodcasts(data.id);
     }
     
     this.isLoading = false;
