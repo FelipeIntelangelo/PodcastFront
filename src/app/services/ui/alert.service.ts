@@ -69,7 +69,8 @@ export class AlertService {
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
+            theme: 'dark'
         });
     }
 
@@ -83,7 +84,8 @@ export class AlertService {
             confirmButtonColor: "#9D65D7",
             cancelButtonColor: "#dc3545",
             confirmButtonText: "Sí, eliminar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            theme: 'dark'
         }).then((result) => {
             return result.isConfirmed;
         });
@@ -96,7 +98,8 @@ export class AlertService {
             text: "El podcast ha sido eliminado exitosamente",
             icon: "success",
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
+            theme: 'dark'
         });
     }
 
@@ -107,7 +110,8 @@ export class AlertService {
             text: "No se pudo eliminar el podcast",
             icon: "error",
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
+            theme: 'dark'
         });
     }
 
@@ -121,7 +125,8 @@ export class AlertService {
             confirmButtonColor: "#9D65D7",
             cancelButtonColor: "#dc3545",
             confirmButtonText: "Sí, continuar",
-            cancelButtonText: "Cancelar"
+            cancelButtonText: "Cancelar",
+            theme: 'dark'
         }).then((result) => {
             return result.isConfirmed;
         });
@@ -134,7 +139,8 @@ export class AlertService {
             text,
             icon: "success",
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
+            theme: 'dark'
         });
     }
 
@@ -145,7 +151,8 @@ export class AlertService {
             text,
             icon: "error",
             showConfirmButton: false,
-            timer: 2000
+            timer: 2000,
+            theme: 'dark'
         });
     }
 }

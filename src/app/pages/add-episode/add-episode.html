@@ -96,6 +96,9 @@
         <div class="hint">Sube un archivo para habilitar el envío.</div>
         @if (detectedDuration > 0) {
           <div class="duration-info">Duración detectada: {{ getFormattedDuration() }}</div>
+          @if (detectedDuration > 0 && detectedDuration < 30) {
+            <div class="field-error">El archivo debe durar al menos 30 segundos para poder subirlo.</div>
+          }
         }
         @if (form.get('title')?.touched && form.get('description')?.touched && !canSubmit()) {
           <div class="field-error">

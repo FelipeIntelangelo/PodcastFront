@@ -154,7 +154,8 @@ export class AddEpisodePage implements OnInit {
   canSubmit(): boolean {
     // Verificar que haya archivo seleccionado y duración detectada
     const hasFile = (this.mediaUp?.hasFileSelected() || !!this.form.value.audioPath);
-    const hasDuration = this.detectedDuration > 0;
+    // Requerimos duración mínima de 30 segundos
+    const hasDuration = this.detectedDuration >= 30;
     return hasFile && hasDuration;
   }
 
@@ -172,6 +173,13 @@ export class AddEpisodePage implements OnInit {
     if (!this.detectedDuration || this.detectedDuration <= 0) {
       this.isSubmitting = false;
       this.errorMessage = 'No se pudo detectar la duración del archivo. Asegurate de seleccionar un archivo de audio/video válido.';
+      return;
+    }
+
+    // Validación mínima: si es video (o audio) y dura menos de 30 segundos, bloquear
+    if (this.detectedDuration < 30) {
+      this.isSubmitting = false;
+      this.errorMessage = 'El archivo debe durar al menos 30 segundos.';
       return;
     }
 
