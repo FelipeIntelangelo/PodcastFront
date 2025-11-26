@@ -95,7 +95,7 @@ export class Home implements OnInit, AfterViewInit {
           if (this.novedadesWrapper) {
             this.handleScroll('novedades', this.novedadesWrapper.nativeElement);
           }
-        }, 0);
+        }, 100);
       },
       error: (error) => {
         console.error('Error loading novedades:', error);
@@ -115,7 +115,7 @@ export class Home implements OnInit, AfterViewInit {
           if (this.masEscuchadosWrapper) {
             this.handleScroll('masEscuchados', this.masEscuchadosWrapper.nativeElement);
           }
-        }, 0);
+        }, 100);
       },
       error: (error) => {
         console.error('Error loading mas escuchados:', error);
@@ -135,7 +135,7 @@ export class Home implements OnInit, AfterViewInit {
           if (this.mejoresValoradosWrapper) {
             this.handleScroll('mejoresValorados', this.mejoresValoradosWrapper.nativeElement);
           }
-        }, 0);
+        }, 100);
       },
       error: (error) => {
         console.error('Error loading mejores valorados:', error);
@@ -160,7 +160,7 @@ export class Home implements OnInit, AfterViewInit {
           if (this.favoritosWrapper) {
             this.handleScroll('favoritos', this.favoritosWrapper.nativeElement);
           }
-        }, 0);
+        }, 100);
       },
       error: (error) => {
         console.error('Error loading favoritos:', error);
