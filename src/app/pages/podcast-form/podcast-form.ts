@@ -31,7 +31,8 @@ export class PodcastFormComponent implements OnInit, OnChanges {
     },
     description: {
       required: 'La descripción es obligatoria.',
-      minlength: 'La descripción debe tener al menos 10 caracteres.'
+      minlength: 'La descripción debe tener al menos 10 caracteres.',
+      maxLength: 'La descripcion debe tener como maximo 500 caracteres'
     },
     categories: {
       required: 'Debe seleccionar al menos una categoría.'
@@ -125,7 +126,7 @@ export class PodcastFormComponent implements OnInit, OnChanges {
   private initForm(): void {
     this.podcastForm = this.fb.group({
       title: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      description: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(500)]],
       imageUrl: [''],
       categories: new FormControl([], [this.categoriesRequiredValidator.bind(this)])
     });

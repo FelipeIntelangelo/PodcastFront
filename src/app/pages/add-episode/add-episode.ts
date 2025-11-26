@@ -28,6 +28,10 @@ export class AddEpisodePage implements OnInit {
   form!: FormGroup;
   detectedDuration: number = 0; // Duración en segundos detectada automáticamente
 
+  existingEpisodes: any[] = [];
+  episodesBySeasons: { [season: number]: number } = {}; // {season: maxChapter}
+  validationErrors: { [key: string]: string | null } = {};
+
   @ViewChild('mediaUp') mediaUp?: CloudinaryUploadComponent;
   @ViewChild('imageUp') imageUp?: CloudinaryUploadComponent;
 
@@ -53,6 +57,7 @@ export class AddEpisodePage implements OnInit {
       next: (podcast) => {
         this.podcast = podcast;
         this.checkAuthorization();
+        this.loadExistingEpisodes(podcastId);
       },
       error: () => {
         this.errorMessage = 'No se pudo cargar el podcast.';
@@ -70,6 +75,100 @@ export class AddEpisodePage implements OnInit {
         this.checkAuthorization();
       }
     });
+  }
+
+  private loadExistingEpisodes(podcastId: number): void {
+    this.episodeService.getAll(undefined, podcastId).subscribe({
+      next: (episodes) => {
+        this.existingEpisodes = episodes || [];
+        this.processEpisodesBySeasons();
+        this.autoFillEpisodeNumber();
+      },
+      error: (err) => {
+        console.error('Error cargando episodios existentes:', err);
+        this.existingEpisodes = [];
+      }
+    });
+  }
+
+  private processEpisodesBySeasons(): void {
+    this.episodesBySeasons = {};
+    this.existingEpisodes.forEach(ep => {
+      const season = ep.season || 1;
+      const chapter = ep.chapter || 1;
+      if (!this.episodesBySeasons[season] || this.episodesBySeasons[season] < chapter) {
+        this.episodesBySeasons[season] = chapter;
+      }
+    });
+  }
+
+  private autoFillEpisodeNumber(): void {
+    const currentSeason = this.form.get('season')?.value || 1;
+    const maxChapterInSeason = this.episodesBySeasons[currentSeason] || 0;
+    const nextChapter = maxChapterInSeason + 1;
+    this.form.patchValue({ chapter: nextChapter }, { emitEvent: false });
+  }
+
+  onSeasonChange(): void {
+    this.autoFillEpisodeNumber();
+    this.validateSeasonAndChapter();
+  }
+
+  onChapterChange(): void {
+    this.validateSeasonAndChapter();
+  }
+
+  private validateSeasonAndChapter(): void {
+    const season = this.form.get('season')?.value;
+    const chapter = this.form.get('chapter')?.value;
+
+    // Obtener temporadas existentes
+    const existingSeasons = Object.keys(this.episodesBySeasons).map(Number).sort((a, b) => a - b);
+    
+    if (existingSeasons.length === 0) {
+      // Primera temporada: puede ser cualquiera desde 1, solo el primer episodio debe ser 1
+      if (season === 1 && chapter === 1) {
+        this.validationErrors['season'] = null;
+        this.validationErrors['chapter'] = null;
+      } else {
+        this.validationErrors['season'] = null;
+        this.validationErrors['chapter'] = 'El primer episodio debe ser Temporada 1, Episodio 1.';
+      }
+      return;
+    }
+
+    const maxExistingSeason = Math.max(...existingSeasons);
+    
+    // No puede saltar temporadas
+    if (season > maxExistingSeason + 1) {
+      this.validationErrors['season'] = `No puedes crear la temporada ${season}. Primero debes crear la temporada ${maxExistingSeason + 1}.`;
+      return;
+    }
+
+    // Validar episodios consecutivos dentro de la temporada
+    const lastChapterInSeason = this.episodesBySeasons[season] || 0;
+    
+    // Si es una temporada que ya existe, el nuevo episodio debe ser el siguiente (sin saltos)
+    if (season <= maxExistingSeason) {
+      if (chapter <= lastChapterInSeason) {
+        this.validationErrors['chapter'] = `El episodio ${chapter} ya existe en la temporada ${season}. El siguiente es ${lastChapterInSeason + 1}.`;
+        return;
+      }
+      // Validar que no haya saltos de episodios (si existe E1, no puede crear E3 sin E2)
+      if (chapter > lastChapterInSeason + 1) {
+        this.validationErrors['chapter'] = `No puedes saltar episodios. En la temporada ${season} existe hasta el episodio ${lastChapterInSeason}. Debes crear el episodio ${lastChapterInSeason + 1}.`;
+        return;
+      }
+    } else {
+      // Nueva temporada: el primer episodio debe ser 1
+      if (chapter !== 1) {
+        this.validationErrors['chapter'] = `El primer episodio de una nueva temporada debe ser 1, no ${chapter}.`;
+        return;
+      }
+    }
+
+    this.validationErrors['season'] = null;
+    this.validationErrors['chapter'] = null;
   }
 
   private initForm(podcastId: number) {
@@ -163,6 +262,12 @@ export class AddEpisodePage implements OnInit {
     if (!this.isAuthorized) return;
     if (this.form.invalid) {
       this.form.markAllAsTouched();
+      return;
+    }
+
+    // Validar errores de temporada y episodio
+    if (this.validationErrors['season'] || this.validationErrors['chapter']) {
+      this.errorMessage = this.validationErrors['season'] || this.validationErrors['chapter'];
       return;
     }
 
