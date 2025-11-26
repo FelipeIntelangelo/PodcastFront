@@ -4,12 +4,13 @@ import { User } from '../../models/user/user';
 import { UserSearchDTO } from '../../models/user/userSearchDTO';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, forkJoin, of } from 'rxjs';
 import { AuthService } from '../../services/auth/auth.service';
 import { AlertService } from '../../services/ui/alert.service';
 import { PodcastService } from '../../services/podcast/podcast-service';
 import { PodcastTotalDTO } from '../../models/podcast/podcast-total-dto';
 import { PodcastDTO } from '../../models/podcast/podcast-dto';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-profile',
@@ -225,19 +226,63 @@ export class Profile implements OnInit, OnDestroy {
   private loadUserPodcasts(userId: number): void {
     this.podcastService.getAllFiltered(undefined, userId).subscribe({
       next: (podcasts) => {
-        // Convertir PodcastSearchDTO[] a formato compatible
-        this.podcastsData = podcasts.map(p => ({
-          id: p.id,
-          title: p.title,
-          description: p.description || '',
-          imageUrl: p.imageUrl,
-          categories: [],
-          averageViews: p.averageViews,
-          averageRating: 0
-        }));
-        if (this.podcastsData.length > 0) {
-          this.activeTab = 'podcasts';
+        const items = podcasts || [];
+
+        // If items already include owner/user info, filter directly by userId
+        const hasUserField = items.some((p: any) => p && p.user && (p.user.id !== undefined));
+
+        if (hasUserField) {
+          const filtered = items.filter((p: any) => p && p.user && p.user.id === userId);
+          this.podcastsData = filtered.map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            description: p.description || '',
+            imageUrl: p.imageUrl,
+            categories: p.categories || [],
+            averageViews: p.averageViews || 0,
+            averageRating: p.averageRating || 0
+          }));
+          if (this.podcastsData.length > 0) this.activeTab = 'podcasts';
+          return;
         }
+
+        // If server returned items without owner info, try fetching full podcast objects by id and filter
+        const ids = items.map((p: any) => p.id).filter((id: any) => id != null);
+        if (ids.length === 0) {
+          this.podcastsData = [];
+          return;
+        }
+
+        const requests = ids.map(id => this.podcastService.getPodcastById(id).pipe(
+          catchError(() => of(null))
+        ));
+
+        forkJoin(requests).subscribe((fulls: any[]) => {
+          const filtered = (fulls || []).filter(f => f && f.user && f.user.id === userId);
+          this.podcastsData = filtered.map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            description: p.description || '',
+            imageUrl: p.imageUrl,
+            categories: p.categories || [],
+            averageViews: p.averageViews || 0,
+            averageRating: p.averageRating || 0
+          }));
+          if (this.podcastsData.length > 0) this.activeTab = 'podcasts';
+        }, (err) => {
+          console.error('Error fetching full podcast objects for user filtering', err);
+          // Fallback: map server response as-is
+          this.podcastsData = items.map((p: any) => ({
+            id: p.id,
+            title: p.title,
+            description: p.description || '',
+            imageUrl: p.imageUrl,
+            categories: [],
+            averageViews: p.averageViews || 0,
+            averageRating: 0
+          }));
+          if (this.podcastsData.length > 0) this.activeTab = 'podcasts';
+        });
       },
       error: (err) => {
         console.error('Error loading user podcasts:', err);
