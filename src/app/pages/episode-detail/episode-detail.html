@@ -285,7 +285,7 @@
                   (blur)="newCommentContent.trim() === '' ? $any($event.target).rows = 1 : null"
                 ></textarea>
                 <div class="comment-actions">
-                  <span class="char-counter" [class.warning]="newCommentContent.length > 350" [class.realWarning]="newCommentContent.length > 425">
+                  <span class="char-counter" [class.warning]="newCommentContent.length > 200" [class.realWarning]="newCommentContent.length > 325" [class.realRealWarning]="newCommentContent.length > 425">
                     {{ newCommentContent.length }}/500
                   </span>
                   <div class="action-buttons">

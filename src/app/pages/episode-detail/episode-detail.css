@@ -897,8 +897,13 @@
 }
 
 .char-counter.realWarning {
-  color: #fb6824;
+  color: #fb7a24;
   font-weight: 800;
+}
+
+.char-counter.realRealWarning {
+  color: #fd1d1d;
+  font-weight: 1000;
 }
 
 .action-buttons {
