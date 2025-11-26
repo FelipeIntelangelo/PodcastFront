@@ -127,7 +127,19 @@
 }
 
 .views-count-main {
-  color: rgba(157, 101, 215, 0.8);
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.views-count-main .icon-eye {
+  color: #9D65D7;
+  fill: #9D65D7;
+}
+
+.episode-views {
+  color: white;
   display: flex;
   align-items: center;
   gap: 0.3rem;
@@ -155,6 +167,7 @@
   font-size: 0.95rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -896,3 +909,5 @@
     justify-content: center;
   }
 }
+
+

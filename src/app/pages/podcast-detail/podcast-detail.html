@@ -7,7 +7,8 @@
     <!-- Header similar a Profile -->
     <div class="podcast-header-main">
       <div class="podcast-image-wrapper">
-        <img [src]="podcast.imageUrl || 'assets/default-podcast.png'" [alt]="podcast.title" class="podcast-main-image">
+        <img [src]="podcast.imageUrl" [alt]="podcast.title" class="podcast-main-image" (error)="onImageError($event)">
+        <div class="image-placeholder" style="display: none;"></div>
       </div>
       <div class="podcast-info-section">
         <div class="title-actions-wrapper">
@@ -129,7 +130,7 @@
           @for (episode of filteredEpisodes; track episode.id) {
             <article class="episode-card" (click)="viewEpisode(episode.id)">
               <div class="episode-image">
-                <img [src]="episode.imageUrl || podcast.imageUrl || 'assets/default-episode.png'" [alt]="episode.title" (error)="onImageError($event)">
+                <img [src]="episode.imageUrl || podcast.imageUrl" [alt]="episode.title" (error)="onImageError($event)">
                 <div class="image-placeholder" style="display: none;"></div>
               </div>
               <div class="episode-content">
