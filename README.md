@@ -1,6 +1,7 @@
 # 🎙️ PodcastFront - Wavelly una Podcasts
 
 Wavelly es una plataforma web para descubrir, escuchar y gestionar podcasts. Desarrollado con Angular 20, permite a los usuarios explorar contenido, crear sus propios podcasts, gestionar episodios, y disfrutar de una experiencia de audio completa.
+Esta aplicacion utiliza la siguiente API desarrollada por el mismo equipo. https://github.com/FelipeIntelangelo/Wavelly-Back-End
 
 ## 📋 Tabla de Contenidos
 
